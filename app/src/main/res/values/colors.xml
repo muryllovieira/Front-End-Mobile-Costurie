@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="principal_1">#FFF</color>
+    <color name="principal_2">#FCF6FF</color>
+    <color name="destaque_1">#C98FEC</color>
+    <color name="destaque_2">#A89BFF</color>
+    <color name="contraste">#413946</color>
+</resources>

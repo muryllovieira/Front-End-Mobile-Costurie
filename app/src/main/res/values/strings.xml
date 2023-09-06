@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">costurie_app</string>
+    <string name="boas_vindas">Bem vindo(a)!</string>
+    <string name="texto_boas_vindas"></string>
+    <string name="texto_botao_registrar">Registrar</string>
+    <string name="texto_botao_login">Login</string>
+</resources>
