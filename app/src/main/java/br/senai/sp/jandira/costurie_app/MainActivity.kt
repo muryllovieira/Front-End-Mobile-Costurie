@@ -29,11 +29,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import br.senai.sp.jandira.costurie_app.ui.theme.Principal1
+import br.senai.sp.jandira.costurie_app.ui.theme.Principal2
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +77,9 @@ fun MainScreen() {
                     Image(
                         painter = painterResource(id = R.drawable.forma1_topo_main),
                         contentDescription = "",
-                        modifier = Modifier.height(310.dp).width(390.dp),
+                        modifier = Modifier
+                            .height(310.dp)
+                            .width(390.dp),
                         alignment = Alignment.TopStart
                     )
 
@@ -122,31 +131,21 @@ fun MainScreen() {
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    Button(
-                        modifier = Modifier
-                            .width(135.dp)
-                            .height(45.dp),
-                        onClick = { }
-                    ) {
-                        Text(
-                            text = "REGISTRAR", style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.height(35.dp)
-                        )
-                    }
+                    GradientButton(
+                        onClick = {  },
+                        text = stringResource(id = R.string.texto_botao_registrar).uppercase(),
+                        color1 = Destaque1,
+                        color2 = Destaque2
+                    )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                    Button(
-                        modifier = Modifier
-                            .width(135.dp)
-                            .height(45.dp),
-                        onClick = { }
-                    ) {
-                        Text(
-                            text = "LOGIN", style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.height(35.dp)
-                        )
-                    }
+                    GradientButton(
+                        onClick = {  },
+                        text = stringResource(id = R.string.texto_botao_login).uppercase(),
+                        color1 = Destaque1,
+                        color2 = Destaque2
+                    )
                 }
             }
 
