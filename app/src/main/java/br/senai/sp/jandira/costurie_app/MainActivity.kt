@@ -91,21 +91,21 @@ fun MainScreen() {
                     ){
                         Text(
                             color = Color.White,
-                            text = "COSTURIÊ".uppercase(),
+                            text = stringResource(id = R.string.titulo_app),
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 32.sp
                         )
 
                         Text(
                             color = Color.White,
-                            text = "Bem-vindo(a)!".uppercase(),
+                            text = stringResource(id = R.string.boas_vindas).uppercase(),
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 24.sp
                         )
 
                         Text(
                             color = Color.White,
-                            text = "Olá, seja bem-vindo(a) ao Costuriê. É um prazer recebê-lo(a) aqui.",
+                            text = stringResource(id = R.string.texto_boas_vindas),
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.width(220.dp),

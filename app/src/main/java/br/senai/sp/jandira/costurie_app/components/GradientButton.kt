@@ -3,7 +3,6 @@ package br.senai.sp.jandira.costurie_app.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -49,6 +48,6 @@ fun GradientButton (
             hoveredElevation = 0.dp
         )
     ) {
-        Text(text = text, fontSize = 16.sp, style = MaterialTheme.typography.bodySmall)
+        Text(text = text, fontSize = 18.sp, style = MaterialTheme.typography.bodySmall)
     }
 }
