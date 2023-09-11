@@ -27,6 +27,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -39,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.costurie_app.components.CaixaDeTexto
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -63,6 +68,11 @@ class RegisterActivity : ComponentActivity() {
 @Composable
 fun RegisterScreen() {
     Costurie_appTheme {
+
+        var textstate by remember { mutableStateOf("") }
+        var textstate2 by remember { mutableStateOf("") }
+        var textstate3 by remember { mutableStateOf("") }
+        var textstate4 by remember { mutableStateOf("") }
 
         Surface (
             modifier = Modifier
@@ -92,7 +102,7 @@ fun RegisterScreen() {
                     Column (
                         modifier = Modifier
                             .width(320.dp)
-                            .height(560.dp),
+                            .height(450.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ){
@@ -105,19 +115,71 @@ fun RegisterScreen() {
                         )
 
                         OutlinedTextField(
-                            value = "",
-                            onValueChange = { },
+                            value = textstate2,
+                            onValueChange = { textstate = it },
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(30.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            label = { (Text(text = "Teste")) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                                .padding(top = 20.dp)
+                                .height(62.dp),
+                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp)},
                             colors = TextFieldDefaults.textFieldColors(
-                                unfocusedLabelColor = Color.Cyan,
-                                focusedLabelColor = Color.Cyan,
-                                containerColor = Color.White
+                                unfocusedLabelColor = Color.Black,
+                                cursorColor = Color.Black,
+                                focusedLabelColor = Color.Black,
+                                textColor = Color.Black,
+                                containerColor = Color.White,
                             ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+
+                        OutlinedTextField(
+                            value = textstate2,
+                            onValueChange = { textstate2 = it },
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .height(62.dp),
+                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp)},
+                            colors = TextFieldDefaults.textFieldColors(
+                                unfocusedLabelColor = Color.Black,
+                                cursorColor = Color.Black,
+                                focusedLabelColor = Color.Black,
+                                textColor = Color.Black,
+                                containerColor = Color.White,
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+
+                        OutlinedTextField(
+                            value = textstate2,
+                            onValueChange = { textstate3 = it },
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .height(62.dp),
+                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp)},
+                            colors = TextFieldDefaults.textFieldColors(
+                                unfocusedLabelColor = Color.Black,
+                                cursorColor = Color.Black,
+                                focusedLabelColor = Color.Black,
+                                textColor = Color.Black,
+                                containerColor = Color.White,
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+
+                        OutlinedTextField(
+                            value = textstate2,
+                            onValueChange = { textstate4 = it },
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .height(62.dp),
+                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp)},
+                            colors = TextFieldDefaults.textFieldColors(
+                                unfocusedLabelColor = Color.Black,
+                                cursorColor = Color.Black,
+                                focusedLabelColor = Color.Black,
+                                textColor = Color.Black,
+                                containerColor = Color.White,
+                            ),
+                            shape = RoundedCornerShape(20.dp)
                         )
 
                         GradientButton(
