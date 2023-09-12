@@ -30,11 +30,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,8 +102,9 @@ fun LoginScreen() {
                             Text(
                                 text = stringResource(id = R.string.titulo_app),
                                 color = Color.White
+                                //fontFamily = Fo
                             )
-                            Spacer(modifier = Modifier.height(15.dp))
+                            //Spacer(modifier = Modifier.height(5.dp))
                             OutlinedTextField(
                                 value = "",
                                 onValueChange = {},
@@ -109,18 +115,52 @@ fun LoginScreen() {
                                     Text(text = "E-mail", color = Color.Gray, fontSize = 16.sp, textAlign = TextAlign.Center)
                                 },
                                 colors = TextFieldDefaults.textFieldColors(
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
                                     containerColor = Color.White
                                 )
 
                             )
-                            Spacer(modifier = Modifier.height(30.dp))
+                            Spacer(modifier = Modifier.height(15.dp))
                             OutlinedTextField(
                                 value = "",
                                 onValueChange = {},
                                 shape = RoundedCornerShape(15.dp),
                                 modifier = Modifier
-                                    .height(40.dp)
-                                    .width(250.dp))
+                                    .height(60.dp),
+                                label = {
+                                    Text(text = "Senha", color = Color.Gray, fontSize = 16.sp, textAlign = TextAlign.Center)
+                                },
+                                colors = TextFieldDefaults.textFieldColors(
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    containerColor = Color.White
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Column(
+                                modifier = Modifier.width(300.dp),
+                                horizontalAlignment = Alignment.End,
+
+                            ) {
+                                Text(
+                                    text = "Escolha a senha?",
+                                    color = Color(168,155,255),
+                                    textAlign = TextAlign.Right,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold
+
+                                )
+                            }
+
+                            GradientButton(
+                                onClick = {  },
+                                text = stringResource(id = R.string.texto_botao_login).uppercase() ,
+                                color1 = Destaque1,
+                                color2 = Destaque2
+                            )
+
+                            Line()
                         }
 
                     }
