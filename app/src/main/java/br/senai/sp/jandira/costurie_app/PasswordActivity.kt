@@ -174,13 +174,15 @@ fun PasswordScreen() {
                                     cursorColor = Color.Black,
                                     focusedLabelColor = Color.Black,
                                     textColor = Color.Black,
-                                    containerColor = Color.White,
+                                    containerColor = Principal2,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    focusedIndicatorColor = Color.Transparent
                                 ),
                                 shape = RoundedCornerShape(20.dp)
                             )
                             GradientButton(
                                 onClick = {  },
-                                text = stringResource(id = R.string.texto_botao_registrar).uppercase(),
+                                text = stringResource(id = R.string.texto_botao_enviar).uppercase(),
                                 color1 = Destaque1,
                                 color2 = Destaque2
                             )

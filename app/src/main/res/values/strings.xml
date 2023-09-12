@@ -13,4 +13,6 @@
     <string name="title_activity_password">PasswordActivity</string>
     <string name="recuperar_senha">Recuperar senha</string>
     <string name="verificacao_email">Insira seu e-mail para o processo de verificação, vamos mandar um código para o seu e-mail.</string>
+    <string name="texto_botao_enviar">Enviar</string>
+    <string name="title_activity_validation_code">ValidationCodeActivity</string>
 </resources>
