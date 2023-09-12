@@ -40,14 +40,15 @@ fun Line() {
                 modifier = Modifier
                     .height(1.dp)
                     .width(100.dp)
-                    .background(Color(128, 128, 128)),
+                    .background(Color(65, 57,70)),
             ){}
 
             Text(
                 text = "Ou",
                 fontSize = 13.sp,
                 fontWeight = FontWeight(700),
-                color = Color(413946),
+                color = Color.Black,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif
 
                 )
 
@@ -55,7 +56,7 @@ fun Line() {
                 modifier = Modifier
                     .height(1.dp)
                     .width(100.dp)
-                    .background(Color(128, 128, 128)),
+                    .background(Color(65, 57,70)),
             ){}
         }
     }

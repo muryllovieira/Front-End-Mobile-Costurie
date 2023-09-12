@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
 
 @Composable
@@ -50,4 +52,10 @@ fun GradientButton (
     ) {
         Text(text = text, fontSize = 18.sp, style = MaterialTheme.typography.bodySmall)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GradientButtonPreview() {
+    GradientButton( onClick = {}, text = "", color1 = Destaque1, color2 = Destaque2)
 }
