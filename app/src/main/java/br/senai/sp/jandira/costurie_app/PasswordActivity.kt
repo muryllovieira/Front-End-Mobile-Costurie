@@ -118,12 +118,13 @@ fun PasswordScreen() {
                     ) {
                         Spacer(modifier = Modifier.height(100.dp))
                         Button(
+                            modifier = Modifier.fillMaxWidth(),
                             onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent
                             )
                         ) {
-                            Column(Modifier.padding(end = 250.dp)) {
+                            Column(Modifier.padding(end = 300.dp)) {
                                 Image(
                                     painter = painterResource(id = R.drawable.arrow_back),
                                     contentDescription = "",
@@ -145,11 +146,6 @@ fun PasswordScreen() {
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 20.sp
                             )
-//                            Image(
-//                                painter = painterResource(id = R.drawable.recuperar_senha),
-//                                contentDescription = "",
-//                                modifier = Modifier.width(178.dp).height(12.dp)
-//                            )
                             Image(
                                 painter = painterResource(id = R.drawable.costureira2),
                                 contentDescription = "",

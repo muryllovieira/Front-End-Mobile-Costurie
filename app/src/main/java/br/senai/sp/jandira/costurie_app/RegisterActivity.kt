@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -158,6 +159,7 @@ fun RegisterScreen() {
                                 focusedIndicatorColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(20.dp),
+                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
                             trailingIcon = {
                                 Icon(
                                     painter = painterResource(id = R.drawable.question_icon),

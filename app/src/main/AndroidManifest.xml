@@ -25,6 +25,7 @@
             android:label="@string/title_activity_password"
             android:theme="@style/Theme.Costurie_app" />
         <activity
+            android:name=".RegisterActivity"
             android:name=".LoginActivity"
             android:exported="false"
             android:label="LoginActivity"

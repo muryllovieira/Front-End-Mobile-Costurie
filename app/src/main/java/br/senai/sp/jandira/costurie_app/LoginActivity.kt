@@ -199,9 +199,9 @@ fun LoginScreen() {
                             WhiteButton(onClick = { /*TODO*/ }, text = "REGISTRAR-SE")
                         }
 
+                        }
                     }
                 }
-
             }
         }
     }
