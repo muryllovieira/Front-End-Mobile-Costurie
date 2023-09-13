@@ -35,8 +35,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
+import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -97,7 +99,7 @@ fun LoginScreen() {
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Spacer(modifier = Modifier.height(170.dp))
+                            Spacer(modifier = Modifier.height(155.dp))
 
                             Text(
                                 text = stringResource(id = R.string.titulo_app),
@@ -161,6 +163,9 @@ fun LoginScreen() {
                             )
 
                             Line()
+                            GoogleButton( onClick = {}, text = "Entre com o Google")
+                            Spacer(modifier = Modifier.height(15.dp))
+                            WhiteButton(onClick = { /*TODO*/ }, text = "REGISTRAR-SE")
                         }
 
                     }

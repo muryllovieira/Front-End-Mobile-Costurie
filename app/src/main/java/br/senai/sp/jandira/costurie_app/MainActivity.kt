@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.costurie_app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -56,6 +58,9 @@ class MainActivity : ComponentActivity() {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun MainScreen() {
+
+    val context = LocalContext.current
+
     Costurie_appTheme {
 
         Surface (
@@ -141,7 +146,11 @@ fun MainScreen() {
                     Spacer(modifier = Modifier.height(12.dp))
 
                     GradientButton(
-                        onClick = {  },
+                        onClick = {
+                            var openLogin = Intent(context, LoginActivity::class.java)
+
+                            context.startActivity(openLogin)
+                        },
                         text = stringResource(id = R.string.texto_botao_login).uppercase(),
                         color1 = Destaque1,
                         color2 = Destaque2
