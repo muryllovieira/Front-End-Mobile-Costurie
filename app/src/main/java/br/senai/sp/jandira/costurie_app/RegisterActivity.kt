@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.costurie_app.components.CaixaDeTexto
 import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.components.Line
+import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
@@ -69,7 +72,7 @@ class RegisterActivity : ComponentActivity() {
 fun RegisterScreen() {
     Costurie_appTheme {
 
-        var textstate by remember { mutableStateOf("") }
+        var textstate  by remember  { mutableStateOf("") }
         var textstate2 by remember { mutableStateOf("") }
         var textstate3 by remember { mutableStateOf("") }
         var textstate4 by remember { mutableStateOf("") }
@@ -102,7 +105,7 @@ fun RegisterScreen() {
                     Column (
                         modifier = Modifier
                             .width(320.dp)
-                            .height(450.dp),
+                            .height(570.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ){
@@ -120,13 +123,21 @@ fun RegisterScreen() {
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp)},
+                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp, color = Color(
+                                65,
+                                57,
+                                70,
+                                204
+                            )
+                            )},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
                                 focusedLabelColor = Color.Black,
                                 textColor = Color.Black,
                                 containerColor = Color.White,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(20.dp)
                         )
@@ -137,13 +148,21 @@ fun RegisterScreen() {
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp)},
+                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp, color = Color(
+                                65,
+                                57,
+                                70,
+                                204
+                            )
+                            )},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
                                 focusedLabelColor = Color.Black,
                                 textColor = Color.Black,
                                 containerColor = Color.White,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(20.dp)
                         )
@@ -154,13 +173,21 @@ fun RegisterScreen() {
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp)},
+                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Color(
+                                65,
+                                57,
+                                70,
+                                204
+                            )
+                            )},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
                                 focusedLabelColor = Color.Black,
                                 textColor = Color.Black,
                                 containerColor = Color.White,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(20.dp)
                         )
@@ -171,16 +198,28 @@ fun RegisterScreen() {
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp)},
+                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp, color = Color(
+                                65,
+                                57,
+                                70,
+                                204
+                            )
+                            )},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
                                 focusedLabelColor = Color.Black,
                                 textColor = Color.Black,
                                 containerColor = Color.White,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(20.dp)
                         )
+
+                        Line()
+
+                        WhiteButton(onClick = {  }, text = stringResource(id = R.string.texto_botao_login).uppercase())
 
                         GradientButton(
                             onClick = {  },

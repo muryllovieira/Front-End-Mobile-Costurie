@@ -171,10 +171,3 @@ fun MainScreen() {
         }
     }
 }
-
-val horizontalGradientBrush = Brush.horizontalGradient(
-    colors = listOf(
-        Color(0xFFC98FEC),
-        Color(0xFFA89BFF)
-    )
-)
