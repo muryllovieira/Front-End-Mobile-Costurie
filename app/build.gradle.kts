@@ -84,7 +84,7 @@ dependencies {
 
     //Icons
     //implementation ("com.google.accompanist:accompanist-icons-extended:0.17.0")
-    implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
-
-    implementation ("com.google.android.material:material:1.4.0")
+//    implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
+//
+//    implementation ("com.google.android.material:material:1.4.0")
 }
