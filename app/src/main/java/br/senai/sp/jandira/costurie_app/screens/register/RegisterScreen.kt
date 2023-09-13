@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -121,7 +122,7 @@ fun RegisterScreen(navController: NavController) {
                                 .padding(top = 20.dp)
                                 .width(280.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp, color = Contraste2) },
+                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp, color = Contraste2)},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
@@ -132,6 +133,7 @@ fun RegisterScreen(navController: NavController) {
                                 focusedIndicatorColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(20.dp),
+                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
                             trailingIcon = {
                                 Icon(
                                     painter = painterResource(id = R.drawable.question_icon),
@@ -148,7 +150,7 @@ fun RegisterScreen(navController: NavController) {
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp, color = Contraste2) },
+                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp, color = Contraste2)},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
@@ -172,20 +174,20 @@ fun RegisterScreen(navController: NavController) {
                             visualTransformation = if (!passwordVisibilityState) PasswordVisualTransformation()
                             else
                                 VisualTransformation.None,
-                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Contraste2) },
+                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Contraste2)},
                             trailingIcon = {
                                 IconButton(
                                     onClick = {
                                         passwordVisibilityState = !passwordVisibilityState
                                     }
                                 ) {
-                                    Icon(
-                                        imageVector = if (passwordVisibilityState)
-                                            Icons.Default.VisibilityOff
-                                        else
-                                            Icons.Default.Visibility,
-                                        contentDescription = null
-                                    )
+//                                    Icon(
+//                                        imageVector = if (passwordVisibilityState)
+//                                            Icons.Default.VisibilityOff
+//                                        else
+//                                            Icons.Default.Visibility,
+//                                        contentDescription = null
+//                                    )
                                 }
                             },
                             colors = TextFieldDefaults.textFieldColors(
@@ -205,7 +207,7 @@ fun RegisterScreen(navController: NavController) {
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp, color = Contraste2) },
+                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp, color = Contraste2)},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
