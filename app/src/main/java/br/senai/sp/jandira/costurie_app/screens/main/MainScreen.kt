@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.costurie_app.screens.main
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,13 +29,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
+import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
+import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
+import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
 @Composable
 fun MainScreen(navController: NavController) {
+    val context = LocalContext.current
+
     Costurie_appTheme {
 
         Surface (
@@ -119,32 +130,12 @@ fun MainScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(12.dp))
 
                     GradientButton(
-                        onClick = { navController.navigate("login") },
+                        onClick = { navController.navigate("login")},
                         text = stringResource(id = R.string.texto_botao_login).uppercase(),
                         color1 = Destaque1,
                         color2 = Destaque2
                     )
                 }
-            }
-
-            Row (
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalAlignment = Alignment.Bottom
-            ){
-                Image(
-                    painter = painterResource(id = R.drawable.forma_lateral_esquerda_main),
-                    contentDescription = "",
-                    modifier = Modifier.size(230.dp),
-                    alignment = Alignment.BottomStart
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.forma_lateral_direita_main),
-                    contentDescription = "",
-                    modifier = Modifier.size(230.dp),
-                    alignment = Alignment.BottomEnd
-                )
             }
         }
     }

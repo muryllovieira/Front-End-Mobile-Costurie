@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -91,12 +92,13 @@ fun PasswordScreen(navController: NavController) {
                     ) {
                         Spacer(modifier = Modifier.height(100.dp))
                         Button(
+                            modifier = Modifier.fillMaxWidth(),
                             onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent
                             )
                         ) {
-                            Column(Modifier.padding(end = 250.dp)) {
+                            Column(Modifier.padding(end = 300.dp)) {
                                 Image(
                                     painter = painterResource(id = R.drawable.arrow_back),
                                     contentDescription = "",
@@ -118,11 +120,6 @@ fun PasswordScreen(navController: NavController) {
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 20.sp
                             )
-//                            Image(
-//                                painter = painterResource(id = R.drawable.recuperar_senha),
-//                                contentDescription = "",
-//                                modifier = Modifier.width(178.dp).height(12.dp)
-//                            )
                             Image(
                                 painter = painterResource(id = R.drawable.costureira2),
                                 contentDescription = "",
@@ -141,7 +138,7 @@ fun PasswordScreen(navController: NavController) {
                             OutlinedTextField(
                                 value = textstate2,
                                 onValueChange = { textstate2 = it },
-                                label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp) },
+                                label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp)},
                                 colors = TextFieldDefaults.textFieldColors(
                                     unfocusedLabelColor = Color.Black,
                                     cursorColor = Color.Black,
@@ -151,7 +148,10 @@ fun PasswordScreen(navController: NavController) {
                                     unfocusedIndicatorColor = Color.Transparent,
                                     focusedIndicatorColor = Color.Transparent
                                 ),
-                                shape = RoundedCornerShape(20.dp)
+                                shape = RoundedCornerShape(20.dp),
+                                modifier = Modifier
+                                    .height(60.dp),
+                                textStyle = TextStyle.Default.copy(fontSize = 15.sp)
                             )
                             GradientButton(
                                 onClick = {  },
