@@ -4,7 +4,7 @@
     <string name="boas_vindas">Bem vindo(a)!</string>
     <string name="texto_boas_vindas">Olá, seja bem-vindo(a) ao Costuriê. É um prazer recebê-lo(a) aqui.</string>
     <string name="texto_botao_registrar">Registrar</string>
-    <string name="texto_botao_login">Login</string>
+    <string name="texto_botao_login">Entrar</string>
     <string name="texto_registrar_se">Registrar - se</string>
     <string name="nome_label">Digite um nome de usuário</string>
     <string name="email_label">E-mail</string>
