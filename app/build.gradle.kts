@@ -87,4 +87,19 @@ dependencies {
     //implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
 
     //implementation ("com.google.android.material:material:1.4.0")
+
+    //implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
+
+    //implementation ("com.google.android.material:material:1.4.0")
+
+//    implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
+//
+//    implementation ("com.google.android.material:material:1.4.0")
+
+    //dependencia do navigation
+    implementation("androidx.navigation:navigation-compose:2.6.0")
+
+    //animacao na navegacao
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.30.1")
+
 }

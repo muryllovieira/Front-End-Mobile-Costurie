@@ -29,8 +29,8 @@ fun WhiteButton (
     Button(
         onClick,
         modifier = Modifier
-            .height(45.dp)
-            .width(225.dp)
+            .height(40.dp)
+            .width(200.dp)
             .fillMaxWidth(),
         shape = ShapeButton.large,
         border = BorderStroke(
