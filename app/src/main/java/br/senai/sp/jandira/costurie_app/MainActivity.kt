@@ -28,11 +28,12 @@ class MainActivity : ComponentActivity() {
                     composable(route = "register") { RegisterScreen(navController = navController)}
                     composable(route = "login") { LoginScreen(navController = navController)}
                 }
-
             }
         }
     }
 }
+
+//teste
 
 
 
