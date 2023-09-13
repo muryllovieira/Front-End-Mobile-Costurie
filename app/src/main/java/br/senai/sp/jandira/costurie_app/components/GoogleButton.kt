@@ -29,7 +29,7 @@ import br.senai.sp.jandira.costurie_app.R
 fun GoogleButton(
     onClick: () -> Unit,
     text: String,
-    icon: ImageVector,
+    icon: String,
 ) {
         Button(
             onClick = onClick,
@@ -66,5 +66,5 @@ fun GoogleButton(
 @Preview(showBackground = true)
 @Composable
 fun GoogleButtonPreview() {
-    GoogleButton( onClick = {}, text = "", icon = )
+    GoogleButton( onClick = {}, text = "", icon = "")
 }
