@@ -20,11 +20,14 @@
             android:label="@string/title_activity_validation_code"
             android:theme="@style/Theme.Costurie_app" />
         <activity
-            android:name=".PasswordActivity"
+            android:name=".MainActivity"
             android:exported="false"
             android:label="@string/title_activity_password"
             android:theme="@style/Theme.Costurie_app" />
         <activity
+
+            android:name=".PasswordActivity"
+
             android:name=".RegisterActivity"
             android:name=".LoginActivity"
             android:exported="false"
@@ -37,6 +40,7 @@
             android:theme="@style/Theme.Costurie_app"/>
         <activity
             android:name=".MainActivity"
+
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Costurie_app">

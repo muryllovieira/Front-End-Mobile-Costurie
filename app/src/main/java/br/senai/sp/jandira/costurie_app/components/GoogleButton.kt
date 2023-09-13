@@ -63,12 +63,14 @@ fun GoogleButton(
                     .fillMaxWidth(),
             ) {
 
+
                 Image(
                     painter = painterResource(id = R.drawable.ic_google),
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.size(24.dp)
                 )
+
 
 
 //                Icon(
