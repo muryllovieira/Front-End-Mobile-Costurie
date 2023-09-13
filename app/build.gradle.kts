@@ -76,4 +76,12 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation ("io.coil-kt:coil-compose:2.3.0")
+
+    //Icons
+    //implementation ("com.google.accompanist:accompanist-icons-extended:0.17.0")
+    implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
+
+    implementation ("com.google.android.material:material:1.4.0")
+
+
 }

@@ -41,7 +41,7 @@ fun Line() {
                 modifier = Modifier
                     .height(1.dp)
                     .width(100.dp)
-                    .background(Color(128, 128, 128)),
+                    .background(Color(65, 57,70)),
             ){}
 
             Text(
@@ -57,7 +57,7 @@ fun Line() {
                 modifier = Modifier
                     .height(1.dp)
                     .width(100.dp)
-                    .background(Color(128, 128, 128)),
+                    .background(Color(65, 57,70)),
             ){}
         }
     }
