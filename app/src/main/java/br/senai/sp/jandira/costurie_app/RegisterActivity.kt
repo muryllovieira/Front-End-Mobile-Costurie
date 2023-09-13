@@ -19,8 +19,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -40,6 +45,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +56,7 @@ import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
+import br.senai.sp.jandira.costurie_app.ui.theme.Contraste2
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -72,10 +80,25 @@ class RegisterActivity : ComponentActivity() {
 fun RegisterScreen() {
     Costurie_appTheme {
 
-        var textstate  by remember  { mutableStateOf("") }
-        var textstate2 by remember { mutableStateOf("") }
-        var textstate3 by remember { mutableStateOf("") }
-        var textstate4 by remember { mutableStateOf("") }
+        var nameState by remember  {
+            mutableStateOf("")
+        }
+
+        var emailState by remember {
+            mutableStateOf("")
+        }
+
+        var passwordState by remember {
+            mutableStateOf("")
+        }
+
+        var repeatPasswordState by remember {
+            mutableStateOf("")
+        }
+
+        var passwordVisibilityState by remember {
+            mutableStateOf(false)
+        }
 
         Surface (
             modifier = Modifier
@@ -118,18 +141,40 @@ fun RegisterScreen() {
                         )
 
                         OutlinedTextField(
-                            value = textstate2,
-                            onValueChange = { textstate = it },
+                            value = nameState,
+                            onValueChange = { nameState = it },
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .width(280.dp)
+                                .height(62.dp),
+                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp, color = Contraste2)},
+                            colors = TextFieldDefaults.textFieldColors(
+                                unfocusedLabelColor = Color.Black,
+                                cursorColor = Color.Black,
+                                focusedLabelColor = Color.Black,
+                                textColor = Color.Black,
+                                containerColor = Color.White,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent
+                            ),
+                            shape = RoundedCornerShape(20.dp),
+                            trailingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.question_icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(65, 57, 70, 255)
+                                )
+                            }
+                        )
+
+                        OutlinedTextField(
+                            value = emailState,
+                            onValueChange = { emailState = it },
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp, color = Color(
-                                65,
-                                57,
-                                70,
-                                204
-                            )
-                            )},
+                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp, color = Contraste2)},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
@@ -143,18 +188,32 @@ fun RegisterScreen() {
                         )
 
                         OutlinedTextField(
-                            value = textstate2,
-                            onValueChange = { textstate2 = it },
+                            value = passwordState,
+                            onValueChange = { passwordState = it },
                             modifier = Modifier
                                 .padding(top = 20.dp)
+                                .width(280.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp, color = Color(
-                                65,
-                                57,
-                                70,
-                                204
-                            )
-                            )},
+                            shape = RoundedCornerShape(20.dp),
+                            visualTransformation = if (!passwordVisibilityState) PasswordVisualTransformation()
+                            else
+                                VisualTransformation.None,
+                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Contraste2)},
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = {
+                                        passwordVisibilityState = !passwordVisibilityState
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = if (passwordVisibilityState)
+                                            Icons.Default.VisibilityOff
+                                        else
+                                            Icons.Default.Visibility,
+                                        contentDescription = null
+                                    )
+                                }
+                            },
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
@@ -164,22 +223,15 @@ fun RegisterScreen() {
                                 unfocusedIndicatorColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent
                             ),
-                            shape = RoundedCornerShape(20.dp)
                         )
 
                         OutlinedTextField(
-                            value = textstate2,
-                            onValueChange = { textstate3 = it },
+                            value = repeatPasswordState,
+                            onValueChange = { repeatPasswordState = it },
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .height(62.dp),
-                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Color(
-                                65,
-                                57,
-                                70,
-                                204
-                            )
-                            )},
+                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp, color = Contraste2)},
                             colors = TextFieldDefaults.textFieldColors(
                                 unfocusedLabelColor = Color.Black,
                                 cursorColor = Color.Black,
@@ -191,35 +243,6 @@ fun RegisterScreen() {
                             ),
                             shape = RoundedCornerShape(20.dp)
                         )
-
-                        OutlinedTextField(
-                            value = textstate2,
-                            onValueChange = { textstate4 = it },
-                            modifier = Modifier
-                                .padding(top = 20.dp)
-                                .height(62.dp),
-                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp, color = Color(
-                                65,
-                                57,
-                                70,
-                                204
-                            )
-                            )},
-                            colors = TextFieldDefaults.textFieldColors(
-                                unfocusedLabelColor = Color.Black,
-                                cursorColor = Color.Black,
-                                focusedLabelColor = Color.Black,
-                                textColor = Color.Black,
-                                containerColor = Color.White,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent
-                            ),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-
-                        Line()
-
-                        WhiteButton(onClick = {  }, text = stringResource(id = R.string.texto_botao_login).uppercase())
 
                         GradientButton(
                             onClick = {  },
@@ -227,6 +250,10 @@ fun RegisterScreen() {
                             color1 = Destaque1,
                             color2 = Destaque2
                         )
+
+                        Line()
+
+                        WhiteButton(onClick = {  }, text = stringResource(id = R.string.texto_botao_login).uppercase())
                     }
                 }
             }
