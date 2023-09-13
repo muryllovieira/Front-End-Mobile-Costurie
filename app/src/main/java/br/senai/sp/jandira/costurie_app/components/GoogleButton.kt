@@ -46,12 +46,12 @@ fun GoogleButton(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null, // Defina uma descrição apropriada
-                    modifier = Modifier.size(24.dp), // Ajuste o tamanho do ícone conforme necessário
-                    tint = Color.White // Defina a cor do ícone conforme necessário
-                )
+//                Icon(
+//                    imageVector = icon,
+//                    contentDescription = null, // Defina uma descrição apropriada
+//                    modifier = Modifier.size(24.dp), // Ajuste o tamanho do ícone conforme necessário
+//                    tint = Color.White // Defina a cor do ícone conforme necessário
+//                )
                 Spacer(modifier = Modifier.width(8.dp)) // Espaçamento entre o ícone e o texto
                 Text(
                     text = text,
