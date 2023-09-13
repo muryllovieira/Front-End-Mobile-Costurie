@@ -84,6 +84,11 @@ dependencies {
 
     //Icons
     //implementation ("com.google.accompanist:accompanist-icons-extended:0.17.0")
+
+    //implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
+
+    //implementation ("com.google.android.material:material:1.4.0")
+
 //    implementation ("com.google.accompanist:accompanist-icons-extended:0.18.0")
 //
 //    implementation ("com.google.android.material:material:1.4.0")
@@ -93,4 +98,5 @@ dependencies {
 
     //animacao na navegacao
     implementation("com.google.accompanist:accompanist-navigation-animation:0.30.1")
+
 }
