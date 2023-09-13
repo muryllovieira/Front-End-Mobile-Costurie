@@ -62,12 +62,22 @@ fun GoogleButton(
                 modifier = Modifier
                     .fillMaxWidth(),
             ) {
+
                 Image(
                     painter = painterResource(id = R.drawable.ic_google),
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.size(24.dp)
                 )
+
+
+//                Icon(
+//                    imageVector = icon,
+//                    contentDescription = null, // Defina uma descrição apropriada
+//                    modifier = Modifier.size(24.dp), // Ajuste o tamanho do ícone conforme necessário
+//                    tint = Color.White // Defina a cor do ícone conforme necessário
+//                )
+                Spacer(modifier = Modifier.width(8.dp)) // Espaçamento entre o ícone e o texto
 
                 Text(
                     text = text,

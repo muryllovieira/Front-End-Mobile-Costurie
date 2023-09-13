@@ -1,53 +1,39 @@
-package br.senai.sp.jandira.costurie_app
+package br.senai.sp.jandira.costurie_app.screens.main
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
-import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
-
-import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
-import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
-
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.navigation.animation.composable
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
-class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalAnimationApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            Costurie_appTheme {
 
-                MainScreen()
-            }
-        }
-    }
-}
-
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun MainScreen() {
-
-    val context = LocalContext.current
-
+fun MainScreen(navController: NavController) {
     Costurie_appTheme {
 
         Surface (
@@ -124,7 +110,7 @@ fun MainScreen() {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     GradientButton(
-                        onClick = {  },
+                        onClick = { navController.navigate("register") },
                         text = stringResource(id = R.string.texto_botao_registrar).uppercase(),
                         color1 = Destaque1,
                         color2 = Destaque2
@@ -133,42 +119,33 @@ fun MainScreen() {
                     Spacer(modifier = Modifier.height(12.dp))
 
                     GradientButton(
-                        onClick = {
-                            var openLogin = Intent(context, LoginActivity::class.java)
-
-                            context.startActivity(openLogin)
-                        },
+                        onClick = { navController.navigate("login") },
                         text = stringResource(id = R.string.texto_botao_login).uppercase(),
                         color1 = Destaque1,
                         color2 = Destaque2
                     )
-
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    val navController = rememberAnimatedNavController()
-                    AnimatedNavHost(
-                        navController = navController,
-                        startDestination = "main") {
-                        composable(route = "main") { br.senai.sp.jandira.costurie_app.screens.main.MainScreen(
-                            navController = navController
-                        )}
-                        composable(route = "login") { br.senai.sp.jandira.costurie_app.screens.login.LoginScreen(
-                            navController = navController
-                        )}
-                        composable(route = "password") { br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen(
-                            navController = navController
-                        )}
-                        composable(route = "register") { br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen(
-                            navController = navController 
-                        )}
-                        composable(route = "validation") { br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen(
-                            navController = navController
-                        )}
-                    }
-
                 }
+            }
+
+            Row (
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.Bottom
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.forma_lateral_esquerda_main),
+                    contentDescription = "",
+                    modifier = Modifier.size(230.dp),
+                    alignment = Alignment.BottomStart
+                )
+
+                Image(
+                    painter = painterResource(id = R.drawable.forma_lateral_direita_main),
+                    contentDescription = "",
+                    modifier = Modifier.size(230.dp),
+                    alignment = Alignment.BottomEnd
+                )
             }
         }
     }
 }
-
-
