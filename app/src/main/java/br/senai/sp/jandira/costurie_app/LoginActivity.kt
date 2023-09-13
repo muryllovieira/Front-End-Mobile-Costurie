@@ -24,6 +24,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +43,7 @@ import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.ui.theme.Contraste2
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -57,6 +62,15 @@ class LoginActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun LoginScreen() {
+
+    var emailState by remember {
+        mutableStateOf("")
+    }
+
+    var passwordState by remember {
+        mutableStateOf("")
+    }
+
     Costurie_appTheme {
         Surface(
             modifier = Modifier
@@ -108,36 +122,53 @@ fun LoginScreen() {
                             )
                             //Spacer(modifier = Modifier.height(5.dp))
                             OutlinedTextField(
-                                value = "",
-                                onValueChange = {},
-                                shape = RoundedCornerShape(15.dp),
+                                value = emailState,
+                                onValueChange = { emailState = it},
+                                shape = RoundedCornerShape(20.dp),
                                 modifier = Modifier
                                     .height(60.dp),
                                 label = {
-                                    Text(text = "E-mail", color = Color.Gray, fontSize = 16.sp, textAlign = TextAlign.Center)
+                                    Text(
+                                        stringResource(id = R.string.email_label),
+                                        fontSize = 16.sp,
+                                        textAlign = TextAlign.Center,
+                                        color = Contraste2)
                                 },
                                 colors = TextFieldDefaults.textFieldColors(
-                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedLabelColor = Color.Black,
+                                    cursorColor = Color.Black,
+                                    focusedLabelColor = Color.Black,
+                                    textColor = Color.Black,
+                                    containerColor = Color.White,
                                     unfocusedIndicatorColor = Color.Transparent,
-                                    containerColor = Color.White
-                                )
+                                    focusedIndicatorColor = Color.Transparent
+                                ),
+                                textStyle = TextStyle.Default.copy(fontSize = 15.sp)
 
                             )
                             Spacer(modifier = Modifier.height(15.dp))
                             OutlinedTextField(
-                                value = "",
-                                onValueChange = {},
-                                shape = RoundedCornerShape(15.dp),
+                                value = passwordState,
+                                onValueChange = { passwordState = it},
+                                shape = RoundedCornerShape(20.dp),
                                 modifier = Modifier
                                     .height(60.dp),
                                 label = {
-                                    Text(text = "Senha", color = Color.Gray, fontSize = 16.sp, textAlign = TextAlign.Center)
+                                    Text(stringResource(id = R.string.senha_label),
+                                        fontSize = 16.sp,
+                                        textAlign = TextAlign.Center,
+                                        color = Contraste2)
                                 },
                                 colors = TextFieldDefaults.textFieldColors(
-                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedLabelColor = Color.Black,
+                                    cursorColor = Color.Black,
+                                    focusedLabelColor = Color.Black,
+                                    textColor = Color.Black,
+                                    containerColor = Color.White,
                                     unfocusedIndicatorColor = Color.Transparent,
-                                    containerColor = Color.White
-                                )
+                                    focusedIndicatorColor = Color.Transparent
+                                ),
+                                textStyle = TextStyle.Default.copy(fontSize = 15.sp)
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                             Column(
