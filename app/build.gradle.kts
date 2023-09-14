@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "br.senai.sp.jandira.costurie_app"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "br.senai.sp.jandira.costurie_app"

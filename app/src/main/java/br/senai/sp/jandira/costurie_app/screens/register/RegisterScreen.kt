@@ -38,10 +38,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
@@ -52,7 +54,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen() {
     Costurie_appTheme {
 
         var nameState by remember  {
@@ -181,13 +183,13 @@ fun RegisterScreen(navController: NavController) {
                                         passwordVisibilityState = !passwordVisibilityState
                                     }
                                 ) {
-//                                    Icon(
-//                                        imageVector = if (passwordVisibilityState)
-//                                            Icons.Default.VisibilityOff
-//                                        else
-//                                            Icons.Default.Visibility,
-//                                        contentDescription = null
-//                                    )
+                                    Icon(
+                                        imageVector = if (passwordVisibilityState)
+                                            Icons.Default.VisibilityOff
+                                        else
+                                            Icons.Default.Visibility,
+                                        contentDescription = null
+                                    )
                                 }
                             },
                             colors = TextFieldDefaults.textFieldColors(
@@ -229,10 +231,18 @@ fun RegisterScreen(navController: NavController) {
 
                         Line()
 
+                        GoogleButton(onClick = { /*TODO*/ }, text = "")
+
                         WhiteButton(onClick = {  }, text = stringResource(id = R.string.texto_botao_login).uppercase())
                     }
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RegisterPreview() {
+    RegisterScreen()
 }
