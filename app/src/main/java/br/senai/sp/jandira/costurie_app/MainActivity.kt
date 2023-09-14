@@ -25,15 +25,10 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = "main") {
                     composable(route = "main") { MainScreen(navController = navController)}
-                    composable(route = "register") { RegisterScreen(navController = navController)}
+                    //composable(route = "register") { RegisterScreen(navController = navController)}
                     composable(route = "login") { LoginScreen(navController = navController)}
                 }
             }
         }
     }
 }
-
-//teste
-
-
-

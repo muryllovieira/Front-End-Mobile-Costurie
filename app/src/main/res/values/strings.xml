@@ -16,5 +16,5 @@
     <string name="texto_botao_enviar">Enviar</string>
     <string name="title_activity_validation_code">ValidationCodeActivity</string>
     <string name="validacao_de_codigo">Validação de código</string>
-    <string name="ata">Validação de código</string>
+    <string name="texto_botao_google_registre_se">Registre-se com o Google</string>
 </resources>
