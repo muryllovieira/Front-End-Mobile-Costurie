@@ -1,12 +1,12 @@
 package br.senai.sp.jandira.costurie_app
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
 import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
+import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -25,9 +25,11 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = "main") {
                     composable(route = "main") { MainScreen(navController = navController)}
-                    //composable(route = "register") { RegisterScreen(navController = navController)}
+                    composable(route = "register") { RegisterScreen(navController = navController)}
                     composable(route = "login") { LoginScreen(navController = navController)}
+                    composable(route = "password") { PasswordScreen(navController = navController) }
                 }
             }
         }
-    }}
+    }
+}

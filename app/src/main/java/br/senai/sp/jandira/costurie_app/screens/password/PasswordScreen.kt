@@ -33,11 +33,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.Principal2
@@ -90,7 +92,7 @@ fun PasswordScreen(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(modifier = Modifier.height(100.dp))
+                        Spacer(modifier = Modifier.height(85.dp))
                         Button(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = { /*TODO*/ },
@@ -131,7 +133,6 @@ fun PasswordScreen(navController: NavController) {
                                 modifier = Modifier
                                     .width(247.dp),
                                 style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium,
                                 textAlign = TextAlign.Center,
                                 fontSize = 16.sp
                             )
@@ -163,8 +164,6 @@ fun PasswordScreen(navController: NavController) {
                     }
                 }
             }
-
         }
     }
-
 }
