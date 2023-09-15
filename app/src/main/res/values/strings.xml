@@ -17,4 +17,12 @@
     <string name="title_activity_validation_code">ValidationCodeActivity</string>
     <string name="validacao_de_codigo">Validação de código</string>
     <string name="texto_botao_google_registre_se">Registre-se com o Google</string>
+    <string name="codigo_de_verificacao">Insira o código enviado ao seu e-mail.</string>
+    <string name="texto_botao_confirmar">Confirmar</string>
+    <string name="troca_de_senha">troca de senha</string>
+    <string name="requerimentos_senha">*É preciso ter ao menos 8 caracteres</string>
+    <string name="requerimentos_senha2">*É preciso ter ao menos um caractere especial Ex: (*@-)</string>
+    <string name="requerimentos_senha3">*É preciso ter ao menos um número</string>
+    <string name="requerimentos_senha4">*É preciso ter ao menos um caractére maiúsculo</string>
+    <string name="requerimentos_senha5">*É preciso ter ao menos um caractére minúsculo</string>
 </resources>

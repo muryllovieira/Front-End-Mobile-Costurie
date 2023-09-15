@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,23 +18,37 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.components.OtpTextField
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
+//navController: NavController
 @Composable
-fun ValidationCodeScreen(navController: NavController) {
+fun ValidationCodeScreen() {
     Costurie_appTheme {
+        var otpValue by remember {
+            mutableStateOf("")
+        }
+
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = Color.White
@@ -71,7 +86,7 @@ fun ValidationCodeScreen(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(modifier = Modifier.height(100.dp))
+                        Spacer(modifier = Modifier.height(140.dp))
                         Button(
                             onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(
@@ -101,15 +116,42 @@ fun ValidationCodeScreen(navController: NavController) {
                                 modifier = Modifier.padding(top = 10.dp)
                             )
                         }
+                        Spacer(modifier = Modifier.height(125.dp))
                         Column() {
                             Text(
                                 color = Contraste,
-                                text = ""
+                                text = stringResource(id = R.string.codigo_de_verificacao),
+                                modifier = Modifier
+                                    .width(247.dp),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                textAlign = TextAlign.Center,
+                                fontSize = 16.sp
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            OtpTextField(
+                                otpText = otpValue,
+                                onOtpTextChange = { value, otpInputFilled ->
+                                    otpValue = value
+                                }
                             )
                         }
+                        Spacer(modifier = Modifier.height(60.dp))
+                        GradientButton(
+                            onClick = {  },
+                            text = stringResource(id = R.string.texto_botao_confirmar).uppercase(),
+                            color1 = Destaque1,
+                            color2 = Destaque2
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun ValidationCodeScreenPreview() {
+    ValidationCodeScreen()
 }
