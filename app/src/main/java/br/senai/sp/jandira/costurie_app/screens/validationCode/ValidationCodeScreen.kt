@@ -31,7 +31,6 @@ import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ValidationCodeScreen(navController: NavController) {
     Costurie_appTheme {

@@ -29,7 +29,7 @@ fun CaixaDeTexto(
             Text(text = label)
         },
 
-    )
+        )
 }
 
 @Preview(showSystemUi = true, showBackground = true)

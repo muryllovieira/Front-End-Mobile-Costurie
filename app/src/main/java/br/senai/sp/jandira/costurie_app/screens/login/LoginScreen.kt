@@ -8,9 +8,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +33,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -51,7 +60,11 @@ fun LoginScreen(navController: NavController) {
     var passwordState by remember {
         mutableStateOf("")
     }
- //ndn
+
+    var passwordVisibilityState by remember {
+        mutableStateOf(false)
+    }
+
     Costurie_appTheme {
         Surface(
             modifier = Modifier
@@ -99,7 +112,6 @@ fun LoginScreen(navController: NavController) {
                             Text(
                                 text = stringResource(id = R.string.titulo_app),
                                 color = Color.White
-                                //fontFamily = Fo
                             )
                             //Spacer(modifier = Modifier.height(5.dp))
                             OutlinedTextField(
@@ -128,32 +140,46 @@ fun LoginScreen(navController: NavController) {
                                 textStyle = TextStyle.Default.copy(fontSize = 15.sp)
 
                             )
+
                             Spacer(modifier = Modifier.height(15.dp))
+
                             OutlinedTextField(
                                 value = passwordState,
-                                onValueChange = { passwordState = it},
-                                shape = RoundedCornerShape(20.dp),
+                                onValueChange = { passwordState = it },
                                 modifier = Modifier
-                                    .height(60.dp),
-                                label = {
-                                    Text(stringResource(id = R.string.senha_label),
-                                        fontSize = 16.sp,
-                                        textAlign = TextAlign.Center,
-                                        color = Contraste2
-                                    )
+                                    .padding(top = 20.dp)
+                                    .width(280.dp)
+                                    .height(62.dp),
+                                shape = RoundedCornerShape(20.dp),
+                                visualTransformation = if (!passwordVisibilityState) PasswordVisualTransformation()
+                                else
+                                    VisualTransformation.None,
+                                label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Contraste2)},
+                                textStyle = TextStyle.Default.copy(fontSize = 15.sp),
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            passwordVisibilityState = !passwordVisibilityState
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = if (passwordVisibilityState)
+                                                Icons.Default.VisibilityOff
+                                            else
+                                                Icons.Default.Visibility,
+                                            contentDescription = null
+                                        )
+                                    }
                                 },
                                 colors = TextFieldDefaults.textFieldColors(
-                                    unfocusedLabelColor = Color.Black,
-                                    cursorColor = Color.Black,
-                                    focusedLabelColor = Color.Black,
-                                    textColor = Color.Black,
                                     containerColor = Color.White,
                                     unfocusedIndicatorColor = Color.Transparent,
                                     focusedIndicatorColor = Color.Transparent
                                 ),
-                                textStyle = TextStyle.Default.copy(fontSize = 15.sp)
                             )
+
                             Spacer(modifier = Modifier.height(20.dp))
+
                             Column(
                                 modifier = Modifier.width(300.dp),
                                 horizontalAlignment = Alignment.End,
@@ -181,7 +207,6 @@ fun LoginScreen(navController: NavController) {
                             Spacer(modifier = Modifier.height(15.dp))
                             WhiteButton(onClick = { /*TODO*/ }, text = "REGISTRAR-SE")
                         }
-
                     }
                 }
             }

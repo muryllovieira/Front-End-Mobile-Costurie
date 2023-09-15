@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,14 +27,13 @@ fun Line() {
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            //.height(100.dp),
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
+        Spacer(modifier = Modifier.height(5.dp))
 
+        Row(
             modifier = Modifier
                 . fillMaxWidth()
-                .height(50.dp),
+                .height(30.dp),
             horizontalArrangement = Arrangement.spacedBy(18.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -50,8 +50,7 @@ fun Line() {
                 fontSize = 13.sp,
                 fontWeight = FontWeight(500),
                 color = Color.Black,
-
-                )
+            )
 
             Box (
                 modifier = Modifier

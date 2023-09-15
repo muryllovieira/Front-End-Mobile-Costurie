@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +55,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController: NavController) {
     Costurie_appTheme {
 
         var nameState by remember  {
@@ -114,7 +115,8 @@ fun RegisterScreen() {
                             text = stringResource(id = R.string.texto_registrar_se).uppercase(),
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 24.sp
+                            fontSize = 24.sp,
+                            modifier = Modifier.height(30.dp)
                         )
 
                         OutlinedTextField(
@@ -126,10 +128,6 @@ fun RegisterScreen() {
                                 .height(62.dp),
                             label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp, color = Contraste2)},
                             colors = TextFieldDefaults.textFieldColors(
-                                unfocusedLabelColor = Color.Black,
-                                cursorColor = Color.Black,
-                                focusedLabelColor = Color.Black,
-                                textColor = Color.Black,
                                 containerColor = Color.White,
                                 unfocusedIndicatorColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent
@@ -154,15 +152,12 @@ fun RegisterScreen() {
                                 .height(62.dp),
                             label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp, color = Contraste2)},
                             colors = TextFieldDefaults.textFieldColors(
-                                unfocusedLabelColor = Color.Black,
-                                cursorColor = Color.Black,
-                                focusedLabelColor = Color.Black,
-                                textColor = Color.Black,
                                 containerColor = Color.White,
                                 unfocusedIndicatorColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent
                             ),
-                            shape = RoundedCornerShape(20.dp)
+                            shape = RoundedCornerShape(20.dp),
+                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
                         )
 
                         OutlinedTextField(
@@ -177,6 +172,7 @@ fun RegisterScreen() {
                             else
                                 VisualTransformation.None,
                             label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Contraste2)},
+                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
                             trailingIcon = {
                                 IconButton(
                                     onClick = {
@@ -193,10 +189,6 @@ fun RegisterScreen() {
                                 }
                             },
                             colors = TextFieldDefaults.textFieldColors(
-                                unfocusedLabelColor = Color.Black,
-                                cursorColor = Color.Black,
-                                focusedLabelColor = Color.Black,
-                                textColor = Color.Black,
                                 containerColor = Color.White,
                                 unfocusedIndicatorColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent
@@ -210,17 +202,16 @@ fun RegisterScreen() {
                                 .padding(top = 20.dp)
                                 .height(62.dp),
                             label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp, color = Contraste2)},
+                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
                             colors = TextFieldDefaults.textFieldColors(
-                                unfocusedLabelColor = Color.Black,
-                                cursorColor = Color.Black,
-                                focusedLabelColor = Color.Black,
-                                textColor = Color.Black,
                                 containerColor = Color.White,
                                 unfocusedIndicatorColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent
                             ),
                             shape = RoundedCornerShape(20.dp)
                         )
+
+                        Spacer(modifier = Modifier.height(5.dp))
 
                         GradientButton(
                             onClick = {  },
@@ -231,7 +222,9 @@ fun RegisterScreen() {
 
                         Line()
 
-                        GoogleButton(onClick = { /*TODO*/ }, text = "")
+                        GoogleButton(onClick = { }, text = stringResource(id = R.string.texto_botao_google_registre_se))
+
+                        Spacer(modifier = Modifier.height(5.dp))
 
                         WhiteButton(onClick = {  }, text = stringResource(id = R.string.texto_botao_login).uppercase())
                     }
@@ -239,10 +232,4 @@ fun RegisterScreen() {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterPreview() {
-    RegisterScreen()
 }
