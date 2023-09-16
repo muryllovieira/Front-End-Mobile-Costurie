@@ -53,8 +53,8 @@ import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.repository.CadastroRepository
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
-import br.senai.sp.jandira.costurie_app.service.UserRepository
 import br.senai.sp.jandira.costurie_app.service.UserService
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
@@ -90,12 +90,6 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
         var repeatPasswordState by remember {
             mutableStateOf("")
         }
-
-        var passwordVisibilityState by remember {
-            mutableStateOf(false)
-        }
-
-
 
         var validateName by rememberSaveable {
             mutableStateOf(true)
@@ -149,15 +143,13 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
             confirmPassword: String
         ) {
             if(validateData(name, email, password, confirmPassword)){
-                val userRepository = UserRepository()
+                val userRepository = CadastroRepository()
                 lifecycleScope.launch {
                     val response = userRepository.registerUser(name, email, password)
 
                     if (response.isSuccessful) {
-                        // Registro bem-sucedido, faça algo com a resposta, se necessário
                         Log.d(MainActivity::class.java.simpleName, "Registro bem-sucedido")
                     } else {
-                        // Registro falhou, lide com os erros aqui
                         val errorBody = response.errorBody()?.string()
                         Log.e(MainActivity::class.java.simpleName, "Erro durante o registro: $errorBody")
                         Toast.makeText(context, "Erro durante o registro", Toast.LENGTH_SHORT).show()
@@ -223,7 +215,8 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                             ),
                             keyboardActions = KeyboardActions(
                                 onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                            )
+                            ),
+                            borderColor = Color.Transparent
                         )
 
                         CustomOutlinedTextField(
@@ -239,7 +232,8 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                             ),
                             keyboardActions = KeyboardActions(
                                 onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                            )
+                            ),
+                            borderColor = Color.Transparent
                         )
 
                         CustomOutlinedTextField(
@@ -258,7 +252,8 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                             ),
                             keyboardActions = KeyboardActions(
                                 onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                            )
+                            ),
+                            borderColor = Color.Transparent
                         )
 
                         CustomOutlinedTextField(
@@ -277,7 +272,8 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = { focusManager.clearFocus() }
-                            )
+                            ),
+                            borderColor = Color.Transparent
                         )
 
                         Spacer(modifier = Modifier.height(5.dp))
@@ -293,7 +289,11 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
 
                         GoogleButton(onClick = {
                             register(nameState, emailState, passwordState, repeatPasswordState)
-                        }, text = stringResource(id = R.string.texto_botao_google_registre_se))
+
+                            navController.navigate("login")
+
+                        },
+                            text = stringResource(id = R.string.texto_botao_google_registre_se))
 
                         Spacer(modifier = Modifier.height(5.dp))
 
@@ -306,34 +306,3 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
         }
     }
 }
-//INSERIR USUARIO
-//fun onRegisterClick() {
-//    createUser(nameState, emailState, passwordState, apiService, lifecycleScope)
-//}
-//fun createUser(
-//    nome_de_usuario: String,
-//    email: String,
-//    senha: String,
-//    apiService: UserService,
-//    lifecycleScope: LifecycleCoroutineScope
-//) {
-//    Log.d("createUser", "Iniciando criação do usuário")
-//    lifecycleScope.launch {
-//        val body = JsonObject().apply {
-//            addProperty("nome_de_usuario", nome_de_usuario)
-//            addProperty("email", email)
-//            addProperty("senha", senha)
-//        }
-//
-//        Log.d("createUser", "Dados enviados: $body")
-//
-//        val result = apiService.createUser(body)
-//
-//        if (result.isSuccessful) {
-//            val msg = result.body()?.get("${result.message()}")
-//            Log.i("mumu", "$msg")
-//        } else {
-//            Log.i("mumu", result.message())
-//        }
-//    }
-//}

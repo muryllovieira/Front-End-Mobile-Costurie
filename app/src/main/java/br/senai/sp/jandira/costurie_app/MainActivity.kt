@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                 {
                     composable(route = "main") { MainScreen(navController = navController)}
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope)}
-                    composable(route = "login") { LoginScreen(navController = navController)}
+                    composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope)}
                     composable(route = "password") { PasswordScreen(navController = navController)}
                 }
             }
