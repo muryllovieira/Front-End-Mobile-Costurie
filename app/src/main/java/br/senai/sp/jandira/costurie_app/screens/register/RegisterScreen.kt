@@ -1,5 +1,8 @@
 package br.senai.sp.jandira.costurie_app.screens.register
 
+import android.util.Log
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,46 +12,46 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.PermIdentity
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField
 import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
-import br.senai.sp.jandira.costurie_app.ui.theme.Contraste2
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -57,6 +60,10 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 @Composable
 fun RegisterScreen(navController: NavController) {
     Costurie_appTheme {
+
+        val context = LocalContext.current
+        val focusManager = LocalFocusManager.current
+        val scrollState = rememberScrollState()
 
         var nameState by remember  {
             mutableStateOf("")
@@ -76,6 +83,66 @@ fun RegisterScreen(navController: NavController) {
 
         var passwordVisibilityState by remember {
             mutableStateOf(false)
+        }
+
+
+
+        var validateName by rememberSaveable {
+            mutableStateOf(true)
+        }
+
+        var validateEmail by rememberSaveable {
+            mutableStateOf(true)
+        }
+
+        var validatePassword by rememberSaveable {
+            mutableStateOf(true)
+        }
+
+        var validateConfirmPassword by rememberSaveable {
+            mutableStateOf(true)
+        }
+
+        var validateArePasswordEqual by rememberSaveable {
+            mutableStateOf(true)
+        }
+
+        var isPasswordVisible by rememberSaveable {
+            mutableStateOf(false)
+        }
+
+        var isConfirmPasswordVisible by rememberSaveable {
+            mutableStateOf(false)
+        }
+
+        val validateNameError = "Nome não pode ficar em branco"
+        val validateEmailError = "O formato do e-mail não é válido"
+        val validatePasswordError = "Deve misturar letras maiúsculas e minúsculas, pelo menos um número, caracter especial e mínimo de 8 caracteres"
+        val validateEqualPasswordError = "As senhas devem ser iguais"
+
+        fun validateData(name: String, email: String, password: String, confirmPassword: String): Boolean {
+            val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}\$".toRegex()
+
+            validateName = name.isNotBlank()
+            validateEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            validatePassword = passwordRegex.matches(password)
+            validateConfirmPassword = passwordRegex.matches(confirmPassword)
+            validateArePasswordEqual = password == confirmPassword
+
+            return validateName && validateEmail && validatePassword && validateConfirmPassword && validateArePasswordEqual
+        }
+
+        fun register (
+            name: String,
+            email: String,
+            password: String,
+            confirmPassword: String
+        ) {
+            if(validateData(name, email, password, confirmPassword)){
+                Log.d(MainActivity::class.java.simpleName, "Name: $name, Email: $email, Password: $password")
+            } else {
+                Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
+            }
         }
 
         Surface (
@@ -106,7 +173,8 @@ fun RegisterScreen(navController: NavController) {
                     Column (
                         modifier = Modifier
                             .width(320.dp)
-                            .height(570.dp),
+                            .height(570.dp)
+                            .verticalScroll(scrollState),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ){
@@ -119,102 +187,80 @@ fun RegisterScreen(navController: NavController) {
                             modifier = Modifier.height(30.dp)
                         )
 
-                        OutlinedTextField(
+                        CustomOutlinedTextField(
                             value = nameState,
                             onValueChange = { nameState = it },
-                            modifier = Modifier
-                                .padding(top = 20.dp)
-                                .width(280.dp)
-                                .height(62.dp),
-                            label = { Text(stringResource(id = R.string.nome_label), fontSize = 15.sp, color = Contraste2)},
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.White,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent
+                            label = "Digite um nome de usuário",
+                            showError = !validateName,
+                            errorMessage = validateNameError,
+                            leadingIconImageVector = Icons.Default.PermIdentity,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
                             ),
-                            shape = RoundedCornerShape(20.dp),
-                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
-                            trailingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.question_icon),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = Color(65, 57, 70, 255)
-                                )
-                            }
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                            )
                         )
 
-                        OutlinedTextField(
+                        CustomOutlinedTextField(
                             value = emailState,
                             onValueChange = { emailState = it },
-                            modifier = Modifier
-                                .padding(top = 20.dp)
-                                .height(62.dp),
-                            label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp, color = Contraste2)},
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.White,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent
+                            label = "E-mail",
+                            showError = !validateEmail,
+                            errorMessage = validateEmailError,
+                            leadingIconImageVector = Icons.Default.AlternateEmail,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Email,
+                                imeAction = ImeAction.Next
                             ),
-                            shape = RoundedCornerShape(20.dp),
-                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                            )
                         )
 
-                        OutlinedTextField(
+                        CustomOutlinedTextField(
                             value = passwordState,
                             onValueChange = { passwordState = it },
-                            modifier = Modifier
-                                .padding(top = 20.dp)
-                                .width(280.dp)
-                                .height(62.dp),
-                            shape = RoundedCornerShape(20.dp),
-                            visualTransformation = if (!passwordVisibilityState) PasswordVisualTransformation()
-                            else
-                                VisualTransformation.None,
-                            label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Contraste2)},
-                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
-                            trailingIcon = {
-                                IconButton(
-                                    onClick = {
-                                        passwordVisibilityState = !passwordVisibilityState
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = if (passwordVisibilityState)
-                                            Icons.Default.VisibilityOff
-                                        else
-                                            Icons.Default.Visibility,
-                                        contentDescription = null
-                                    )
-                                }
-                            },
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.White,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent
+                            label = "Senha",
+                            showError = !validatePassword,
+                            errorMessage = validatePasswordError,
+                            isPasswordField = true,
+                            isPasswordVisible = isPasswordVisible,
+                            onVisibilityChange = { isPasswordVisible = it },
+                            leadingIconImageVector = Icons.Default.Password,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
                             ),
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                            )
                         )
 
-                        OutlinedTextField(
+                        CustomOutlinedTextField(
                             value = repeatPasswordState,
                             onValueChange = { repeatPasswordState = it },
-                            modifier = Modifier
-                                .padding(top = 20.dp)
-                                .height(62.dp),
-                            label = { Text(stringResource(id = R.string.repeticao_senha_label), fontSize = 15.sp, color = Contraste2)},
-                            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.White,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent
+                            label = "Repita a senha",
+                            showError = !validateConfirmPassword || !validateArePasswordEqual,
+                            errorMessage = if (!validateConfirmPassword) validatePasswordError else validateEqualPasswordError,
+                            isPasswordField = true,
+                            isPasswordVisible = isConfirmPasswordVisible,
+                            onVisibilityChange = { isConfirmPasswordVisible = it },
+                            leadingIconImageVector = Icons.Default.Password,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done
                             ),
-                            shape = RoundedCornerShape(20.dp)
+                            keyboardActions = KeyboardActions(
+                                onDone = { focusManager.clearFocus() }
+                            )
                         )
 
                         Spacer(modifier = Modifier.height(5.dp))
 
                         GradientButton(
-                            onClick = {  },
+                            onClick = { register(nameState, emailState, passwordState, repeatPasswordState) },
                             text = stringResource(id = R.string.texto_botao_registrar).uppercase(),
                             color1 = Destaque1,
                             color2 = Destaque2
