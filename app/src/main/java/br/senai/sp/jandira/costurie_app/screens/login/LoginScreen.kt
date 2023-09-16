@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
@@ -50,13 +51,15 @@ import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.repository.LoginRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutineScope) {
 
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -107,7 +110,20 @@ fun LoginScreen(navController: NavController) {
         password: String
     ) {
         if(validateData(email, password)){
-            Log.d(MainActivity::class.java.simpleName, "Email: $email, Password: $password")
+            val loginRepository = LoginRepository()
+            lifecycleScope.launch {
+                val response = loginRepository.loginUser(email, password)
+
+                if(response.isSuccessful){
+                    Log.e(MainActivity::class.java.simpleName, "Login bem-sucedido" )
+                    Log.e("login", "login: ${response.body()}", )
+                }else{
+                    val errorBody = response.errorBody()?.string()
+
+                    Log.e(MainActivity::class.java.simpleName, "Erro durante o login: $errorBody")
+                    Toast.makeText(context, "Erro durante o login", Toast.LENGTH_SHORT).show()
+                }
+            }
         } else {
             Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
         }
@@ -177,7 +193,8 @@ fun LoginScreen(navController: NavController) {
                                 ),
                                 keyboardActions = KeyboardActions(
                                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                                )
+                                ),
+                                borderColor = Color.Transparent
                             )
 
                             CustomOutlinedTextField(
@@ -196,7 +213,8 @@ fun LoginScreen(navController: NavController) {
                                 ),
                                 keyboardActions = KeyboardActions(
                                     onNext = { focusManager.clearFocus() }
-                                )
+                                ),
+                                borderColor = Color.Transparent
                             )
 
                             Spacer(modifier = Modifier.height(20.dp))

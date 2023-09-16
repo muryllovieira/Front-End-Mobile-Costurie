@@ -13,4 +13,9 @@ interface UserService {
     @Headers("Content-Type: application/json")
     @POST("/usuario/cadastro")
     suspend fun createUser(@Body body: JsonObject): Response<JsonObject>
+
+    @Headers("Content-Type: application/json")
+    @POST("/usuario/login")
+    suspend fun postUser(@Body body: JsonObject): Response<JsonObject>
+
 }
