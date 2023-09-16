@@ -1,16 +1,13 @@
 package br.senai.sp.jandira.costurie_app.screens.main
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,22 +20,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
-import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
-import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
-import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
-import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
 @Composable
@@ -49,7 +38,8 @@ fun MainScreen(navController: NavController) {
 
         Surface (
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            color = Color.White
         ) {
             Column (
                 modifier = Modifier

@@ -23,7 +23,8 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberAnimatedNavController()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "main") {
+                    startDestination = "main")
+                {
                     composable(route = "main") { MainScreen(navController = navController)}
                     composable(route = "register") { RegisterScreen(navController = navController)}
                     composable(route = "login") { LoginScreen(navController = navController)}
