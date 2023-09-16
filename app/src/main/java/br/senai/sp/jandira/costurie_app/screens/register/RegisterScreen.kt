@@ -44,6 +44,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
@@ -52,18 +53,21 @@ import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
+import br.senai.sp.jandira.costurie_app.service.UserRepository
+import br.senai.sp.jandira.costurie_app.service.UserService
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController) {
-    Costurie_appTheme {
+fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCoroutineScope) {
 
-        val context = LocalContext.current
-        val focusManager = LocalFocusManager.current
-        val scrollState = rememberScrollState()
+    lateinit var apiService: UserService
+
+    Costurie_appTheme {
 
         var nameState by remember  {
             mutableStateOf("")
@@ -76,6 +80,12 @@ fun RegisterScreen(navController: NavController) {
         var passwordState by remember {
             mutableStateOf("")
         }
+
+        apiService = RetrofitFactory.getInstance().create(UserService::class.java)
+
+        val context = LocalContext.current
+        val focusManager = LocalFocusManager.current
+        val scrollState = rememberScrollState()
 
         var repeatPasswordState by remember {
             mutableStateOf("")
@@ -139,7 +149,20 @@ fun RegisterScreen(navController: NavController) {
             confirmPassword: String
         ) {
             if(validateData(name, email, password, confirmPassword)){
-                Log.d(MainActivity::class.java.simpleName, "Name: $name, Email: $email, Password: $password")
+                val userRepository = UserRepository()
+                lifecycleScope.launch {
+                    val response = userRepository.registerUser(name, email, password)
+
+                    if (response.isSuccessful) {
+                        // Registro bem-sucedido, faça algo com a resposta, se necessário
+                        Log.d(MainActivity::class.java.simpleName, "Registro bem-sucedido")
+                    } else {
+                        // Registro falhou, lide com os erros aqui
+                        val errorBody = response.errorBody()?.string()
+                        Log.e(MainActivity::class.java.simpleName, "Erro durante o registro: $errorBody")
+                        Toast.makeText(context, "Erro durante o registro", Toast.LENGTH_SHORT).show()
+                    }
+                }
             } else {
                 Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
             }
@@ -268,14 +291,49 @@ fun RegisterScreen(navController: NavController) {
 
                         Line()
 
-                        GoogleButton(onClick = { }, text = stringResource(id = R.string.texto_botao_google_registre_se))
+                        GoogleButton(onClick = {
+                            register(nameState, emailState, passwordState, repeatPasswordState)
+                        }, text = stringResource(id = R.string.texto_botao_google_registre_se))
 
                         Spacer(modifier = Modifier.height(5.dp))
 
-                        WhiteButton(onClick = {  }, text = stringResource(id = R.string.texto_botao_login).uppercase())
+                        WhiteButton(onClick = {
+                            navController.navigate("login")
+                        }, text = stringResource(id = R.string.texto_botao_login).uppercase())
                     }
                 }
             }
         }
     }
 }
+//INSERIR USUARIO
+//fun onRegisterClick() {
+//    createUser(nameState, emailState, passwordState, apiService, lifecycleScope)
+//}
+//fun createUser(
+//    nome_de_usuario: String,
+//    email: String,
+//    senha: String,
+//    apiService: UserService,
+//    lifecycleScope: LifecycleCoroutineScope
+//) {
+//    Log.d("createUser", "Iniciando criação do usuário")
+//    lifecycleScope.launch {
+//        val body = JsonObject().apply {
+//            addProperty("nome_de_usuario", nome_de_usuario)
+//            addProperty("email", email)
+//            addProperty("senha", senha)
+//        }
+//
+//        Log.d("createUser", "Dados enviados: $body")
+//
+//        val result = apiService.createUser(body)
+//
+//        if (result.isSuccessful) {
+//            val msg = result.body()?.get("${result.message()}")
+//            Log.i("mumu", "$msg")
+//        } else {
+//            Log.i("mumu", result.message())
+//        }
+//    }
+//}

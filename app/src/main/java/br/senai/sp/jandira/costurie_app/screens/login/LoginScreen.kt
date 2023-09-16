@@ -1,5 +1,8 @@
 package br.senai.sp.jandira.costurie_app.screens.login
 
+import android.util.Log
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,44 +11,45 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField
 import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
-import br.senai.sp.jandira.costurie_app.ui.theme.Contraste2
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -53,6 +57,11 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController) {
+
+    val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
+
     var emailState by remember {
         mutableStateOf("")
     }
@@ -63,6 +72,45 @@ fun LoginScreen(navController: NavController) {
 
     var passwordVisibilityState by remember {
         mutableStateOf(false)
+    }
+
+    var validateEmail by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    var validatePassword by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    var isPasswordVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var isConfirmPasswordVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val validateEmailError = "O formato do e-mail não é válido"
+    val validatePasswordError = "Deve misturar letras maiúsculas e minúsculas, pelo menos um número, caracter especial e mínimo de 8 caracteres"
+
+    fun validateData(email: String, password: String): Boolean {
+        val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}\$".toRegex()
+
+        validateEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        validatePassword = passwordRegex.matches(password)
+
+        return validateEmail && validatePassword
+    }
+
+    fun login (
+        email: String,
+        password: String
+    ) {
+        if(validateData(email, password)){
+            Log.d(MainActivity::class.java.simpleName, "Email: $email, Password: $password")
+        } else {
+            Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
+        }
     }
 
     Costurie_appTheme {
@@ -104,7 +152,9 @@ fun LoginScreen(navController: NavController) {
                             modifier = Modifier.fillMaxSize()
                         )
                         Column(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(scrollState),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(modifier = Modifier.height(155.dp))
@@ -114,68 +164,39 @@ fun LoginScreen(navController: NavController) {
                                 color = Color.White
                             )
                             //Spacer(modifier = Modifier.height(5.dp))
-                            OutlinedTextField(
+                            CustomOutlinedTextField(
                                 value = emailState,
-                                onValueChange = { emailState = it},
-                                shape = RoundedCornerShape(20.dp),
-                                modifier = Modifier
-                                    .height(60.dp),
-                                label = {
-                                    Text(
-                                        stringResource(id = R.string.email_label),
-                                        fontSize = 16.sp,
-                                        textAlign = TextAlign.Center,
-                                        color = Contraste2
-                                    )
-                                },
-                                colors = TextFieldDefaults.textFieldColors(
-                                    unfocusedLabelColor = Color.Black,
-                                    cursorColor = Color.Black,
-                                    focusedLabelColor = Color.Black,
-                                    textColor = Color.Black,
-                                    containerColor = Color.White,
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent
+                                onValueChange = { emailState = it },
+                                label = "E-mail",
+                                showError = !validateEmail,
+                                errorMessage = validateEmailError,
+                                leadingIconImageVector = Icons.Default.AlternateEmail,
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Email,
+                                    imeAction = ImeAction.Next
                                 ),
-                                textStyle = TextStyle.Default.copy(fontSize = 15.sp)
-
+                                keyboardActions = KeyboardActions(
+                                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                                )
                             )
 
-                            Spacer(modifier = Modifier.height(15.dp))
-
-                            OutlinedTextField(
+                            CustomOutlinedTextField(
                                 value = passwordState,
                                 onValueChange = { passwordState = it },
-                                modifier = Modifier
-                                    .padding(top = 20.dp)
-                                    .width(280.dp)
-                                    .height(62.dp),
-                                shape = RoundedCornerShape(20.dp),
-                                visualTransformation = if (!passwordVisibilityState) PasswordVisualTransformation()
-                                else
-                                    VisualTransformation.None,
-                                label = { Text(stringResource(id = R.string.senha_label), fontSize = 15.sp, color = Contraste2)},
-                                textStyle = TextStyle.Default.copy(fontSize = 15.sp),
-                                trailingIcon = {
-                                    IconButton(
-                                        onClick = {
-                                            passwordVisibilityState = !passwordVisibilityState
-                                        }
-                                    ) {
-                                        Icon(
-                                            imageVector = if (passwordVisibilityState)
-                                                Icons.Default.VisibilityOff
-                                            else
-                                                Icons.Default.Visibility,
-                                            contentDescription = null
-                                        )
-                                    }
-                                },
-                                colors = TextFieldDefaults.textFieldColors(
-                                    containerColor = Color.White,
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent
+                                label = "Senha",
+                                showError = !validatePassword,
+                                errorMessage = validatePasswordError,
+                                isPasswordField = true,
+                                isPasswordVisible = isPasswordVisible,
+                                onVisibilityChange = { isPasswordVisible = it },
+                                leadingIconImageVector = Icons.Default.Password,
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Text,
+                                    imeAction = ImeAction.Done
                                 ),
+                                keyboardActions = KeyboardActions(
+                                    onNext = { focusManager.clearFocus() }
+                                )
                             )
 
                             Spacer(modifier = Modifier.height(20.dp))
@@ -196,7 +217,7 @@ fun LoginScreen(navController: NavController) {
                             }
 
                             GradientButton(
-                                onClick = {  },
+                                onClick = { login(emailState, passwordState) },
                                 text = stringResource(id = R.string.texto_botao_login).uppercase() ,
                                 color1 = Destaque1,
                                 color2 = Destaque2
@@ -205,7 +226,10 @@ fun LoginScreen(navController: NavController) {
                             Line()
                             GoogleButton( onClick = {}, text = "Entre com o Google")
                             Spacer(modifier = Modifier.height(15.dp))
-                            WhiteButton(onClick = { /*TODO*/ }, text = "REGISTRAR-SE")
+                            WhiteButton(onClick = {
+                                navController.navigate("register")
+                            },
+                                text = "REGISTRAR-SE")
                         }
                     }
                 }
