@@ -4,6 +4,7 @@ import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -239,6 +240,11 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
 
                                 ) {
                                 Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                                   navController.navigate("password")
+                                        },
                                     text = "Esqueceu a senha?",
                                     color = Color(168,155,255),
                                     textAlign = TextAlign.Right,
