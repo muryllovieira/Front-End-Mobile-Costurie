@@ -1,5 +1,8 @@
 package br.senai.sp.jandira.costurie_app.screens.password
 
+import android.util.Log
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,32 +27,79 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.repository.ResetPasswordRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.Principal2
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordScreen(navController: NavController, onRecoveryRequested: (String) -> Unit) {
+fun PasswordScreen(navController: NavController, onEmailEntered: (String) -> Unit,  lifecycleScope: LifecycleCoroutineScope) {
     var textstate2 by remember { mutableStateOf("") }
 
-    var email by remember { mutableStateOf(TextFieldValue()) }
+    var email by remember { mutableStateOf("") }
 
+    var validateEmail by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    val context = LocalContext.current
+
+    fun validateData(email: String): Boolean {
+
+        validateEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+        return validateEmail
+    }
+
+    fun resetPassword (
+        email: String,
+    ) {
+        if(validateData(email)){
+            val resetPasswordRepository = ResetPasswordRepository()
+            lifecycleScope.launch {
+                val response = resetPasswordRepository.requestPasswordReset(email)
+
+                if(response.isSuccessful){
+                    Log.e(MainActivity::class.java.simpleName, "Email bem-sucedido" )
+                    Log.e("Email", "Email: ${response.body()}", )
+//                    val checagem = response.body()?.get("status")
+//                    if (checagem.toString() == "404") {
+//                        Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_LONG).show()
+//                    } else {
+//                        Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
+//                        navController.navigate("loading")
+//                    }
+                }else{
+                    val errorBody = response.errorBody()?.string()
+
+                    Log.e(MainActivity::class.java.simpleName, "Erro durante o reset da senha: $errorBody")
+                    Toast.makeText(context, "Email inválido", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Surface (
         modifier = Modifier
@@ -140,7 +190,8 @@ fun PasswordScreen(navController: NavController, onRecoveryRequested: (String) -
                             )
                             OutlinedTextField(
                                 value = email,
-                                onValueChange = { email = it },
+                                onValueChange = { newEmail ->
+                                    email = newEmail },
                                 label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp)},
                                 colors = TextFieldDefaults.textFieldColors(
                                     unfocusedLabelColor = Color.Black,
@@ -158,8 +209,7 @@ fun PasswordScreen(navController: NavController, onRecoveryRequested: (String) -
                             )
                             GradientButton(
                                 onClick = {
-                                    val emailText = email.text
-                                    onRecoveryRequested(emailText)
+                                    resetPassword(email)
                                 },
                                 text = stringResource(id = R.string.texto_botao_enviar).uppercase(),
                                 color1 = Destaque1,

@@ -10,6 +10,7 @@ import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
 import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
 import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
+import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
 
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -30,7 +31,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = "main") { MainScreen(navController = navController)}
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope)}
                     composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope)}
-                    composable(route = "password") { PasswordScreen(navController = navController)}
+                    composable(route = "password") { PasswordScreen(navController = navController, onEmailEntered = {_: String ->},  lifecycleScope = lifecycleScope)}
+                    composable(route = "validationCode") { ValidationCodeScreen(navController = navController)}
                     composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
                 }
             }
