@@ -32,22 +32,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
-import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.Principal2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordScreen(navController: NavController) {
+fun PasswordScreen(navController: NavController, onRecoveryRequested: (String) -> Unit) {
     var textstate2 by remember { mutableStateOf("") }
+
+    var email by remember { mutableStateOf(TextFieldValue()) }
+
 
     Surface (
         modifier = Modifier
@@ -137,8 +139,8 @@ fun PasswordScreen(navController: NavController) {
                                 fontSize = 16.sp
                             )
                             OutlinedTextField(
-                                value = textstate2,
-                                onValueChange = { textstate2 = it },
+                                value = email,
+                                onValueChange = { email = it },
                                 label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp)},
                                 colors = TextFieldDefaults.textFieldColors(
                                     unfocusedLabelColor = Color.Black,
@@ -155,7 +157,10 @@ fun PasswordScreen(navController: NavController) {
                                 textStyle = TextStyle.Default.copy(fontSize = 15.sp)
                             )
                             GradientButton(
-                                onClick = {  },
+                                onClick = {
+                                    val emailText = email.text
+                                    onRecoveryRequested(emailText)
+                                },
                                 text = stringResource(id = R.string.texto_botao_enviar).uppercase(),
                                 color1 = Destaque1,
                                 color2 = Destaque2

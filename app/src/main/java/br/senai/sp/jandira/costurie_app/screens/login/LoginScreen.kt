@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -117,11 +118,18 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                 if(response.isSuccessful){
                     Log.e(MainActivity::class.java.simpleName, "Login bem-sucedido" )
                     Log.e("login", "login: ${response.body()}", )
+                    val checagem = response.body()?.get("status")
+                    if (checagem.toString() == "404") {
+                        Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
+                        navController.navigate("loading")
+                    }
                 }else{
                     val errorBody = response.errorBody()?.string()
 
                     Log.e(MainActivity::class.java.simpleName, "Erro durante o login: $errorBody")
-                    Toast.makeText(context, "Erro durante o login", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
@@ -159,21 +167,27 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
 
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.modal_login),
                             contentDescription = "",
                             alignment = Alignment.Center,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth()
                         )
                         Column(
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .width(320.dp)
+                                .height(570.dp)
                                 .verticalScroll(scrollState),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceBetween
+
                         ) {
-                            Spacer(modifier = Modifier.height(155.dp))
+                            //Spacer(modifier = Modifier.height(155.dp))
 
                             Text(
                                 text = stringResource(id = R.string.titulo_app),
@@ -217,15 +231,15 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                 borderColor = Color.Transparent
                             )
 
-                            Spacer(modifier = Modifier.height(20.dp))
+                            //Spacer(modifier = Modifier.height(20.dp))
 
                             Column(
-                                modifier = Modifier.width(300.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.End,
 
                                 ) {
                                 Text(
-                                    text = "Escolha a senha?",
+                                    text = "Esqueceu a senha?",
                                     color = Color(168,155,255),
                                     textAlign = TextAlign.Right,
                                     fontSize = 14.sp,
