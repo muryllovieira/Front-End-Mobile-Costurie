@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -43,7 +41,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 //navController: NavController
 @Composable
-fun ValidationCodeScreen() {
+fun ValidationCodeScreen(navController: NavController) {
     Costurie_appTheme {
         var otpValue by remember {
             mutableStateOf("")
@@ -150,8 +148,8 @@ fun ValidationCodeScreen() {
     }
 }
 
-@Preview
-@Composable
-fun ValidationCodeScreenPreview() {
-    ValidationCodeScreen()
-}
+//@Preview
+//@Composable
+//fun ValidationCodeScreenPreview() {
+//    ValidationCodeScreen(navController = NavController())
+//}

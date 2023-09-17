@@ -18,4 +18,8 @@ interface UserService {
     @POST("/usuario/login")
     suspend fun postUser(@Body body: JsonObject): Response<JsonObject>
 
+    @Headers("Content-Type: application/json")
+    @POST("/usuario/esqueci_a_senha")
+    suspend fun requestPasswordReset(@Body requestBody: JsonObject): Response<JsonObject>
+
 }
