@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.lifecycleScope
+import br.senai.sp.jandira.costurie_app.screens.loading.LoadingScreen
 import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
 import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
 import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope)}
                     composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope)}
                     composable(route = "password") { PasswordScreen(navController = navController)}
+                    composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
                 }
             }
         }
