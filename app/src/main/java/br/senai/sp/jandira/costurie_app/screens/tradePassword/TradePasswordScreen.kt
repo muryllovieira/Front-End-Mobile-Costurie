@@ -120,7 +120,7 @@ fun TradePasswordScreen(
         confirmPassword: String,
         viewModel: PasswordResetViewModel
     ) {
-
+        if (validateData(password, confirmPassword)){
             val resetPassword = PasswordResetRepository()
             lifecycleScope.launch {
                 val response = resetPassword.updatePassword(id, password)
@@ -142,7 +142,10 @@ fun TradePasswordScreen(
                     Toast.makeText(context, "Erro durante a troca de senha", Toast.LENGTH_SHORT).show()
                 }
             }
+        } else{
+            Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
         }
+    }
 
 
     Surface (
@@ -191,7 +194,9 @@ fun TradePasswordScreen(
                         Spacer(modifier = Modifier.height(100.dp))
                         Button(
                             modifier = Modifier.fillMaxWidth(),
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                      navController.navigate("validationCode")
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent
                             )
@@ -227,8 +232,8 @@ fun TradePasswordScreen(
                                     value = passwordState,
                                     onValueChange = { passwordState = it },
                                     label = "Senha",
-//                                    showError = !validatePassword,
-//                                    errorMessage = validatePasswordError,
+                                    showError = !validatePassword,
+                                    errorMessage = validatePasswordError,
                                     isPasswordField = true,
                                     isPasswordVisible = isPasswordVisible,
                                     onVisibilityChange = { isPasswordVisible = it },
@@ -247,8 +252,8 @@ fun TradePasswordScreen(
                                     value = repeatPasswordState,
                                     onValueChange = { repeatPasswordState = it },
                                     label = "Repita a senha",
-//                                    showError = !validateConfirmPassword || !validateArePasswordEqual,
-//                                    errorMessage = if (!validateConfirmPassword) validatePasswordError else validateEqualPasswordError,
+                                    showError = !validateConfirmPassword || !validateArePasswordEqual,
+                                    errorMessage = if (!validateConfirmPassword) validatePasswordError else validateEqualPasswordError,
                                     isPasswordField = true,
                                     isPasswordVisible = isConfirmPasswordVisible,
                                     onVisibilityChange = { isConfirmPasswordVisible = it },

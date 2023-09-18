@@ -182,13 +182,13 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                         Column(
                             modifier = Modifier
                                 .width(320.dp)
-                                .height(570.dp)
+                                .height(480.dp)
                                 .verticalScroll(scrollState),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceBetween
 
                         ) {
-                            //Spacer(modifier = Modifier.height(155.dp))
+                            Spacer(modifier = Modifier.height(15.dp))
 
                             Text(
                                 text = stringResource(id = R.string.titulo_app),
@@ -263,7 +263,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
 
                             Line()
                             GoogleButton( onClick = {}, text = "Entre com o Google")
-                            Spacer(modifier = Modifier.height(15.dp))
+                            Spacer(modifier = Modifier.height(5.dp))
                             WhiteButton(onClick = {
                                 navController.navigate("register")
                             },
