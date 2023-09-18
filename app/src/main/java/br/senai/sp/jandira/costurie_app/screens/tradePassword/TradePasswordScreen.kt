@@ -1,9 +1,9 @@
 package br.senai.sp.jandira.costurie_app.screens.tradePassword
 
-import androidx.compose.foundation.BorderStroke
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,45 +14,134 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.MainActivity
+import br.senai.sp.jandira.costurie_app.PasswordResetViewModel
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField
 import br.senai.sp.jandira.costurie_app.components.GradientButton
-import br.senai.sp.jandira.costurie_app.ui.theme.Contraste2
+import br.senai.sp.jandira.costurie_app.repository.PasswordResetRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
-import br.senai.sp.jandira.costurie_app.ui.theme.Principal2
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TradePasswordScreen() {
+fun TradePasswordScreen(
+    navController: NavController,
+    lifecycleScope: LifecycleCoroutineScope,
+    viewModel: PasswordResetViewModel
+) {
+    val idUser = viewModel.id
+
+    Log.e("Testando", "ValidationCodeScreen: $idUser")
+
     var passwordState by remember {
         mutableStateOf("")
     }
+
+    var repeatPasswordState by remember {
+        mutableStateOf("")
+    }
+
+    var validatePassword by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    var validateConfirmPassword by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    var validateArePasswordEqual by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    var isPasswordVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var isConfirmPasswordVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
+
+    val validatePasswordError = "Deve misturar letras maiúsculas e minúsculas, pelo menos um número, caracter especial e mínimo de 8 caracteres"
+    val validateEqualPasswordError = "As senhas devem ser iguais"
+
+    fun validateData(password: String, confirmPassword: String): Boolean {
+        val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}\$".toRegex()
+
+        validatePassword = passwordRegex.matches(password)
+        validateConfirmPassword = passwordRegex.matches(confirmPassword)
+        validateArePasswordEqual = password == confirmPassword
+
+        return validatePassword && validateConfirmPassword && validateArePasswordEqual
+    }
+
+    fun updatePassword (
+        id: Int,
+        password: String,
+        confirmPassword: String,
+        viewModel: PasswordResetViewModel
+    ) {
+
+            val resetPassword = PasswordResetRepository()
+            lifecycleScope.launch {
+                val response = resetPassword.updatePassword(id, password)
+
+                if (response.isSuccessful) {
+                    val checagem = response.body()?.get("status")
+                    if (checagem.toString() == "400") {
+                        Toast.makeText(context, "Campos obrigatórios não foram preenchidos.", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(context, "Troca de senha bem-sucedida", Toast.LENGTH_SHORT).show()
+                        navController.navigate("loading")
+                    }
+                    Log.d(MainActivity::class.java.simpleName, "Troca de senha bem-sucedida")
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e(MainActivity::class.java.simpleName, "Erro durante a troca de senha: $errorBody")
+                    Toast.makeText(context, "Erro durante a troca de senha", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
 
     Surface (
         modifier = Modifier
@@ -132,53 +221,44 @@ fun TradePasswordScreen() {
                                 verticalArrangement = Arrangement.SpaceBetween,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ){
-                                OutlinedTextField(
+                                CustomOutlinedTextField(
                                     value = passwordState,
-                                    onValueChange = { passwordState = it},
-                                    shape = RoundedCornerShape(20.dp),
-                                    modifier = Modifier
-                                        .height(60.dp),
-                                    label = {
-                                        Text(stringResource(id = R.string.senha_label),
-                                            fontSize = 16.sp,
-                                            textAlign = TextAlign.Center,
-                                            color = Contraste2
-                                        )
-                                    },
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        unfocusedLabelColor = Color.Black,
-                                        cursorColor = Color.Black,
-                                        focusedLabelColor = Color.Black,
-                                        textColor = Color.Black,
-                                        containerColor = Principal2,
-                                        unfocusedIndicatorColor = Color.Transparent,
-                                        focusedIndicatorColor = Color.Transparent
+                                    onValueChange = { passwordState = it },
+                                    label = "Senha",
+//                                    showError = !validatePassword,
+//                                    errorMessage = validatePasswordError,
+                                    isPasswordField = true,
+                                    isPasswordVisible = isPasswordVisible,
+                                    onVisibilityChange = { isPasswordVisible = it },
+                                    leadingIconImageVector = Icons.Default.Password,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Text,
+                                        imeAction = ImeAction.Next
                                     ),
-                                    textStyle = TextStyle.Default.copy(fontSize = 15.sp)
+                                    keyboardActions = KeyboardActions(
+                                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                                    ),
+                                    borderColor = Color.Transparent
                                 )
-                                OutlinedTextField(
-                                    value = passwordState,
-                                    onValueChange = { passwordState = it},
-                                    shape = RoundedCornerShape(20.dp),
-                                    modifier = Modifier
-                                        .height(60.dp),
-                                    label = {
-                                        Text(stringResource(id = R.string.repeticao_senha_label),
-                                            fontSize = 16.sp,
-                                            textAlign = TextAlign.Center,
-                                            color = Contraste2
-                                        )
-                                    },
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        unfocusedLabelColor = Color.Black,
-                                        cursorColor = Color.Black,
-                                        focusedLabelColor = Color.Black,
-                                        textColor = Color.Black,
-                                        containerColor = Principal2,
-                                        unfocusedIndicatorColor = Color.Transparent,
-                                        focusedIndicatorColor = Color.Transparent
+
+                                CustomOutlinedTextField(
+                                    value = repeatPasswordState,
+                                    onValueChange = { repeatPasswordState = it },
+                                    label = "Repita a senha",
+//                                    showError = !validateConfirmPassword || !validateArePasswordEqual,
+//                                    errorMessage = if (!validateConfirmPassword) validatePasswordError else validateEqualPasswordError,
+                                    isPasswordField = true,
+                                    isPasswordVisible = isConfirmPasswordVisible,
+                                    onVisibilityChange = { isConfirmPasswordVisible = it },
+                                    leadingIconImageVector = Icons.Default.Password,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Text,
+                                        imeAction = ImeAction.Done
                                     ),
-                                    textStyle = TextStyle.Default.copy(fontSize = 15.sp)
+                                    keyboardActions = KeyboardActions(
+                                        onDone = { focusManager.clearFocus() }
+                                    ),
+                                    borderColor = Color.Transparent
                                 )
                                 Box(
                                     modifier = Modifier
@@ -229,7 +309,12 @@ fun TradePasswordScreen() {
                                 }
                             }
                             GradientButton(
-                                onClick = { /*TODO*/ },
+                                onClick = {
+                                    if (idUser != null) {
+                                        updatePassword(idUser, passwordState, repeatPasswordState, viewModel)
+                                        Log.e("TAG", "bu: $idUser, $passwordState, $repeatPasswordState, $viewModel", )
+                                    }
+                                },
                                 text = stringResource(id = R.string.texto_botao_confirmar),
                                 color1 = Destaque1,
                                 color2 = Destaque2
@@ -240,10 +325,4 @@ fun TradePasswordScreen() {
             }
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun TradePasswordScreenPreview() {
-    TradePasswordScreen()
 }

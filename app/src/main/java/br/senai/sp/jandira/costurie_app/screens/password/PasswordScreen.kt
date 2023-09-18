@@ -43,9 +43,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
+import br.senai.sp.jandira.costurie_app.PasswordResetViewModel
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
-import br.senai.sp.jandira.costurie_app.repository.ResetPasswordRepository
+import br.senai.sp.jandira.costurie_app.repository.PasswordResetRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.Principal2
@@ -53,7 +54,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordScreen(navController: NavController, onEmailEntered: (String) -> Unit,  lifecycleScope: LifecycleCoroutineScope) {
+fun PasswordScreen(
+    navController: NavController,
+    lifecycleScope: LifecycleCoroutineScope,
+    viewModel: PasswordResetViewModel
+) {
     var textstate2 by remember { mutableStateOf("") }
 
     var email by remember { mutableStateOf("") }
@@ -71,51 +76,59 @@ fun PasswordScreen(navController: NavController, onEmailEntered: (String) -> Uni
         return validateEmail
     }
 
-    fun resetPassword (
+    fun resetPassword(
         email: String,
+        viewModel: PasswordResetViewModel
     ) {
-        if(validateData(email)){
-            val resetPasswordRepository = ResetPasswordRepository()
+        if (validateData(email)) {
+            val resetPasswordRepository = PasswordResetRepository()
             lifecycleScope.launch {
                 val response = resetPasswordRepository.requestPasswordReset(email)
 
-                if(response.isSuccessful){
-                    Log.e(MainActivity::class.java.simpleName, "Email bem-sucedido" )
-                    Log.e("Email", "Email: ${response.body()}", )
-//                    val checagem = response.body()?.get("status")
-//                    if (checagem.toString() == "404") {
-//                        Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_LONG).show()
-//                    } else {
-//                        Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
-//                        navController.navigate("loading")
-//                    }
-                }else{
+                Log.e("boi", "resetPassword: $response")
+
+                if (response.isSuccessful) {
+                    Log.e(MainActivity::class.java.simpleName, "Email bem-sucedido")
+                    Log.e("Email", "Email: ${response.body()}")
+                    val checagem = response.body()?.get("status")
+                    if (checagem.toString() == "404") {
+                        Toast.makeText(context, "O email não foi encontrado em nosso sistema", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(context, "Token enviado ao Email", Toast.LENGTH_SHORT).show()
+                        val id = response.body()?.get("id")?.asInt
+                        viewModel.id = id
+                        navController.navigate("validationCode")
+                    }
+                } else {
                     val errorBody = response.errorBody()?.string()
 
-                    Log.e(MainActivity::class.java.simpleName, "Erro durante o reset da senha: $errorBody")
+                    Log.e(
+                        MainActivity::class.java.simpleName,
+                        "Erro durante o reset da senha: $errorBody"
+                    )
                     Toast.makeText(context, "Email inválido", Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
-            Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT)
         }
     }
 
-    Surface (
+    Surface(
         modifier = Modifier
             .fillMaxSize(),
         color = Color.White
-    ){
-        Column (
+    ) {
+        Column(
             modifier = Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
-        ){
-            Box (
+        ) {
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-            ){
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.forma_topo_recuperar_a_senha),
                     contentDescription = "",
@@ -131,9 +144,9 @@ fun PasswordScreen(navController: NavController, onEmailEntered: (String) -> Uni
                     modifier = Modifier.fillMaxSize(),
                     alignment = Alignment.BottomEnd
                 )
-                Box (
+                Box(
                     modifier = Modifier.fillMaxWidth()
-                ){
+                ) {
                     Image(
                         painter = painterResource(id = R.drawable.modal_redefinir_senha),
                         contentDescription = "",
@@ -191,8 +204,14 @@ fun PasswordScreen(navController: NavController, onEmailEntered: (String) -> Uni
                             OutlinedTextField(
                                 value = email,
                                 onValueChange = { newEmail ->
-                                    email = newEmail },
-                                label = { Text(stringResource(id = R.string.email_label), fontSize = 15.sp)},
+                                    email = newEmail
+                                },
+                                label = {
+                                    Text(
+                                        stringResource(id = R.string.email_label),
+                                        fontSize = 15.sp
+                                    )
+                                },
                                 colors = TextFieldDefaults.textFieldColors(
                                     unfocusedLabelColor = Color.Black,
                                     cursorColor = Color.Black,
@@ -209,7 +228,7 @@ fun PasswordScreen(navController: NavController, onEmailEntered: (String) -> Uni
                             )
                             GradientButton(
                                 onClick = {
-                                    resetPassword(email)
+                                    resetPassword(email, viewModel)
                                 },
                                 text = stringResource(id = R.string.texto_botao_enviar).uppercase(),
                                 color1 = Destaque1,
