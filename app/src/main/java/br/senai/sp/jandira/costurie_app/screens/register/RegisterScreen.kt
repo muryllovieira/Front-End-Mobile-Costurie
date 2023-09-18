@@ -148,6 +148,13 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                     val response = userRepository.registerUser(name, email, password)
 
                     if (response.isSuccessful) {
+                        val checagem = response.body()?.get("status")
+                        if (checagem.toString() == "400") {
+                            Toast.makeText(context, "Campos obrigatórios não foram preenchidos.", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
+                            navController.navigate("login")
+                        }
                         Log.d(MainActivity::class.java.simpleName, "Registro bem-sucedido")
                     } else {
                         val errorBody = response.errorBody()?.string()
@@ -288,9 +295,9 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                         Line()
 
                         GoogleButton(onClick = {
-                            register(nameState, emailState, passwordState, repeatPasswordState)
+                            //register(nameState, emailState, passwordState, repeatPasswordState)
 
-                            navController.navigate("login")
+                            //navController.navigate("login")
 
                         },
                             text = stringResource(id = R.string.texto_botao_google_registre_se))
