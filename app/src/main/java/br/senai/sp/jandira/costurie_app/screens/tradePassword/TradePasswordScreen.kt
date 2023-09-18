@@ -317,7 +317,7 @@ fun TradePasswordScreen(
                                         Log.e("TAG", "bu: $idUser, $passwordState, $repeatPasswordState, $viewModel", )
                                     }
                                 },
-                                text = stringResource(id = R.string.texto_botao_confirmar),
+                                text = stringResource(id = R.string.texto_botao_confirmar).uppercase(),
                                 color1 = Destaque1,
                                 color2 = Destaque2
                             )

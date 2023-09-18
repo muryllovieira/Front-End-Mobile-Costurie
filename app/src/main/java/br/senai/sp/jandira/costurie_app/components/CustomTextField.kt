@@ -112,8 +112,9 @@ fun CustomOutlinedTextField(
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .padding(start = 8.dp)
-                    .offset(y = (-8).dp)
-                    .fillMaxWidth(0.9f)
+                    .offset(y = (-1).dp)
+                    .fillMaxWidth(0.9f),
+                fontSize = 12.sp
             )
         }
     }
