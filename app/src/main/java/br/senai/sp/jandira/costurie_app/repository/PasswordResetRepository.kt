@@ -32,7 +32,9 @@ class PasswordResetRepository {
             addProperty("senha", senha)
         }
 
+
         return apiService.updateUserPassword(requestBody)
+
     }
 
 }
