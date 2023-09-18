@@ -268,6 +268,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
 
                             Spacer(modifier = Modifier.height(5.dp))
 
+
                             WhiteButton(onClick = {
                                 navController.navigate("register")
                             },
