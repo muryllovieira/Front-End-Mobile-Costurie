@@ -127,7 +127,9 @@ fun TradePasswordScreen(
 
                 if (response.isSuccessful) {
                     val checagem = response.body()?.get("status")
+
                     if (checagem.toString() == "400") {
+
                         Toast.makeText(context, "Campos obrigatórios não foram preenchidos.", Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(context, "Troca de senha bem-sucedida", Toast.LENGTH_SHORT).show()
