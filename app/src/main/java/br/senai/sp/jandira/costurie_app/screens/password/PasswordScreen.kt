@@ -160,7 +160,9 @@ fun PasswordScreen(
                         Spacer(modifier = Modifier.height(85.dp))
                         Button(
                             modifier = Modifier.fillMaxWidth(),
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                      navController.navigate("login")
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent
                             )

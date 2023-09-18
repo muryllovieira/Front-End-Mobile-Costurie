@@ -146,7 +146,9 @@ fun ValidationCodeScreen(
                     ) {
                         Spacer(modifier = Modifier.height(140.dp))
                         Button(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                navController.navigate("password")
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent
                             )
