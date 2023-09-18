@@ -5,6 +5,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface UserService {
 
@@ -19,7 +20,15 @@ interface UserService {
     suspend fun postUser(@Body body: JsonObject): Response<JsonObject>
 
     @Headers("Content-Type: application/json")
-    @POST("/usuario/esqueci_a_senha")
+    @POST("/usuario/esqueceu_a_senha")
     suspend fun requestPasswordReset(@Body requestBody: JsonObject): Response<JsonObject>
+
+    @Headers("Content-Type: application/json")
+    @POST("/usuario/validar_token")
+    suspend fun tokenValidation(@Body requestBody: JsonObject): Response<JsonObject>
+
+    @Headers("Content-Type: application/json")
+    @PUT("/usuario/atualizar_senha")
+    suspend fun updateUserPassword(@Body body: JsonObject): Response<JsonObject>
 
 }

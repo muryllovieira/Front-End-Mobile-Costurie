@@ -1,5 +1,7 @@
 package br.senai.sp.jandira.costurie_app.screens.validationCode
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,28 +26,86 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.MainActivity
+import br.senai.sp.jandira.costurie_app.PasswordResetViewModel
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.OtpTextField
+import br.senai.sp.jandira.costurie_app.repository.PasswordResetRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import kotlinx.coroutines.launch
 
 //navController: NavController
 @Composable
-fun ValidationCodeScreen(navController: NavController) {
-    Costurie_appTheme {
-        var otpValue by remember {
-            mutableStateOf("")
+fun ValidationCodeScreen(
+    navController: NavController,
+    lifecycleScope: LifecycleCoroutineScope,
+    viewModel: PasswordResetViewModel
+) {
+
+    val idUser = viewModel.id
+
+    Log.e("Testando", "ValidationCodeScreen: $idUser")
+
+    var otpValue by remember {
+        mutableStateOf("")
+    }
+
+    val context = LocalContext.current
+
+    fun token(
+        id: Int,
+        otpValue: String,
+        viewModel: PasswordResetViewModel
+    ) {
+        val resetPasswordRepository = PasswordResetRepository()
+        lifecycleScope.launch {
+            val response = resetPasswordRepository.validateResetCode(id, otpValue)
+
+            Log.e("boi", "ValidateResetCode: $response")
+
+            if (response.isSuccessful) {
+                Log.e(MainActivity::class.java.simpleName, "Token bem-sucedido")
+                Log.e("Token", "Token: ${response.body()}")
+                val checagem = response.body()?.get("status")
+                if (checagem.toString() == "401") {
+                    Toast.makeText(
+                        context,
+                        "O token encaminhado na requisicão não está valido",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    Toast.makeText(context, "Token validado", Toast.LENGTH_SHORT).show()
+//                    val id = response.body()?.get("id")?.asInt
+//                    viewModel.id = id
+                    navController.navigate("tradePassword")
+                }
+            } else {
+                val errorBody = response.errorBody()?.string()
+
+                Log.e(
+                    MainActivity::class.java.simpleName,
+                    "Erro durante o reset da senha: $errorBody"
+                )
+                Toast.makeText(context, "Token inválido", Toast.LENGTH_SHORT).show()
+            }
         }
+
+    }
+
+    Costurie_appTheme {
 
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -136,7 +196,11 @@ fun ValidationCodeScreen(navController: NavController) {
                         }
                         Spacer(modifier = Modifier.height(60.dp))
                         GradientButton(
-                            onClick = {  },
+                            onClick = {
+                                if (idUser != null) {
+                                    token(idUser, otpValue, viewModel)
+                                }
+                            },
                             text = stringResource(id = R.string.texto_botao_confirmar).uppercase(),
                             color1 = Destaque1,
                             color2 = Destaque2
