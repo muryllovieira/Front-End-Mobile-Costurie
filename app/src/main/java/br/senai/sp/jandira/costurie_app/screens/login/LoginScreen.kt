@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -134,7 +135,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                 }
             }
         } else {
-            Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Por favor, reveja suas caixas de texto", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -262,8 +263,12 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                             )
 
                             Line()
+
                             GoogleButton( onClick = {}, text = "Entre com o Google")
+
                             Spacer(modifier = Modifier.height(5.dp))
+
+
                             WhiteButton(onClick = {
                                 navController.navigate("register")
                             },
