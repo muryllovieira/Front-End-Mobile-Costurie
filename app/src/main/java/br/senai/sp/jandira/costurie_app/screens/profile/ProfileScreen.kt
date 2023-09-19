@@ -1,14 +1,18 @@
-package br.senai.sp.jandira.costurie_app.screens.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,6 +32,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -60,74 +65,125 @@ fun ProfileScreen() {
                         painter = painterResource(id = R.drawable.forma_tela_perfil),
                         contentDescription = "",
                         modifier = Modifier
-                            .height(310.dp)
+                            .height(240.dp)
                             .width(390.dp),
                         alignment = Alignment.TopStart
                     )
 
-                    Column (
-                        modifier = Modifier
-                            .height(250.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top
-                    ){
-                        Text(
-                            color = Color.White,
-                            text = stringResource(id = R.string.texto_meu_perfil),
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                    Column () {
+                        Row (
+                            modifier = Modifier
+                                .padding(start = 16.dp, end = 16.dp)
+                                .fillMaxWidth(),
+                            Arrangement.SpaceBetween
+                        ){
+                            Text(
+                                color = Color.White,
+                                text = stringResource(id = R.string.texto_meu_perfil),
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
 
-                        Text(
-                            color = Color.White,
-                            text = stringResource(id = R.string.boas_vindas).uppercase(),
-                            style = MaterialTheme.typography.bodySmall,
-                            fontSize = 24.sp
-                        )
+                            Row (
+                                modifier = Modifier
+                                    .padding(end = 16.dp)
+                                    .width(280.dp),
+                                Arrangement.End
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.icon_edit),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(35.dp),
+                                    alignment = Alignment.TopEnd
+                                )
 
-                        Text(
-                            color = Color.White,
-                            text = stringResource(id = R.string.texto_boas_vindas),
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.width(220.dp),
-                            fontSize = 18.sp
-                        )
+                                Spacer(modifier = Modifier.width(10.dp))
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.icon_config),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(35.dp)
+                                )
+                            }
+                        }
+
+                        Row (
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .width(320.dp),
+                            Arrangement.Start
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.profile_pic),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(88.dp)
+                            )
+
+                            Spacer(modifier = Modifier.width(5.dp))
+
+                            Column (
+                            ) {
+                                Text(
+                                    color = Color.White,
+                                    text = stringResource(id = R.string.nome_perfil),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.height(24.dp)
+                                )
+
+                                Text(
+                                    color = Color.White,
+                                    text = stringResource(id = R.string.tag_usuario),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    modifier = Modifier.height(22.dp)
+                                )
+
+                                Row {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.icon_location),
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .size(22.dp)
+                                    )
+
+                                    Text(
+                                        color = Color.White,
+                                        text = stringResource(id = R.string.cidade_perfil),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        modifier = Modifier.height(20.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
-
                 }
 
-                Column (
+                Row (
                     modifier = Modifier
-                        .height(480.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .height(480.dp)
                 ){
-                    Image(
-                        painter = painterResource(id = R.drawable.foto_principal_main),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .height(240.dp)
-                            .width(240.dp),
-                        alignment = Alignment.TopStart
-                    )
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    GradientButton(
+                    WhiteButton(
                         onClick = { },
-                        text = stringResource(id = R.string.texto_botao_registrar).uppercase(),
-                        color1 = Destaque1,
-                        color2 = Destaque2
+                        text = stringResource(id = R.string.botao_recomendacoes).uppercase()
                     )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
 
-                    GradientButton(
+                    WhiteButton(
                         onClick = {},
-                        text = stringResource(id = R.string.texto_botao_login).uppercase(),
-                        color1 = Destaque1,
-                        color2 = Destaque2
+                        text = stringResource(id = R.string.botao_recomendados).uppercase()
                     )
                 }
             }
