@@ -35,4 +35,8 @@
     <string name="descricao_nome_do_seu_perfil1">*O nome do seu perfil pode ser o seu nome inteiro.</string>
     <string name="descricao_nome_do_seu_perfil2">O nome do perfil é obrigatório.</string>
     <string name="nome_do_perfil_label">Digite seu nome</string>
+    <string name="descricao_perfil">Olá, meu nome é Beltrana, e é uma prazer tê-la(lo) em meu perfil!
+                                    Aqui você pode encontrar algumas publicações feitas por mim,
+                                    e se gostar, é só entrar em contato para falarmos sobre o que você precisa.</string>
+    <string name="texto_button_tag"># VER MAIS</string>
 </resources>

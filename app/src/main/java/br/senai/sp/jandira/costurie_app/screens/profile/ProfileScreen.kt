@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +31,10 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.components.GradientButtonViewMore
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
+import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -40,7 +42,6 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 @Composable
 fun ProfileScreen() {
-    val context = LocalContext.current
 
     Costurie_appTheme {
 
@@ -52,8 +53,7 @@ fun ProfileScreen() {
             Column (
                 modifier = Modifier
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 Box (
@@ -168,22 +168,61 @@ fun ProfileScreen() {
                 }
 
                 Row (
-                    modifier = Modifier
-                        .height(480.dp)
                 ){
-
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    WhiteButton(
+                    WhiteButtonSmall(
                         onClick = { },
                         text = stringResource(id = R.string.botao_recomendacoes).uppercase()
                     )
 
                     Spacer(modifier = Modifier.width(12.dp))
 
-                    WhiteButton(
+                    WhiteButtonSmall(
                         onClick = {},
                         text = stringResource(id = R.string.botao_recomendados).uppercase()
+                    )
+                }
+
+                Text(
+                    color = Contraste,
+                    text = stringResource(id = R.string.descricao_perfil),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier
+                        .height(65.dp)
+                        .width(370.dp),
+                    textAlign = TextAlign.Justify
+                )
+
+                Spacer(modifier = Modifier.height(25.dp))
+
+                Row (
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp)
+                        .fillMaxWidth(),
+                    Arrangement.SpaceEvenly
+                ) {
+                    GradientButtonViewMore(
+                        onClick = { },
+                        text = stringResource(id = R.string.texto_button_tag),
+                        color1 = Destaque1,
+                        color2 = Destaque2
+                    )
+
+                    GradientButtonViewMore(
+                        onClick = { },
+                        text = stringResource(id = R.string.texto_button_tag),
+                        color1 = Destaque1,
+                        color2 = Destaque2
+                    )
+
+                    GradientButtonViewMore(
+                        onClick = { },
+                        text = stringResource(id = R.string.texto_button_tag),
+                        color1 = Destaque1,
+                        color2 = Destaque2
                     )
                 }
             }
