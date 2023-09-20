@@ -32,5 +32,7 @@
     <string name="botao_recomendacoes">Recomendações</string>
     <string name="botao_recomendados">Recomendados</string>
     <string name="texto_nome_do_seu_perfil">Nome do seu Perfil</string>
-    <string name="descricao_nome_do_seu_perfil">*O nome do seu perfil pode ser o seu nome inteiro. O nome do perfil é obrigatório.</string>
+    <string name="descricao_nome_do_seu_perfil1">*O nome do seu perfil pode ser o seu nome inteiro.</string>
+    <string name="descricao_nome_do_seu_perfil2">O nome do perfil é obrigatório.</string>
+    <string name="nome_do_perfil_label">Digite seu nome</string>
 </resources>
