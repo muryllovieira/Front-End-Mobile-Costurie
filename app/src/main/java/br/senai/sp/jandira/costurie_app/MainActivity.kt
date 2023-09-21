@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "name")
                     startDestination = "editProfile")
                 {
                     composable(route = "main") { MainScreen(navController = navController)}

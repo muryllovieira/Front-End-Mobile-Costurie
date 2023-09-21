@@ -47,11 +47,7 @@ fun CustomOutlinedTextField2(
     borderColor: Color,
     modifier: Modifier
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        //horizontalAlignment = Alignment.CenterHorizontally,
-        //verticalArrangement = Arrangement.Center
-    ) {
+
         OutlinedTextField(
             value = value,
             onValueChange = { onValueChange(it) },
@@ -70,6 +66,6 @@ fun CustomOutlinedTextField2(
         )
 
 
-    }
+
 }
 
