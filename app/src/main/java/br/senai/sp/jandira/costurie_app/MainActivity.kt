@@ -11,7 +11,7 @@ import br.senai.sp.jandira.costurie_app.screens.loading.LoadingScreen
 import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
 import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
 import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
-import br.senai.sp.jandira.costurie_app.screens.personalizacao.NameScreen
+import br.senai.sp.jandira.costurie_app.screens.personalization.NameScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 import br.senai.sp.jandira.costurie_app.screens.tradePassword.TradePasswordScreen
 import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "editProfile")
+                    startDestination = "name")
                 {
                     composable(route = "main") { MainScreen(navController = navController)}
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope)}
