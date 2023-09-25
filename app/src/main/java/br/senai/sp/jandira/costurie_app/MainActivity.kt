@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
 
                     startDestination = "foto")
+                 
 
                 {
                     composable(route = "main") { MainScreen(navController = navController)}
