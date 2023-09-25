@@ -64,8 +64,10 @@ fun DescriptionScreen() {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     modifier = Modifier
@@ -129,7 +131,7 @@ fun DescriptionScreen() {
                         color = Color.Black
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    //Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
                         text =
@@ -150,7 +152,7 @@ fun DescriptionScreen() {
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(50.dp))
+                //Spacer(modifier = Modifier.height(50.dp))
 
                 CustomOutlinedTextField2(
                     value = descriptionState,
@@ -166,8 +168,7 @@ fun DescriptionScreen() {
                 )
 
                 Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(0.dp, 110.dp, 15.dp, 0.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.End
                 ) {
                     WhiteButton(
