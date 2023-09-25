@@ -51,7 +51,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NameScreen(navController: NavController) {
+fun NameScreen() {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
     var nomeState by remember {
@@ -168,8 +168,8 @@ fun NameScreen(navController: NavController) {
     }
 
 
-//@Preview(showSystemUi = true)
-//@Composable
-//fun PreviewNameScreen() {
-//    NameScreen()
-//}
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewNameScreen() {
+    NameScreen()
+}
