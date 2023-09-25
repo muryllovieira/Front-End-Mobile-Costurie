@@ -41,7 +41,7 @@ fun DropdownEstado() {
 
     Box(
         modifier = Modifier
-            .width(180.dp)
+            .fillMaxWidth()
             .height(67.dp)
             .background(
                 colorResource(id = R.color.principal_2),
@@ -81,21 +81,21 @@ fun DropdownEstado() {
                 )
             ) {
                 DropdownMenuItem(
-                    text = { Text("AC", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("AC", color = Contraste2) },
                     onClick = {
                         estado = "AC"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("SP", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("SP", color = Contraste2) },
                     onClick = {
                         estado = "SP"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("RJ", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("RJ", color = Contraste2) },
                     onClick = {
                         estado = "RJ"
                         isExpanded = false

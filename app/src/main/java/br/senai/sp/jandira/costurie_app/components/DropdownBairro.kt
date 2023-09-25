@@ -10,8 +10,10 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,12 +43,13 @@ fun DropdownBairro() {
 
     Box(
         modifier = Modifier
-            .width(180.dp)
+            .fillMaxWidth()
             .height(67.dp)
             .background(
                 colorResource(id = R.color.principal_2),
                 shape = RoundedCornerShape(20.dp)
             ),
+        //contentColor(backgroundColor = Color.White),
         contentAlignment = Alignment.Center
     ) {
         ExposedDropdownMenuBox(
@@ -81,21 +84,21 @@ fun DropdownBairro() {
                 )
             ) {
                 DropdownMenuItem(
-                    text = { Text("Acrinho", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("Acrinho", color = Contraste2) },
                     onClick = {
                         bairro = "Acrinho"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Engenho Novo", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("Engenho Novo", color = Contraste2) },
                     onClick = {
                         bairro = "Engenho Novo"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Niteroi", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("Niteroi", color = Contraste2) },
                     onClick = {
                         bairro = "Niteroi"
                         isExpanded = false

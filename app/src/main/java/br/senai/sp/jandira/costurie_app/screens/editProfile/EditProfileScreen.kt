@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.costurie_app.screens.editProfile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +63,8 @@ fun EditProfileScreen(
     var descricaoState by remember {
         mutableStateOf("")
     }
+
+    val scrollState = rememberScrollState()
 
     Costurie_appTheme {
 
@@ -130,10 +135,12 @@ fun EditProfileScreen(
                     }
 
                 }
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp, 8.dp, 20.dp, 0.dp)
+                        .verticalScroll(scrollState)
                 ) {
                     Text(
                         text = "NOME",
@@ -142,7 +149,7 @@ fun EditProfileScreen(
                     CustomOutlinedTextField2(
                         value = nomeState,
                         onValueChange = {
-                                        nomeState = it
+                            nomeState = it
                         },
                         borderColor = Color.Transparent,
                         modifier = Modifier
@@ -156,42 +163,26 @@ fun EditProfileScreen(
                     CustomOutlinedTextField2(
                         value = tagDeUsuarioState,
                         onValueChange = {
-                                        tagDeUsuarioState = it
+                            tagDeUsuarioState = it
                         },
                         borderColor = Color.Transparent,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(62.dp)
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(30.dp, 0.dp, 30.dp, 0.dp),
-                        //horizontalArrangement = Arrangement.SpaceBetween
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = "Cidade",
-                            fontSize = 24.sp
-                        )
-                        Spacer(modifier = Modifier.width(130.dp))
-                        Text(
-                            text = "Bairro",
-                            fontSize = 24.sp,
-                            textAlign = TextAlign.Start
-                        )
-
+                        Text(text = "Cidade", fontSize = 24.sp)
+                        DropdownCidade()
                     }
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(30.dp, 0.dp, 30.dp, 0.dp),
-                        //horizontalArrangement = Arrangement.SpaceEvenly
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            DropdownCidade()
-                            Spacer(modifier = Modifier.width(20.dp))
-                            DropdownBairro()
-                        }
+                        Text(text = "Bairro", fontSize = 24.sp)
+                        DropdownBairro()
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -200,11 +191,23 @@ fun EditProfileScreen(
                         Text(text = "Estado", fontSize = 24.sp)
                         DropdownEstado()
                     }
+//                    Column(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(30.dp, 0.dp, 30.dp, 0.dp),
+//                        //horizontalArrangement = Arrangement.SpaceEvenly
+//                    ) {
+//                        Row(modifier = Modifier.fillMaxWidth()) {
+//                            DropdownCidade()
+//                            Spacer(modifier = Modifier.width(20.dp))
+//                            DropdownBairro()
+//                        }
+//                    }
                     Text(text = "Descrição", fontSize = 24.sp)
                     CustomOutlinedTextField2(
                         value = descricaoState,
                         onValueChange = {
-                                        descricaoState = it
+                            descricaoState = it
                         },
                         borderColor = Color.Transparent,
                         modifier = Modifier
