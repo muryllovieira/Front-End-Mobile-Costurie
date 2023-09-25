@@ -71,7 +71,6 @@ fun DropdownCidade() {
                     .background(
                         color = Color.White
                     )
-
             )
 
             ExposedDropdownMenu(
@@ -82,21 +81,21 @@ fun DropdownCidade() {
                 )
             ) {
                 DropdownMenuItem(
-                    text = { Text("Barueri", color = Contraste2) },
+                    text = { Text("Barueri", fontSize= 8.sp, color = Contraste2) },
                     onClick = {
                         cidade = "Barueri"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("São Paulo", color = Contraste2) },
+                    text = { Text("São Paulo", fontSize= 8.sp, color = Contraste2) },
                     onClick = {
                         cidade = "São Paulo"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Rio", color = Contraste2) },
+                    text = { Text("Rio", fontSize= 8.sp, color = Contraste2) },
                     onClick = {
                         cidade = "Rio"
                         isExpanded = false
