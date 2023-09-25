@@ -39,4 +39,7 @@
                                     Aqui você pode encontrar algumas publicações feitas por mim,
                                     e se gostar, é só entrar em contato para falarmos sobre o que você precisa.</string>
     <string name="texto_button_tag"># VER MAIS</string>
+    <string name="texto_tipo_de_perfil">Qual seu tipo de perfil?</string>
+    <string name="perfil_costureira">Perfil de Costureira</string>
+    <string name="perfil_consumidor">Perfil de Consumidor</string>
 </resources>
