@@ -22,7 +22,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
 
 @Composable
-fun WhiteButton (
+fun WhiteButton(
     onClick: () -> Unit,
     text: String
 ) {
@@ -40,12 +40,17 @@ fun WhiteButton (
             containerColor = Color.Transparent
         ),
     ) {
-        Text(text = text, fontSize = 18.sp, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold, color = Color(
-            168,
-            155,
-            255,
-            255
-        )
+        Text(
+            text = text,
+            fontSize = 18.sp,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(
+                168,
+                155,
+                255,
+                255
+            )
         )
     }
 }
@@ -53,5 +58,5 @@ fun WhiteButton (
 @Preview(showBackground = true)
 @Composable
 fun WhiteButtonPreview() {
-    WhiteButton(onClick = {  }, text = "",)
+    WhiteButton(onClick = { }, text = "")
 }

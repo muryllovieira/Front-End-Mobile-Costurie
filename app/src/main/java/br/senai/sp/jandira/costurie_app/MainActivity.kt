@@ -11,6 +11,8 @@ import br.senai.sp.jandira.costurie_app.screens.loading.LoadingScreen
 import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
 import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
 import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
+import br.senai.sp.jandira.costurie_app.screens.personalization.DescriptionScreen
+import br.senai.sp.jandira.costurie_app.screens.personalization.LocationScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.NameScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 import br.senai.sp.jandira.costurie_app.screens.tradePassword.TradePasswordScreen
@@ -30,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "name")
+                    startDestination = "location")
                 {
                     composable(route = "main") { MainScreen(navController = navController)}
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope)}
@@ -41,6 +43,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
                     //composable(route = "name") { NameScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen() }
+                    composable(route = "description") { DescriptionScreen()}
+                    composable(route = "location") { LocationScreen()}
                 }
             }
         }
