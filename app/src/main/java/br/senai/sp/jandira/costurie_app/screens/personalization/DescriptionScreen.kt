@@ -1,15 +1,7 @@
 package br.senai.sp.jandira.costurie_app.screens.personalization
 
-
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,14 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -40,8 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -54,40 +40,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePicScreen(navController: NavController) {
+fun DescriptionScreen() {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
-
-    //obter fot oda galeria de imagens
-
-    var fotoUri by remember {
-        mutableStateOf<Uri?>(null)
+    var descriptionState by remember {
+        mutableStateOf("")
     }
-
-    //criar o objeto que abrira a galeria e retornara a uri da imagem selecionada
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) {
-        fotoUri = it
-    }
-
-    var context = LocalContext.current
-
-    var painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(context).data(fotoUri).build()
-    )
-
-
 
     Costurie_appTheme {
         Surface(
@@ -97,7 +64,8 @@ fun ProfilePicScreen(navController: NavController) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -105,9 +73,22 @@ fun ProfilePicScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                    horizontalArrangement = Arrangement.End,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+
+                    IconButton(
+                        onClick = { /*TODO*/ },
+
+                        ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrow_back),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(35.dp),
+                            tint = Color.Magenta
+                        )
+                    }
                     Button(
                         onClick = { /*TODO*/ },
                         modifier = Modifier
@@ -133,16 +114,16 @@ fun ProfilePicScreen(navController: NavController) {
                             tint = Color.White
                         )
                     }
-                }//row
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 35.dp),
+                        .padding(horizontal = 35.dp, vertical = 56.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
 
-                        text = stringResource(id = R.string.texto_foto_de_perfil).uppercase(),
+                        text = stringResource(id = R.string.texto_descricao_do_seu_perfil).uppercase(),
                         modifier = Modifier.height(30.dp),
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,
@@ -150,90 +131,61 @@ fun ProfilePicScreen(navController: NavController) {
                         color = Color.Black
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    //Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        text = stringResource(id = R.string.descricao_foto_de_perfil1),
-                        color = Color.Black,
+                        text =
+                        buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = Color.Black)) {
+                                append(stringResource(id = R.string.descricao_da_descricao_do_seu_perfil))
+                            }
+
+                        },
                         fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Light
-                    )
-                }//column
-
-                Text(
-                    text = stringResource(id = R.string.descricao_foto_de_perfil2),
-                    color = Color.Black,
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Light
-                )//text
-
-                Box(
-                    contentAlignment = Alignment.BottomEnd,
-                    modifier = Modifier
-                        .size(150.dp)
-                        .clickable {
-                            launcher.launch("image/*")
-                        }
-                ) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.Center),
-                        shape = CircleShape,
-                        colors = CardDefaults.cardColors(Color.Transparent)
-                    ) {
-                        if (fotoUri == null) {
-                            Image(
-                                painter = painterResource(id = R.drawable.profile_default),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-
-                        } else {
-                            Image(
-                                painter = painter,
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                    }
-                    Icon(
-                        painter = painterResource(id = R.drawable.camera),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .height(25.dp)
-                            .width(41.dp)
-                            .align(Alignment.BottomEnd)
-                            .padding(end = 16.dp),
-                        tint = Color(207, 6, 240)
+                        textAlign = TextAlign.Center
                     )
                 }
 
-                Row(
+                Text(
+                    text = stringResource(id = R.string.texto_adicionar_descricao),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                //Spacer(modifier = Modifier.height(50.dp))
+
+                CustomOutlinedTextField2(
+                    value = descriptionState,
+                    onValueChange = {
+                        descriptionState = it
+                    },
+                    label = stringResource(id = R.string.descricao_do_perfil_label),
+                    borderColor = Color.Transparent,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 10.dp),
-                    horizontalArrangement = Arrangement.End
+                        .height(200.dp)
+                        .padding(horizontal = 35.dp)
+                )
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.End
                 ) {
-                    WhiteButtonSmall(
+                    WhiteButton(
                         onClick = { /*TODO*/ },
                         text = "Pular".uppercase()
                     )
                 }
 
             }
+
         }
     }
 }
 
-//@Preview (showSystemUi = true, showBackground = true)
-//@Composable
-//fun PreviewProfilePicScreen() {
-//    ProfilePicScreen()
-//}
+
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewDescriptionScreen() {
+    DescriptionScreen()
+}
