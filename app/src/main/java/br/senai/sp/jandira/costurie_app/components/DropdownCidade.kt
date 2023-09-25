@@ -41,7 +41,7 @@ fun DropdownCidade() {
 
     Box(
         modifier = Modifier
-            .width(180.dp)
+            .fillMaxWidth()
             .height(67.dp)
             .background(
                 color = Color.White,
@@ -82,21 +82,21 @@ fun DropdownCidade() {
                 )
             ) {
                 DropdownMenuItem(
-                    text = { Text("Barueri", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("Barueri", color = Contraste2) },
                     onClick = {
                         cidade = "Barueri"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("São Paulo", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("São Paulo", color = Contraste2) },
                     onClick = {
                         cidade = "São Paulo"
                         isExpanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Rio", fontSize = 15.sp, color = Contraste2) },
+                    text = { Text("Rio", color = Contraste2) },
                     onClick = {
                         cidade = "Rio"
                         isExpanded = false

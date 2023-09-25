@@ -62,7 +62,7 @@ fun CustomOutlinedTextField2(
             ),
             label = { Text(label, fontSize = 15.sp, color = Contraste2) },
             textStyle = TextStyle.Default.copy(fontSize = 15.sp, color = Color.Black),
-            singleLine = true
+            //singleLine = true
         )
 
 
