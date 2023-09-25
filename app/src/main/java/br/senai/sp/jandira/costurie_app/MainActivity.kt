@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 AnimatedNavHost(
                     navController = navController,
 
-                    startDestination = "location")
+                    startDestination = "foto")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController)}
