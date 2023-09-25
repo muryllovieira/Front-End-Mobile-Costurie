@@ -62,8 +62,10 @@ fun LocationScreen() {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     modifier = Modifier
@@ -127,7 +129,7 @@ fun LocationScreen() {
                         color = Color.Black
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    //Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
                         text =
@@ -146,13 +148,13 @@ fun LocationScreen() {
                 }
 
                 Text(
-                    modifier = Modifier.padding(15.dp),
+                    modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 0.dp),
                     text = stringResource(id = R.string.texto_adicionar_localizacao),
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(50.dp))
+                //Spacer(modifier = Modifier.height(50.dp))
 
                 CustomOutlinedTextField2(
                     value = descriptionState,
@@ -168,8 +170,7 @@ fun LocationScreen() {
                 )
 
                 Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(0.dp, 110.dp, 15.dp, 0.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.End
                 ) {
                     WhiteButton(
@@ -188,5 +189,5 @@ fun LocationScreen() {
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewLocationScreen() {
-    DescriptionScreen()
+    LocationScreen()
 }
