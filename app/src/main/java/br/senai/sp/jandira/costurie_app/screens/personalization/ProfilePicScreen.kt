@@ -38,12 +38,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -64,7 +67,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
 @Composable
-fun ProfilePicScreen(navController: NavController) {
+fun ProfilePicScreen() {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
 
@@ -105,9 +108,21 @@ fun ProfilePicScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                    horizontalArrangement = Arrangement.End,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+
+                    IconButton(
+                        onClick = { /*TODO*/ },
+
+                        ) {
+                        Image(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(45.dp)
+                        )
+                    }
                     Button(
                         onClick = { /*TODO*/ },
                         modifier = Modifier
@@ -203,15 +218,14 @@ fun ProfilePicScreen(navController: NavController) {
                             )
                         }
                     }
-                    Icon(
-                        painter = painterResource(id = R.drawable.camera),
+                    Image(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.baseline_camera_alt_24),
                         contentDescription = "",
                         modifier = Modifier
-                            .height(25.dp)
-                            .width(41.dp)
+                            .height(28.dp)
+                            .width(48.dp)
                             .align(Alignment.BottomEnd)
-                            .padding(end = 16.dp),
-                        tint = Color(207, 6, 240)
+                            .padding(end = 16.dp)
                     )
                 }
 
@@ -232,8 +246,8 @@ fun ProfilePicScreen(navController: NavController) {
     }
 }
 
-//@Preview (showSystemUi = true, showBackground = true)
-//@Composable
-//fun PreviewProfilePicScreen() {
-//    ProfilePicScreen()
-//}
+@Preview (showSystemUi = true, showBackground = true)
+@Composable
+fun PreviewProfilePicScreen() {
+    ProfilePicScreen()
+}

@@ -37,32 +37,27 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-
-
-                    startDestination = "foto")
-                 
+                    startDestination = "foto"
+                )
 
 
                 {
-                    composable(route = "main") { MainScreen(navController = navController)}
-                    composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope)}
-                    composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope)}
-                    composable(route = "password") { PasswordScreen(navController = navController,  lifecycleScope = lifecycleScope, viewModel)}
+                    composable(route = "main") { MainScreen(navController = navController) }
+                    composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }
+                    composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope) }
+                    composable(route = "password") {PasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
                     composable(route = "validationCode") { ValidationCodeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
                     composable(route = "tradePassword") { TradePasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
-                    composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) 
-//                    composable(route = "name") { NameScreen(navController = navController) }
+                    composable(route = "loading") {LoadingScreen(navController = navController, lifecycleScope = lifecycleScope)}
+                  //composable(route = "name") { NameScreen(navController = navController) }
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
-
                     //composable(route = "name") { NameScreen(navController = navController) }
-                    composable(route = "foto") { ProfilePicScreen(navController = navController) }
-
+                    //composable(route = "foto") { ProfilePicScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen() }
-                    composable(route = "description") { DescriptionScreen()}
-                    composable(route = "location") { LocationScreen()}
+                    composable(route = "description") { DescriptionScreen() }
+                    composable(route = "location") { LocationScreen() }
+                    }
                 }
             }
         }
     }
-
-}
