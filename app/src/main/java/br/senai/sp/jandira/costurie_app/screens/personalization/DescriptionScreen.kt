@@ -1,10 +1,8 @@
 package br.senai.sp.jandira.costurie_app.screens.personalization
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,8 +17,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,12 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,16 +41,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
+import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NameScreen() {
+fun DescriptionScreen() {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
-    var nomeState by remember {
+    var descriptionState by remember {
         mutableStateOf("")
     }
 
@@ -69,8 +64,10 @@ fun NameScreen() {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     modifier = Modifier
@@ -84,11 +81,12 @@ fun NameScreen() {
                         onClick = { /*TODO*/ },
 
                         ) {
-                        Image(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(45.dp)
+                                .size(35.dp),
+                            tint = Color.Magenta
                         )
                     }
                     Button(
@@ -108,7 +106,7 @@ fun NameScreen() {
                             hoveredElevation = 0.dp
                         ),
                         contentPadding = PaddingValues(0.dp)
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_forward),
                             contentDescription = "",
@@ -116,7 +114,7 @@ fun NameScreen() {
                             tint = Color.White
                         )
                     }
-                }//row
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -125,7 +123,7 @@ fun NameScreen() {
                 ) {
                     Text(
 
-                        text = stringResource(id = R.string.texto_nome_do_seu_perfil).uppercase(),
+                        text = stringResource(id = R.string.texto_descricao_do_seu_perfil).uppercase(),
                         modifier = Modifier.height(30.dp),
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,
@@ -133,45 +131,61 @@ fun NameScreen() {
                         color = Color.Black
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    //Spacer(modifier = Modifier.height(24.dp))
 
-                    Text( text =
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.Black)) {
-                            append(stringResource(id = R.string.descricao_nome_do_seu_perfil1))
-                        }
-                        append(" ")
-                        withStyle(style = SpanStyle(color = Color.Black, fontWeight = FontWeight.Bold)) {
-                            append(stringResource(id = R.string.descricao_nome_do_seu_perfil2))
-                        }
-                    },
+                    Text(
+                        text =
+                        buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = Color.Black)) {
+                                append(stringResource(id = R.string.descricao_da_descricao_do_seu_perfil))
+                            }
+
+                        },
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
                     )
                 }
 
+                Text(
+                    text = stringResource(id = R.string.texto_adicionar_descricao),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                //Spacer(modifier = Modifier.height(50.dp))
+
                 CustomOutlinedTextField2(
-                    value = nomeState,
+                    value = descriptionState,
                     onValueChange = {
-                        nomeState = it
+                        descriptionState = it
                     },
-                    label = stringResource(id = R.string.nome_do_perfil_label),
+                    label = stringResource(id = R.string.descricao_do_perfil_label),
                     borderColor = Color.Transparent,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(62.dp)
+                        .height(200.dp)
                         .padding(horizontal = 35.dp)
                 )
 
-            }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    WhiteButton(
+                        onClick = { /*TODO*/ },
+                        text = "Pular".uppercase()
+                    )
+                }
 
             }
+
         }
     }
+}
 
 
 @Preview(showSystemUi = true)
 @Composable
-fun PreviewNameScreen() {
-    NameScreen()
+fun PreviewDescriptionScreen() {
+    DescriptionScreen()
 }

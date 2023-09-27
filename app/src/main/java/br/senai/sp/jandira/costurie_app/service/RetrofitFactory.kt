@@ -14,4 +14,6 @@ object RetrofitFactory {
             .build()
     }
 
+    private const val URL_IBGE = ""
+
 }

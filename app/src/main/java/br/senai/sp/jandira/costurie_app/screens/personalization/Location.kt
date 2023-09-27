@@ -1,10 +1,8 @@
 package br.senai.sp.jandira.costurie_app.screens.personalization
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,8 +17,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,12 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,19 +38,22 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
+import br.senai.sp.jandira.costurie_app.components.DropdownBairro
+import br.senai.sp.jandira.costurie_app.components.DropdownCidade
+import br.senai.sp.jandira.costurie_app.components.DropdownEstado
+import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NameScreen() {
+fun LocationScreen() {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
-    var nomeState by remember {
+    var descriptionState by remember {
         mutableStateOf("")
     }
 
@@ -69,8 +65,10 @@ fun NameScreen() {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(15.dp),
+                //horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     modifier = Modifier
@@ -84,11 +82,12 @@ fun NameScreen() {
                         onClick = { /*TODO*/ },
 
                         ) {
-                        Image(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(45.dp)
+                                .size(35.dp),
+                            tint = Color.Magenta
                         )
                     }
                     Button(
@@ -108,7 +107,7 @@ fun NameScreen() {
                             hoveredElevation = 0.dp
                         ),
                         contentPadding = PaddingValues(0.dp)
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.arrow_forward),
                             contentDescription = "",
@@ -116,7 +115,7 @@ fun NameScreen() {
                             tint = Color.White
                         )
                     }
-                }//row
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -125,7 +124,7 @@ fun NameScreen() {
                 ) {
                     Text(
 
-                        text = stringResource(id = R.string.texto_nome_do_seu_perfil).uppercase(),
+                        text = stringResource(id = R.string.texto_localizacao_do_seu_perfil).uppercase(),
                         modifier = Modifier.height(30.dp),
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,
@@ -133,45 +132,82 @@ fun NameScreen() {
                         color = Color.Black
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    //Spacer(modifier = Modifier.height(24.dp))
 
-                    Text( text =
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.Black)) {
-                            append(stringResource(id = R.string.descricao_nome_do_seu_perfil1))
-                        }
-                        append(" ")
-                        withStyle(style = SpanStyle(color = Color.Black, fontWeight = FontWeight.Bold)) {
-                            append(stringResource(id = R.string.descricao_nome_do_seu_perfil2))
-                        }
-                    },
+                    Text(
+                        text =
+                        buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = Color.Black)) {
+                                append(stringResource(id = R.string.descricao_localizacao_do_seu_perfil1))
+                            }
+                            append(" ")
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append(stringResource(id = R.string.descricao_localizacao_do_seu_perfil2))
+                            }
+                        },
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
                     )
                 }
 
-                CustomOutlinedTextField2(
-                    value = nomeState,
-                    onValueChange = {
-                        nomeState = it
-                    },
-                    label = stringResource(id = R.string.nome_do_perfil_label),
-                    borderColor = Color.Transparent,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(62.dp)
-                        .padding(horizontal = 35.dp)
+                Text(
+                    modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 0.dp),
+                    text = stringResource(id = R.string.texto_adicionar_localizacao),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
                 )
 
-            }
+                //Spacer(modifier = Modifier.height(50.dp))
+
+                Text(
+                    text = "Estados:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
+                )
+                DropdownEstado()
+                Text(
+                    text = "Cidades:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
+                )
+                DropdownCidade()
+                Text(
+                    text = "Bairros:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
+                )
+                DropdownBairro()
+
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(0.dp, 25.dp, 0.dp, 0.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    WhiteButton(
+                        onClick = { /*TODO*/ },
+                        text = "Pular".uppercase()
+                    )
+                }
 
             }
+
         }
     }
+}
 
 
 @Preview(showSystemUi = true)
 @Composable
-fun PreviewNameScreen() {
-    NameScreen()
+fun PreviewLocationScreen() {
+    LocationScreen()
 }
