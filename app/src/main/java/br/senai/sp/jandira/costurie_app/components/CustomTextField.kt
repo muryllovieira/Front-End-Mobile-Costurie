@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -64,14 +65,16 @@ fun CustomOutlinedTextField(
             value = value,
             onValueChange = { onValueChange(it) },
             modifier = Modifier
-                .padding(top = 20.dp)
                 .width(400.dp)
                 .height(62.dp)
-                .background(colorResource(id = R.color.principal_2), shape = RoundedCornerShape(20.dp)),
+                .background(
+                    colorResource(id = R.color.principal_2),
+                    shape = RoundedCornerShape(20.dp)
+                ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = borderColor,
                 unfocusedBorderColor = borderColor,
-                errorBorderColor = Color.Red
+                errorBorderColor = Color.Transparent
             ),
             label = { Text(label, fontSize = 15.sp, color = Contraste2) },
             textStyle = TextStyle.Default.copy(fontSize = 15.sp, color = Color.Black),
@@ -122,3 +125,13 @@ fun CustomOutlinedTextField(
     }
 }
 
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewButton() {
+//    CustomOutlinedTextField(
+//        value = "teste",
+//        onValueChange = {},
+//        leadingIconImageVector = Icons.Default.AlternateEmail,
+//        borderColor = Color.Transparent
+//    )
+//}

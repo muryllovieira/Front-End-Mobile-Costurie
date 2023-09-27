@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "location"
+                    startDestination = "login"
                 )
 
 
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "validationCode") { ValidationCodeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
                     composable(route = "tradePassword") { TradePasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
                     composable(route = "loading") {LoadingScreen(navController = navController, lifecycleScope = lifecycleScope)}
-                  //composable(route = "name") { NameScreen(navController = navController) }
+                    //composable(route = "name") { NameScreen(navController = navController) }
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
                     //composable(route = "name") { NameScreen(navController = navController) }
                     //composable(route = "foto") { ProfilePicScreen(navController = navController) }
