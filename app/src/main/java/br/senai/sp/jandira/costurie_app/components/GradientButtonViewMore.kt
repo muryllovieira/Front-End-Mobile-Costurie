@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
@@ -22,7 +24,6 @@ import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
 @Composable
 fun GradientButtonViewMore (
     onClick: () -> Unit,
-    text: String,
     color1: Color,
     color2: Color
 ) {
@@ -38,8 +39,8 @@ fun GradientButtonViewMore (
                 ),
                 shape = ShapeButton.large,
             )
-            .height(30.dp)
-            .width(110.dp),
+            .height(37.dp)
+            .width(115.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
         ),
@@ -50,8 +51,8 @@ fun GradientButtonViewMore (
         )
     ) {
         Text(
-            text = text.uppercase(),
-            fontSize = 10.sp,
+            text = stringResource(id = R.string.texto_button_tag),
+            fontSize = 11.sp,
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.SemiBold
         )
@@ -61,5 +62,5 @@ fun GradientButtonViewMore (
 @Preview(showBackground = true)
 @Composable
 fun GradientButtonViewMorePreview() {
-    GradientButtonViewMore(onClick = {  }, text = "", color1 = Destaque1, color2 = Destaque2)
+    GradientButtonViewMore(onClick = {  },color1 = Destaque1, color2 = Destaque2)
 }

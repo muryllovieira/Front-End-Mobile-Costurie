@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +36,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
+import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.components.GradientButtonViewMore
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
@@ -38,29 +44,36 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import br.senai.sp.jandira.costurie_app.components.ModalTagsScreen
 
 
 @Composable
 fun ProfileScreen() {
 
-    Costurie_appTheme {
+    var isModalOpen by remember { mutableStateOf(false) }
 
-        Surface (
+    Costurie_appTheme {
+        ModalTagsScreen(
+            isOpen = isModalOpen,
+            onDismiss = { isModalOpen = false }
+        )
+
+        Surface(
             modifier = Modifier
                 .fillMaxSize(),
             color = Color.White
         ) {
-            Column (
+            Column(
                 modifier = Modifier
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Box (
+                Box(
                     modifier = Modifier
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     Image(
                         painter = painterResource(id = R.drawable.forma_tela_perfil),
                         contentDescription = "",
@@ -70,13 +83,13 @@ fun ProfileScreen() {
                         alignment = Alignment.TopStart
                     )
 
-                    Column () {
-                        Row (
+                    Column() {
+                        Row(
                             modifier = Modifier
                                 .padding(start = 16.dp, end = 16.dp)
                                 .fillMaxWidth(),
                             Arrangement.SpaceBetween
-                        ){
+                        ) {
                             Text(
                                 color = Color.White,
                                 text = stringResource(id = R.string.texto_meu_perfil),
@@ -85,7 +98,7 @@ fun ProfileScreen() {
                                 fontWeight = FontWeight.SemiBold
                             )
 
-                            Row (
+                            Row(
                                 modifier = Modifier
                                     .padding(end = 16.dp)
                                     .width(280.dp),
@@ -110,7 +123,7 @@ fun ProfileScreen() {
                             }
                         }
 
-                        Row (
+                        Row(
                             modifier = Modifier
                                 .padding(start = 16.dp)
                                 .width(320.dp),
@@ -125,7 +138,7 @@ fun ProfileScreen() {
 
                             Spacer(modifier = Modifier.width(5.dp))
 
-                            Column (
+                            Column(
                             ) {
                                 Text(
                                     color = Color.White,
@@ -167,8 +180,8 @@ fun ProfileScreen() {
                     }
                 }
 
-                Row (
-                ){
+                Row(
+                ) {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     WhiteButtonSmall(
@@ -198,29 +211,29 @@ fun ProfileScreen() {
 
                 Spacer(modifier = Modifier.height(25.dp))
 
-                Row (
+                Row(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
                         .fillMaxWidth(),
                     Arrangement.SpaceEvenly
                 ) {
-                    GradientButtonViewMore(
-                        onClick = { },
-                        text = stringResource(id = R.string.texto_button_tag),
+                    GradientButtonTag(
+                        onClick = { /*TODO*/ },
+                        text = "tag",
                         color1 = Destaque1,
                         color2 = Destaque2
                     )
-
-                    GradientButtonViewMore(
-                        onClick = { },
-                        text = stringResource(id = R.string.texto_button_tag),
+                    GradientButtonTag(
+                        onClick = { /*TODO*/ },
+                        text = "tag",
                         color1 = Destaque1,
                         color2 = Destaque2
                     )
-
                     GradientButtonViewMore(
-                        onClick = { },
-                        text = stringResource(id = R.string.texto_button_tag),
+                        onClick = {
+                            !isModalOpen
+//                            Log.i("teste", "${isModalOpen}")
+                        },
                         color1 = Destaque1,
                         color2 = Destaque2
                     )

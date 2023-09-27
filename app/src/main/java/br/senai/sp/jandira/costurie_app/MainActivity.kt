@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.costurie_app
 
+import ProfileScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "type")
+                    startDestination = "profile")
                 {
                     composable(route = "main") { MainScreen(navController = navController)}
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope)}
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
 //                    composable(route = "name") { NameScreen(navController = navController) }
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen() }
+                    composable(route = "profile") { ProfileScreen() }
                 }
             }
         }
