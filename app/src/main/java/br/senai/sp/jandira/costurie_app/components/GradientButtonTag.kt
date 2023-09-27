@@ -2,6 +2,7 @@ package br.senai.sp.jandira.costurie_app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,7 +40,7 @@ fun GradientButtonTag (
                 shape = ShapeButton.large,
             )
             .height(30.dp)
-            .width(110.dp),
+            .width(100.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
         ),
