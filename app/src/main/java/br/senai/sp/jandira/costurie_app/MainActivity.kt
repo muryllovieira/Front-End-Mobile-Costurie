@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "foto"
+                    startDestination = "location"
                 )
 
 
