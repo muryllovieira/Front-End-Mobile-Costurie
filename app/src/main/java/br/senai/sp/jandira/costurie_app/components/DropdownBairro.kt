@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,9 +45,10 @@ fun DropdownBairro() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(67.dp)
+            .height(52.dp)
             .background(
-                colorResource(id = R.color.principal_2),
+                color = Color.White,
+                //colorResource(id = R.color.principal_2),
                 shape = RoundedCornerShape(20.dp)
             ),
         //contentColor(backgroundColor = Color.White),
@@ -72,7 +74,8 @@ fun DropdownBairro() {
                     .menuAnchor()
                     .background(
                         color = Color.White
-                    )
+                    ),
+                textStyle = TextStyle(fontSize = 16.sp),
 
             )
 
