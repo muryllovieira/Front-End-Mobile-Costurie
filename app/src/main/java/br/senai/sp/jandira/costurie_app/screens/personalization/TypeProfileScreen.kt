@@ -46,7 +46,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
 //@Preview(showBackground = true, showSystemUi = true)
 //@Composable
 //fun typeProfileScreenPreview() {
-//    TypeProfileScreen("")
+//    TypeProfileScreen()
 //}
 
 @Composable
@@ -201,24 +201,37 @@ fun TypeProfileScreen(navController: NavController) {
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                text = stringResource(id = R.string.perfil_consumidor),
-                                fontSize = 18.sp,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(
-                                    168,
-                                    155,
-                                    255,
-                                    255
+                            Row (
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                Image(
+                                    painter = painterResource(id = R.drawable.person),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(24.dp, 36.dp)
                                 )
-                            )
+
+                                Text(
+                                    text = stringResource(id = R.string.perfil_consumidor),
+                                    fontSize = 18.sp,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(
+                                        168,
+                                        155,
+                                        255,
+                                        255
+                                    )
+                                )
+                            }
+
                         }
+                    }
                 }
             }
 
 
         }
     }
-}
 }
