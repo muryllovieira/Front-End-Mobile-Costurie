@@ -40,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
+import br.senai.sp.jandira.costurie_app.components.DropdownBairro
+import br.senai.sp.jandira.costurie_app.components.DropdownCidade
+import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
@@ -64,7 +67,7 @@ fun LocationScreen() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                //horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
@@ -138,7 +141,12 @@ fun LocationScreen() {
                                 append(stringResource(id = R.string.descricao_localizacao_do_seu_perfil1))
                             }
                             append(" ")
-                            withStyle(style = SpanStyle(color = Color.Black, fontWeight = FontWeight.Bold)) {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
                                 append(stringResource(id = R.string.descricao_localizacao_do_seu_perfil2))
                             }
                         },
@@ -156,21 +164,33 @@ fun LocationScreen() {
 
                 //Spacer(modifier = Modifier.height(50.dp))
 
-                CustomOutlinedTextField2(
-                    value = descriptionState,
-                    onValueChange = {
-                        descriptionState = it
-                    },
-                    label = stringResource(id = R.string.descricao_do_perfil_label),
-                    borderColor = Color.Transparent,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(horizontal = 35.dp)
+                Text(
+                    text = "Estados:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
+                DropdownEstado()
+                Text(
+                    text = "Cidades:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
+                )
+                DropdownCidade()
+                Text(
+                    text = "Bairros:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
+                )
+                DropdownBairro()
 
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(0.dp, 25.dp, 0.dp, 0.dp),
                     horizontalAlignment = Alignment.End
                 ) {
                     WhiteButton(
