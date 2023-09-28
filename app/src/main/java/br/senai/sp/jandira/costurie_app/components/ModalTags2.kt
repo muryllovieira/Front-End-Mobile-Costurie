@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -108,7 +109,11 @@ fun ModalTags2(
                 Text(text = "Este é o conteúdo do modal.")
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2), // Define que haverá 2 colunas por linha
-                    //modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 50.dp, 0.dp, 0.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                     content = {
                         items(6) { index ->
                             GradientButtonTag(

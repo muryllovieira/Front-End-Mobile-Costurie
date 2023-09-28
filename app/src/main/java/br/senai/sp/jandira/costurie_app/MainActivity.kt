@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = "profile")
 
-
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }

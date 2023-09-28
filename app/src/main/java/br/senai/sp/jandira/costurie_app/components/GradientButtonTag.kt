@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +51,6 @@ fun GradientButtonTag(
             )
             .height(37.dp)
             .width(115.dp),
-
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
         ),
@@ -58,7 +58,8 @@ fun GradientButtonTag(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
             hoveredElevation = 0.dp
-        )
+        ),
+        //contentPadding = PaddingValues.Absolute(12.dp)
     ) {
 
         Text(
