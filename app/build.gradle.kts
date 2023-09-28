@@ -95,4 +95,8 @@ dependencies {
     implementation("androidx.compose.material:material:1.0.0")
     implementation("com.google.accompanist:accompanist-pager:0.20.0")
 
+    //Modal
+    implementation ("androidx.compose.material3:material3:1.0.0-alpha01")
+
+
 }

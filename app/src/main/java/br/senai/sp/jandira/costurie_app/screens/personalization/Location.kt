@@ -198,7 +198,9 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                 DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
 
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(0.dp, 25.dp, 0.dp, 0.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 25.dp, 0.dp, 0.dp),
                     horizontalAlignment = Alignment.End
                 ) {
                     WhiteButton(

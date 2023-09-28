@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -55,22 +57,36 @@ fun ModalTagsScreen(
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.SemiBold
                     )
-                    LazyColumn(
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .height(300.dp)
-                    ) {
-                        items(6) {
-                            GradientButtonTag(
-                                onClick = { /*TODO*/ },
-                                text = "tag",
-                                color1 = Destaque1,
-                                color2 = Destaque2
-                            )
-
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2), // Define que haverá 2 colunas por linha
+                        modifier = Modifier.fillMaxSize(),
+                        content = {
+                            items(6) { index ->
+                                GradientButtonTag(
+                                    onClick = { /*TODO*/ },
+                                    text = "tag",
+                                    color1 = Destaque1,
+                                    color2 = Destaque2
+                                )
+                            }
                         }
-                    }
+                    )
+//                    LazyColumn(
+//                        verticalArrangement = Arrangement.SpaceBetween,
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+////                        modifier = Modifier
+////                            .height(300.dp)
+//                    ) {
+//                        items(6) {
+//                            GradientButtonTag(
+//                                onClick = { /*TODO*/ },
+//                                text = "tag",
+//                                color1 = Destaque1,
+//                                color2 = Destaque2
+//                            )
+//
+//                        }
+//                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     GradientButton(
                         onClick = { onDismiss() },
