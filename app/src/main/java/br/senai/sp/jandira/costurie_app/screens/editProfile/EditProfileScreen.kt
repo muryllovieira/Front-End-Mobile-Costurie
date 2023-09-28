@@ -1,25 +1,18 @@
 package br.senai.sp.jandira.costurie_app.screens.editProfile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,26 +24,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.senai.sp.jandira.costurie_app.R
-import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
+import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(
-    //navController: NavController,
-    //lifecycleScope: LifecycleCoroutineScope
-) {
+fun EditProfileScreen(lifecycleScope: LifecycleCoroutineScope) {
+
+    val viewModel = viewModel<EstadoViewModel>()
+
+    val viewModelCidade = viewModel<BairroViewModel>()
 
     var nomeState by remember {
         mutableStateOf("")
@@ -175,21 +169,21 @@ fun EditProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(text = "Cidade", fontSize = 24.sp)
-                        DropdownCidade()
+                        DropdownCidade(lifecycleScope = lifecycleScope, viewModel, viewModelCidade)
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(text = "Bairro", fontSize = 24.sp)
-                        DropdownBairro()
+                        DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(text = "Estado", fontSize = 24.sp)
-                        DropdownEstado()
+                        DropdownEstado(lifecycleScope = lifecycleScope, viewModel)
                     }
 //                    Column(
 //                        modifier = Modifier
@@ -222,8 +216,3 @@ fun EditProfileScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun EditProfilePreview() {
-    EditProfileScreen()
-}
