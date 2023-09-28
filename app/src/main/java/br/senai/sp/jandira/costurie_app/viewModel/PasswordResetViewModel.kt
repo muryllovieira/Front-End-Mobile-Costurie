@@ -1,4 +1,4 @@
-package br.senai.sp.jandira.costurie_app
+package br.senai.sp.jandira.costurie_app.viewModel
 
 import androidx.lifecycle.ViewModel
 

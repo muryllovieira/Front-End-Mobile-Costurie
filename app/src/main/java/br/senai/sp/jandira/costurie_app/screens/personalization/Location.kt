@@ -38,6 +38,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
@@ -47,10 +49,16 @@ import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
+import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationScreen() {
+fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
+
+    val viewModel = viewModel<EstadoViewModel>()
+
+    val viewModelCidade = viewModel<BairroViewModel>()
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
     var descriptionState by remember {
@@ -171,7 +179,7 @@ fun LocationScreen() {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownEstado()
+                DropdownEstado(lifecycleScope = lifecycleScope, viewModel)
                 Text(
                     text = "Cidades:",
                     fontSize = 16.sp,
@@ -179,7 +187,7 @@ fun LocationScreen() {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownCidade()
+                DropdownCidade(lifecycleScope = lifecycleScope, viewModel, viewModelCidade)
                 Text(
                     text = "Bairros:",
                     fontSize = 16.sp,
@@ -187,7 +195,7 @@ fun LocationScreen() {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownBairro()
+                DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
 
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(0.dp, 25.dp, 0.dp, 0.dp),
@@ -206,8 +214,8 @@ fun LocationScreen() {
 }
 
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewLocationScreen() {
-    LocationScreen()
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PreviewLocationScreen() {
+//    LocationScreen()
+//}

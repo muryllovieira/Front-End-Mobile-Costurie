@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
-import br.senai.sp.jandira.costurie_app.PasswordResetViewModel
+import br.senai.sp.jandira.costurie_app.viewModel.PasswordResetViewModel
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.repository.PasswordResetRepository

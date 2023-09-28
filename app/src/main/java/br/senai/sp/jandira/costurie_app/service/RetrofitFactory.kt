@@ -14,6 +14,13 @@ object RetrofitFactory {
             .build()
     }
 
-    private const val URL_IBGE = ""
+    private const val URL_IBGE = "https://servicodados.ibge.gov.br/api/v1/localidades/"
+
+    fun getInstance2(): Retrofit{
+        return Retrofit.Builder()
+            .baseUrl(URL_IBGE)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
 }

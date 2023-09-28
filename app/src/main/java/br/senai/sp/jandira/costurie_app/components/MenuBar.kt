@@ -36,25 +36,25 @@ fun MenuBar() {
             BottomnavigationBarItem(
                 title = "home",
                 selectedIcon = "Home",
-                unselectedIcon = painterResource(id = R.drawable.homeBar),
+                unselectedIcon = painterResource(id = R.drawable.home_bar),
                 hasNews = false
             ),
             BottomnavigationBarItem(
                 title = "serviços",
                 selectedIcon = "Serviços",
-                unselectedIcon = painterResource(id = R.drawable.servicosBar),
+                unselectedIcon = painterResource(id = R.drawable.servicos_bar),
                 hasNews = false
             ),
             BottomnavigationBarItem(
                 title = "conversas",
                 selectedIcon = "Conversas",
-                unselectedIcon = painterResource(id = R.drawable.conversasBar),
+                unselectedIcon = painterResource(id = R.drawable.conversas_bar),
                 hasNews = false
             ),
             BottomnavigationBarItem(
                 title = "perfil",
                 selectedIcon = "Perfil",
-                unselectedIcon = painterResource(id = R.drawable.perfilBar),
+                unselectedIcon = painterResource(id = R.drawable.perfil_bar),
                 hasNews = false
             )
         )
