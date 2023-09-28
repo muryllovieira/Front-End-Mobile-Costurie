@@ -38,6 +38,7 @@ import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.components.GradientButtonViewMore
+import br.senai.sp.jandira.costurie_app.components.ModalTags2
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
@@ -51,6 +52,8 @@ import br.senai.sp.jandira.costurie_app.components.ModalTagsScreen
 fun ProfileScreen() {
 
     var isModalOpen by remember { mutableStateOf(false) }
+
+    //var modalTag = ModalTags2()
 
     Costurie_appTheme {
         ModalTagsScreen(
@@ -229,14 +232,14 @@ fun ProfileScreen() {
                         color1 = Destaque1,
                         color2 = Destaque2
                     )
-                    GradientButtonViewMore(
-                        onClick = {
-                            !isModalOpen
-//                            Log.i("teste", "${isModalOpen}")
-                        },
-                        color1 = Destaque1,
-                        color2 = Destaque2
-                    )
+                    ModalTags2(color1 = Destaque1, color2 = Destaque2)
+//                    GradientButtonViewMore(
+//                        onClick = {
+//                            //ModalExample()
+//                        },
+//                        color1 = Destaque1,
+//                        color2 = Destaque2
+//                    )
                 }
             }
         }
