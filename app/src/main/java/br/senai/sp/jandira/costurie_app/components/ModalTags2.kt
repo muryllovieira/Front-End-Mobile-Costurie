@@ -101,10 +101,6 @@ fun ModalTags2(
                     )
                 }
             },
-
-//            modifier = Modifier
-//                .background(colorResource(id = R.color.principal_2)),
-//                //.padding(2.dp),
             text = {
                 Text(text = "Este é o conteúdo do modal.")
                 LazyVerticalGrid(
@@ -130,12 +126,10 @@ fun ModalTags2(
             containerColor = colorResource(id = R.color.principal_2),
             confirmButton = {
                 Button(
-                    onClick = {
-
-                    },
+                    onClick = {},
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent, // Define a cor de fundo como transparente
-                        contentColor = Color.Transparent // Define a cor do conteúdo (texto) como preto ou outra cor de sua escolha
+                        containerColor = Color.Transparent,
+                        contentColor = Color.Transparent
                     )
                 ) {
                     Text(text = "Fechar", color = Color.Transparent)
