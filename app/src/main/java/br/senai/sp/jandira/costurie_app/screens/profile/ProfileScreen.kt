@@ -1,4 +1,5 @@
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,7 +35,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
@@ -46,14 +51,46 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.components.ModalTagsScreen
+import br.senai.sp.jandira.costurie_app.repository.LoginRepository
+import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope) {
 
     var isModalOpen by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+//    val focusManager = LocalFocusManager.current
+//    val scrollState = rememberScrollState()
+
     //var modalTag = ModalTags2()
+
+
+    fun user (
+        id: Int,
+        token: String
+    ) {
+            val userRepository = UserRepository()
+            lifecycleScope.launch {
+                val response = userRepository.getUser(id, token)
+
+                Log.e("TAG", "user: $response", )
+                Log.i("TAG", "user: ${response.body()}")
+
+                if(response.isSuccessful){
+                    Log.e(MainActivity::class.java.simpleName, "Usuario sucedido" )
+                    Log.e("user", "user: ${response.body()!!}", )
+                }else{
+                    val errorBody = response.errorBody()?.string()
+                   //val errorBody = response.body()
+                    Log.e(MainActivity::class.java.simpleName, "Erro durante pegar os dados do usuario: ${errorBody}")
+                    Toast.makeText(context, "Erro durante pegar os dados do usuario", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+    }
 
     Costurie_appTheme {
         ModalTagsScreen(
@@ -188,7 +225,9 @@ fun ProfileScreen() {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     WhiteButtonSmall(
-                        onClick = { },
+                        onClick = {
+                                  user(id = 72, token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c")
+                        },
                         text = stringResource(id = R.string.botao_recomendacoes).uppercase()
                     )
 
@@ -246,8 +285,8 @@ fun ProfileScreen() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfileScreenPreview() {
+//    ProfileScreen(lifecycleScope: LifecycleCoroutineScope)
+//}

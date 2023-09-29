@@ -4,11 +4,13 @@ import br.senai.sp.jandira.costurie_app.model.BaseResponse
 import br.senai.sp.jandira.costurie_app.model.CityResponse
 import br.senai.sp.jandira.costurie_app.model.NeighborhoodResponse
 import br.senai.sp.jandira.costurie_app.model.StateResponse
+import br.senai.sp.jandira.costurie_app.model.UserResponse
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -53,4 +55,10 @@ interface UserService {
     @Headers("Content-Type: application/json")
     @POST("/usuario/inserir_localizacao")
     suspend fun postLocation(@Body requestBody: JsonObject): Response<JsonObject>
+
+    @GET("/usuario/meu_perfil/{id}")
+    suspend fun getUser(
+        @Path("id") id: Int,
+        @Header("x-access-token") token: String
+    ): Response<BaseResponse<JsonObject>>
 }
