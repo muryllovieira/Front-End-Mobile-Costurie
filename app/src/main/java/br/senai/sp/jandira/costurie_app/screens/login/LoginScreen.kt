@@ -125,7 +125,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                         Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
-                        navController.navigate("loading")
+                        navController.navigate("home")
                     }
                 }else{
                     val errorBody = response.errorBody()?.string()

@@ -7,13 +7,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.senai.sp.jandira.costurie_app.screens.chats.ChatsScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.EditProfileScreen
+import br.senai.sp.jandira.costurie_app.screens.explore.ExploreScreen
+import br.senai.sp.jandira.costurie_app.screens.home.HomeScreen
 import br.senai.sp.jandira.costurie_app.screens.loading.LoadingScreen
 import br.senai.sp.jandira.costurie_app.screens.login.LoginScreen
 import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
 import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.DescriptionScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.LocationScreen
+import br.senai.sp.jandira.costurie_app.screens.personalization.ProfilePicScreen
 
 import br.senai.sp.jandira.costurie_app.screens.personalization.TypeProfileScreen
 
@@ -37,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "services")
+                    startDestination = "login")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
@@ -47,11 +51,14 @@ class MainActivity : ComponentActivity() {
                     composable(route = "validationCode") { ValidationCodeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
                     composable(route = "tradePassword") { TradePasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
                     composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
+                    composable(route = "home") { HomeScreen(navController = navController) }
+                    composable(route = "explore") { ExploreScreen(navController = navController) }
                     composable(route = "services") { ServicesScreen(navController = navController) }
+                    composable(route = "chats") { ChatsScreen(navController = navController) }
+                    composable(route = "profile") { ProfileScreen(navController = navController) }
+                    composable(route = "foto") { ProfilePicScreen(navController = navController) }
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
-                    //composable(route = "foto") { ProfilePicScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope) }
-                    composable(route = "profile") { ProfileScreen() }
                     composable(route = "description") { DescriptionScreen() }
                     composable(route = "location") { LocationScreen(lifecycleScope = lifecycleScope) }
                     }
