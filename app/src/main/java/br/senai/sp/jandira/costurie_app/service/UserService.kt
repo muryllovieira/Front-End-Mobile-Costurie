@@ -49,4 +49,8 @@ interface UserService {
     @Headers("Content-Type: application/json")
     @GET("municipios/{ID}/distritos")
     suspend fun getNeighborhood(@Path("ID") ID: Int): Response<List<NeighborhoodResponse>>
+
+    @Headers("Content-Type: application/json")
+    @POST("/usuario/inserir_localizacao")
+    suspend fun postLocation(@Body requestBody: JsonObject): Response<JsonObject>
 }
