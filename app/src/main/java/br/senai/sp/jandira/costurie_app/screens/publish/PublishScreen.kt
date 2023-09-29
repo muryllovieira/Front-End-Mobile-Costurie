@@ -1,4 +1,4 @@
-package br.senai.sp.jandira.costurie_app.screens.services
+package br.senai.sp.jandira.costurie_app.screens.publish
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 
 @Composable
-fun ServicesScreen (navController: NavController) {
+fun PublishScreen(navController: NavController) {
     Costurie_appTheme {
         Surface(
             modifier = Modifier
@@ -25,7 +25,7 @@ fun ServicesScreen (navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "servicos",
+                Text(text = "Publicar",
                     color = Color.Red)
             }
 
@@ -34,10 +34,3 @@ fun ServicesScreen (navController: NavController) {
 
     }
 }
-
-
-//@Preview(showSystemUi = true)
-//@Composable
-//fun PreviewServicesScreen () {
-//    ServicesScreen()
-//}

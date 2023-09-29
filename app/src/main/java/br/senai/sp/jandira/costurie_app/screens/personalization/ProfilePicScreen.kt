@@ -67,7 +67,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
 @Composable
-fun ProfilePicScreen() {
+fun ProfilePicScreen(navController: NavController) {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
 
@@ -246,8 +246,8 @@ fun ProfilePicScreen() {
     }
 }
 
-@Preview (showSystemUi = true, showBackground = true)
-@Composable
-fun PreviewProfilePicScreen() {
-    ProfilePicScreen()
-}
+//@Preview (showSystemUi = true, showBackground = true)
+//@Composable
+//fun PreviewProfilePicScreen() {
+//    ProfilePicScreen()
+//}
