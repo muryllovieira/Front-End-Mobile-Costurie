@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "foto") { ProfilePicScreen(navController = navController) }
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope) }
+                    composable(route = "profile") { ProfileScreen(lifecycleScope = lifecycleScope) }
                     composable(route = "description") { DescriptionScreen() }
                     composable(route = "location") { LocationScreen(lifecycleScope = lifecycleScope) }
                     }
