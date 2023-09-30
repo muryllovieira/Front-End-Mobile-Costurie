@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,18 +33,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.components.ModalTags2
-import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
-import br.senai.sp.jandira.costurie_app.components.ModalTagsScreen
+import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
@@ -51,7 +51,11 @@ import org.json.JSONObject
 
 
 @Composable
-fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavController, viewModel: UserViewModel) {
+fun ProfileScreen(
+    lifecycleScope: LifecycleCoroutineScope,
+    navController: NavController,
+    viewModel: UserViewModel,
+) {
 
     var isModalOpen by remember { mutableStateOf(false) }
 
@@ -126,6 +130,17 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
                 val jsonObject = JSONObject(jsonString)
                 val usuarioObject = jsonObject.getJSONObject("usuario")
 
+                val tagsArray = usuarioObject.getJSONArray("tags")
+                val tagsList = mutableListOf<TagsResponse>()
+
+                for (i in 0 until tagsArray.length()) {
+                    val tagObject = tagsArray.getJSONObject(i)
+                    val idTag = tagObject.getInt("id_tag")
+                    val nomeTag = tagObject.getString("nome_tag")
+
+                    val tagResponse = TagsResponse(idTag, nomeTag)
+                    tagsList.add(tagResponse)
+                }
                 id_usuario = usuarioObject.getInt("id_usuario")
                 nome = usuarioObject.getString("nome")
                 descricao = usuarioObject.getString("descricao")
@@ -147,6 +162,7 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
                 viewModel.estado = estado
                 viewModel.bairro = bairro
                 viewModel.id_localizacao = id_localizacao
+                viewModel.tags = tagsList
 
             } else {
                 val errorBody = response.errorBody()?.string()
@@ -165,159 +181,154 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
 
     }
 
-//    LaunchedEffect(key1 = true) {
-//        user(id = 12, token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c")
-//    }
-
-    Costurie_appTheme {
-        ModalTagsScreen(
-            isOpen = isModalOpen,
-            onDismiss = { isModalOpen = false }
+    LaunchedEffect(key1 = true) {
+        user(
+            id = 72,
+            token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c",
+            viewModel
         )
+    }
+    Costurie_appTheme {
 
         Surface(
             modifier = Modifier
                 .fillMaxSize(),
             color = Color.White
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.forma_tela_perfil),
+                    contentDescription = "",
+                    modifier = Modifier.fillMaxSize(),
+                    alignment = Alignment.TopStart
+                )
+            }
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, top = 40.dp),
+                //horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                Box(
+                Row(
                     modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp)
                         .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                    Arrangement.SpaceBetween
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.forma_tela_perfil),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .height(240.dp)
-                            .width(390.dp),
-                        alignment = Alignment.TopStart
+                    Text(
+                        color = Color.White,
+                        text = stringResource(id = R.string.texto_meu_perfil),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
 
-                    Column() {
-                        Row(
+                    Row(
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .width(280.dp),
+                        Arrangement.End
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.icon_edit),
+                            contentDescription = "",
                             modifier = Modifier
-                                .padding(start = 16.dp, end = 16.dp)
-                                .fillMaxWidth(),
-                            Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                color = Color.White,
-                                text = stringResource(id = R.string.texto_meu_perfil),
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 28.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
+                                .size(35.dp)
+                                .clickable {
+                                    navController.navigate("editProfile")
+                                },
+                            alignment = Alignment.TopEnd
+                        )
 
-                            Row(
-                                modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .width(280.dp),
-                                Arrangement.End
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.icon_edit),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .size(35.dp)
-                                        .clickable {
-                                            navController.navigate("editProfile")
-                                        },
-                                    alignment = Alignment.TopEnd
-                                )
+                        Spacer(modifier = Modifier.width(18.dp))
 
-                                Spacer(modifier = Modifier.width(10.dp))
-
-                                Image(
-                                    painter = painterResource(id = R.drawable.icon_config),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .size(35.dp)
-                                )
-                            }
-                        }
-
-                        Row(
+                        Image(
+                            painter = painterResource(id = R.drawable.icon_config),
+                            contentDescription = "",
                             modifier = Modifier
-                                .padding(start = 16.dp)
-                                .width(320.dp),
-                            Arrangement.Start
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.profile_pic),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(88.dp)
-                            )
-
-                            Spacer(modifier = Modifier.width(5.dp))
-
-                            Column(
-                            ) {
-                                Text(
-                                    color = Color.White,
-                                    text = nome,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.height(24.dp)
-                                )
-
-                                Text(
-                                    color = Color.White,
-                                    text = nome_de_usuario,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    modifier = Modifier.height(22.dp)
-                                )
-
-                                Row {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.icon_location),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .size(22.dp)
-                                    )
-
-                                    Text(
-                                        color = Color.White,
-                                        text = "$cidade, $estado",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        modifier = Modifier.height(20.dp)
-                                    )
-                                }
-                            }
-                        }
+                                .size(35.dp)
+                        )
                     }
                 }
 
                 Row(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 20.dp)
+                        .width(320.dp),
+                    Arrangement.Start
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.profile_pic),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(100.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(5.dp))
+
+                    Column(
+                    ) {
+                        Text(
+                            color = Color.White,
+                            text = nome,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.height(28.dp)
+                        )
+
+                        Text(
+                            color = Color.White,
+                            text = nome_de_usuario,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.height(22.dp)
+                        )
+
+                        Row {
+                            Image(
+                                painter = painterResource(id = R.drawable.icon_location),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(23.dp)
+                            )
+
+                            Text(
+                                color = Color.White,
+                                text = "$cidade, $estado",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.height(20.dp)
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(60.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    WhiteButtonSmall(
+                    WhiteButton(
                         onClick = {
-                            user(
-                                id = 72,
-                                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c",
-                                viewModel
-                            )
+
                         },
                         text = stringResource(id = R.string.botao_recomendacoes).uppercase()
                     )
 
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
 
-                    WhiteButtonSmall(
+                    WhiteButton(
                         onClick = {},
                         text = stringResource(id = R.string.botao_recomendados).uppercase()
                     )
@@ -327,12 +338,12 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
                     color = Contraste,
                     text = descricao,
                     style = MaterialTheme.typography.bodySmall,
-                    fontSize = 12.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier
-                        .height(65.dp)
-                        .width(370.dp),
-                    textAlign = TextAlign.Justify
+                        .fillMaxWidth()
+                        .padding(top = 25.dp),
+                    textAlign = TextAlign.Center
                 )
 
                 Spacer(modifier = Modifier.height(25.dp))
@@ -343,27 +354,22 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
                         .fillMaxWidth(),
                     Arrangement.SpaceEvenly
                 ) {
-                    GradientButtonTag(
-                        onClick = { /*TODO*/ },
-                        text = "tag",
-                        color1 = Destaque1,
-                        color2 = Destaque2
-                    )
-                    GradientButtonTag(
-                        onClick = { /*TODO*/ },
-                        text = "tag",
-                        color1 = Destaque1,
-                        color2 = Destaque2
-                    )
-                    ModalTags2(color1 = Destaque1, color2 = Destaque2)
-//                    GradientButtonViewMore(
-//                        onClick = {
-//                            //ModalExample()
-//                        },
-//                        color1 = Destaque1,
-//                        color2 = Destaque2
-//                    )
+                    viewModel.tags.take(1).forEach { tag ->
+                        GradientButtonTag(
+                            onClick = {
+                                // Faça algo quando uma tag for clicada
+                            },
+                            text = tag.nome_tag,
+                            color1 = Destaque1,
+                            color2 = Destaque2,
+                            viewModel,
+                        )
+                    }
+                    if (viewModel.tags.size > 1) {
+                        ModalTags2(color1 = Destaque1, color2 = Destaque2, viewModel)
+                    }
                 }
+
             }
         }
     }

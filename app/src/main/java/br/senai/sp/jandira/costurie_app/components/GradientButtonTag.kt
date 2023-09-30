@@ -1,13 +1,6 @@
 package br.senai.sp.jandira.costurie_app.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,55 +19,60 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
+import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 
 @Composable
 fun GradientButtonTag(
     onClick: () -> Unit,
     text: String,
     color1: Color,
-    color2: Color
+    color2: Color,
+    viewModel: UserViewModel,
 ) {
-    Button(
-        onClick,
-        modifier = Modifier
-            .background(
-                Brush.horizontalGradient(
-                    colors = listOf(
-                        color1,
-                        color2
-                    )
-                ),
-                shape = ShapeButton.large,
+    for (tag in viewModel.tags) {
+        Button(
+            onClick,
+            modifier = Modifier
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            color1,
+                            color2
+                        )
+                    ),
+                    shape = ShapeButton.large,
+                )
+                .height(37.dp)
+                .width(115.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent
+            ),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                hoveredElevation = 0.dp
+            ),
+            //contentPadding = PaddingValues.Absolute(12.dp)
+        ) {
+
+            Text(
+                text = tag.nome_tag,
+                fontSize = 14.sp,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.SemiBold
             )
-            .height(37.dp)
-            .width(115.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent
-        ),
-        elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-            hoveredElevation = 0.dp
-        ),
-        //contentPadding = PaddingValues.Absolute(12.dp)
-    ) {
-
-        Text(
-            text = text,
-            fontSize = 14.sp,
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.SemiBold
-        )
 
 
+        }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GradientButtonTagPreview() {
-    GradientButtonTag(onClick = { }, text = "", color1 = Destaque1, color2 = Destaque2)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GradientButtonTagPreview() {
+//    GradientButtonTag(onClick = { }, text = "", color1 = Destaque1, color2 = Destaque2)
+//}

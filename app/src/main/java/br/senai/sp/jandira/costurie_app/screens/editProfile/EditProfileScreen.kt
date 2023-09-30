@@ -39,6 +39,7 @@ import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
+import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
@@ -46,6 +47,7 @@ import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,6 +77,8 @@ fun EditProfileScreen(
 
     val viewModelBairroUser = viewModel.bairro
 
+    val viewModelFotoUser = viewModel.foto
+
     var nomeState by remember {
         mutableStateOf(viewModelNome)
     }
@@ -87,45 +91,86 @@ fun EditProfileScreen(
         mutableStateOf(viewModelDescricao)
     }
 
+    var fotoState by remember {
+        mutableStateOf(viewModelFotoUser)
+    }
+
+    var cidadeState by remember {
+        mutableStateOf(viewModelCidadeUser)
+
+    }
+
+    var estadoState by remember {
+        mutableStateOf(viewModelEstadoUser)
+    }
+
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
     fun updateUser(
-        id: Int,
+        id_usuario: Int,
         token: String,
-        viewModel: UserViewModel
+        viewModel: UserViewModel,
+        id_localizacao: Int,
+        cidade: String,
+        estado: String,
+        bairro: String,
+        nome: String,
+        descricao: String,
+        foto: String,
+        nome_de_usuario: String,
+        tags: List<TagsResponse>
     ) {
         val userRepository = UserRepository()
 
-        //Log.e("TAG", "updateUser: ${userRepository}", )
         lifecycleScope.launch {
-            Log.e("ID", "user: $id")
+            Log.e("ID", "user: $id_usuario")
             Log.e("token", "user: $token")
 
-            val response = userRepository.updateUser(id, token)
+            val response = userRepository.updateUser(
+                id_usuario,
+                token,
+                id_localizacao,
+                cidade,
+                estado,
+                bairro,
+                nome,
+                descricao,
+                foto,
+                nome_de_usuario,
+                tags
+            )
 
             Log.e("TAG", "user: $response")
             Log.i("TAG", "user: ${response.body()}")
 
             if (response.isSuccessful) {
-                Log.e(MainActivity::class.java.simpleName, "Usuario atualizado com sucesso")
+                Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
                 Log.e("user", "user: ${response.body()}")
             } else {
                 val errorBody = response.errorBody()?.string()
-                //val errorBody = response.body()
-                Log.e(
-                    MainActivity::class.java.simpleName,
-                    "Erro durante atualizar os dados do usuario: ${errorBody}"
-                )
+                val descricao = response.body()?.descricao
+                if (descricao != null) {
+                    if (descricao.length > 255)
+                        Log.e(
+                            MainActivity::class.java.simpleName,
+                            "Erro durante a atualização dos dados do usuário: ${errorBody}"
+                        )
+                    Toast.makeText(
+                        context,
+                        "Descricão grande demais",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 Toast.makeText(
                     context,
-                    "Erro durante atualização dos dados do usuario",
+                    "Erro durante a atualização dos dados do usuário",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
-
     }
+
 
     Costurie_appTheme {
 
@@ -181,12 +226,28 @@ fun EditProfileScreen(
                                     .size(35.dp)
                                     .clickable {
                                         if (viewModelIdUsuario != null) {
-                                            updateUser(
-                                                id = viewModelIdUsuario,
-                                                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c",
-                                                viewModel
-                                            )
+                                            if (viewModelIdLocalizacao != null) {
+                                                updateUser(
+                                                    id_usuario = viewModelIdUsuario,
+                                                    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcyLCJpYXQiOjE2OTYwODAxNTYsImV4cCI6MTcyNjA4MDE1Nn0.4kXtV1QuyHjFHCxW6wbNiZNLOwbFzEuOJudGfKEcj8I",
+                                                    viewModel,
+                                                    id_localizacao = viewModelIdLocalizacao,
+                                                    bairro = viewModelBairroUser,
+                                                    cidade = cidadeState,
+                                                    estado = estadoState,
+                                                    descricao = descricaoState,
+                                                    foto = fotoState,
+                                                    nome_de_usuario = tagDeUsuarioState,
+                                                    nome = nomeState,
+                                                    tags = listOf(
+                                                        TagsResponse(2, "Trabalho"),
+                                                        TagsResponse(3, "Formal")
+                                                    )
+                                                )
+                                            }
                                         }
+                                        navController.navigate("profile")
+                                        Log.e("edit", "EditProfileScreen: $viewModelIdUsuario + $viewModelNome", )
                                     }
                             )
                         }

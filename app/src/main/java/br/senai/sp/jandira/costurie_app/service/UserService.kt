@@ -69,5 +69,5 @@ interface UserService {
     suspend fun updateUser(
         @Body body: JsonObject,
         @Header("x-access-token") token: String
-    ): Response<JsonObject>
+    ): Response<UserResponse>
 }
