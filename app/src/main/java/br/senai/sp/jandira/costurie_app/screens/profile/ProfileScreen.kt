@@ -1,6 +1,7 @@
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
@@ -46,13 +44,14 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.components.ModalTagsScreen
-import br.senai.sp.jandira.costurie_app.repository.LoginRepository
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 @Composable
-fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavController) {
+fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavController, viewModel: UserViewModel) {
 
     var isModalOpen by remember { mutableStateOf(false) }
 
@@ -62,30 +61,113 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
 
     //var modalTag = ModalTags2()
 
+    var id_usuario by remember {
+        mutableStateOf(0)
+    }
 
-    fun user (
+    var nome by remember {
+        mutableStateOf("")
+    }
+
+    var descricao by remember {
+        mutableStateOf("")
+    }
+
+    var nome_de_usuario by remember {
+        mutableStateOf("")
+    }
+
+    var foto by remember {
+        mutableStateOf("")
+    }
+
+    var cidade by remember {
+        mutableStateOf("")
+    }
+
+    var estado by remember {
+        mutableStateOf("")
+    }
+
+    var bairro by remember {
+        mutableStateOf("")
+    }
+
+    var id_localizacao by remember {
+        mutableStateOf(0)
+    }
+
+    var email by remember {
+        mutableStateOf("")
+    }
+
+
+    fun user(
         id: Int,
-        token: String
+        token: String,
+        viewModel: UserViewModel
     ) {
-            val userRepository = UserRepository()
-            lifecycleScope.launch {
-                val response = userRepository.getUser(id, token)
+        val userRepository = UserRepository()
 
-                Log.e("TAG", "user: $response", )
-                Log.i("TAG", "user: ${response.body()}")
+        lifecycleScope.launch {
+            Log.e("ID", "user: $id")
+            Log.e("token", "user: $token")
 
-                if(response.isSuccessful){
-                    Log.e(MainActivity::class.java.simpleName, "Usuario sucedido" )
-                    Log.e("user", "user: ${response.body()!!}", )
-                }else{
-                    val errorBody = response.errorBody()?.string()
-                   //val errorBody = response.body()
-                    Log.e(MainActivity::class.java.simpleName, "Erro durante pegar os dados do usuario: ${errorBody}")
-                    Toast.makeText(context, "Erro durante pegar os dados do usuario", Toast.LENGTH_SHORT).show()
-                }
+            val response = userRepository.getUser(id, token)
+
+            Log.e("TAG", "user: $response")
+            Log.i("TAG", "user: ${response.body()}")
+
+            if (response.isSuccessful) {
+                Log.e(MainActivity::class.java.simpleName, "Usuario sucedido")
+                Log.e("user", "user: ${response.body()}")
+
+                val jsonString = response.body().toString()
+                val jsonObject = JSONObject(jsonString)
+                val usuarioObject = jsonObject.getJSONObject("usuario")
+
+                id_usuario = usuarioObject.getInt("id_usuario")
+                nome = usuarioObject.getString("nome")
+                descricao = usuarioObject.getString("descricao")
+                nome_de_usuario = usuarioObject.getString("nome_de_usuario")
+                foto = usuarioObject.getString("foto")
+                email = usuarioObject.getString("email")
+                cidade = usuarioObject.getString("cidade")
+                estado = usuarioObject.getString("estado")
+                bairro = usuarioObject.getString("bairro")
+                id_localizacao = usuarioObject.getInt("id_localizacao")
+
+                viewModel.id_usuario = id_usuario
+                viewModel.nome = nome
+                viewModel.descricao = descricao
+                viewModel.nome_de_usuario = nome_de_usuario
+                viewModel.foto = foto
+                viewModel.email = email
+                viewModel.cidade = cidade
+                viewModel.estado = estado
+                viewModel.bairro = bairro
+                viewModel.id_localizacao = id_localizacao
+
+            } else {
+                val errorBody = response.errorBody()?.string()
+                //val errorBody = response.body()
+                Log.e(
+                    MainActivity::class.java.simpleName,
+                    "Erro durante pegar os dados do usuario: ${errorBody}"
+                )
+                Toast.makeText(
+                    context,
+                    "Erro durante pegar os dados do usuario",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+        }
 
     }
+
+//    LaunchedEffect(key1 = true) {
+//        user(id = 12, token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c")
+//    }
 
     Costurie_appTheme {
         ModalTagsScreen(
@@ -143,7 +225,10 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
                                     painter = painterResource(id = R.drawable.icon_edit),
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(35.dp),
+                                        .size(35.dp)
+                                        .clickable {
+                                            navController.navigate("editProfile")
+                                        },
                                     alignment = Alignment.TopEnd
                                 )
 
@@ -177,7 +262,7 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
                             ) {
                                 Text(
                                     color = Color.White,
-                                    text = stringResource(id = R.string.nome_perfil),
+                                    text = nome,
                                     style = MaterialTheme.typography.bodySmall,
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.SemiBold,
@@ -186,7 +271,7 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
 
                                 Text(
                                     color = Color.White,
-                                    text = stringResource(id = R.string.tag_usuario),
+                                    text = nome_de_usuario,
                                     style = MaterialTheme.typography.bodySmall,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
@@ -203,7 +288,7 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
 
                                     Text(
                                         color = Color.White,
-                                        text = stringResource(id = R.string.cidade_perfil),
+                                        text = "$cidade, $estado",
                                         style = MaterialTheme.typography.bodySmall,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
@@ -221,7 +306,11 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
 
                     WhiteButtonSmall(
                         onClick = {
-                                  user(id = 72, token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c")
+                            user(
+                                id = 72,
+                                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c",
+                                viewModel
+                            )
                         },
                         text = stringResource(id = R.string.botao_recomendacoes).uppercase()
                     )
@@ -236,7 +325,7 @@ fun ProfileScreen(lifecycleScope: LifecycleCoroutineScope, navController: NavCon
 
                 Text(
                     color = Contraste,
-                    text = stringResource(id = R.string.descricao_perfil),
+                    text = descricao,
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,

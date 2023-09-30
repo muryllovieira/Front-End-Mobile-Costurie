@@ -4,8 +4,10 @@ import br.senai.sp.jandira.costurie_app.model.BaseResponse
 import br.senai.sp.jandira.costurie_app.model.CityResponse
 import br.senai.sp.jandira.costurie_app.model.NeighborhoodResponse
 import br.senai.sp.jandira.costurie_app.model.StateResponse
+import br.senai.sp.jandira.costurie_app.model.UserJsonResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import com.google.gson.JsonObject
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -60,5 +62,12 @@ interface UserService {
     suspend fun getUser(
         @Path("id") id: Int,
         @Header("x-access-token") token: String
-    ): Response<BaseResponse<JsonObject>>
+    ): Response<JsonObject>
+
+    @Headers("Content-Type: application/json")
+    @PUT("/usuario/editar_perfil")
+    suspend fun updateUser(
+        @Body body: JsonObject,
+        @Header("x-access-token") token: String
+    ): Response<JsonObject>
 }
