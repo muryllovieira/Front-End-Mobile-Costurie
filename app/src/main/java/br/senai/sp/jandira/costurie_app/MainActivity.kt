@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                 val viewModelUser = viewModel<UserViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "profile")
+                    startDestination = "home")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }

@@ -2,15 +2,34 @@ package br.senai.sp.jandira.costurie_app.components
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Card
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -23,10 +42,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.LifecycleCoroutineScope
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.model.CityResponse
@@ -46,7 +69,7 @@ fun DropdownCidade(
 
     val context = LocalContext.current
 
-    val siglaEstado = viewModel.estadoSigla
+    val siglaEstado = viewModel.estadoSelecionado
 
     var isExpanded by remember {
         mutableStateOf(false)
@@ -58,12 +81,24 @@ fun DropdownCidade(
 
     val cidades = remember { mutableStateListOf<CityResponse>() }
 
+    var textFieldSize by remember {
+        mutableStateOf(androidx.compose.ui.geometry.Size.Zero)
+    }
+
+    val interactionSource = remember {
+        MutableInteractionSource()
+    }
+
+    val heightTextFields by remember {
+        mutableStateOf(55.dp)
+    }
+
     fun loadCidades(siglaEstado: String) {
         val locationRepository = LocationRepository()
         lifecycleScope.launch {
             val response = locationRepository.getCidades(siglaEstado)
 
-            Log.e("response", "loadCidades: $response", )
+            Log.e("response", "loadCidades: $response")
 
             if (response.isSuccessful) {
                 val cidadesResponse = response.body()
@@ -87,10 +122,10 @@ fun DropdownCidade(
         }
     }
 
-    if(siglaEstado.length > 0){
+    if (siglaEstado.length > 0) {
         LaunchedEffect(key1 = true) {
             loadCidades(siglaEstado)
-            viewModel.estadoSigla = ""
+            viewModel.estadoSelecionado = ""
         }
     }
 
@@ -100,69 +135,128 @@ fun DropdownCidade(
 //        }
 //    }
 
-    Box(
+    Column(
         modifier = Modifier
+            .padding(30.dp)
             .fillMaxWidth()
-            .height(52.dp)
-            .background(
-                color = Color.White,
-                //colorResource(id = R.color.principal_2),
-                shape = RoundedCornerShape(20.dp)
-            ),
-        contentAlignment = Alignment.Center
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = {
+                    isExpanded = false
+                }
+            )
     ) {
-        ExposedDropdownMenuBox(
-            expanded = isExpanded,
-            onExpandedChange = { isExpanded = it },
-            modifier = Modifier.background(
-                color = Color.White
-            )
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
 
-            TextField(
-                value = cidade,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier
-                    .menuAnchor()
-                    .background(
-                        color = Color.White
+            Row(modifier = Modifier.fillMaxWidth()) {
+                androidx.compose.material.TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(heightTextFields)
+                        .border(
+                            width = 1.8.dp,
+                            color = Color.Black,
+                            shape = RoundedCornerShape(5.dp)
+                        )
+                        .onGloballyPositioned { coordinates ->
+                            textFieldSize = coordinates.size.toSize()
+                        },
+                    value = cidade,
+                    onValueChange = {
+                        cidade = it
+                        isExpanded = true
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = Color.Black
                     ),
-                textStyle = TextStyle(fontSize = 16.sp),
-            )
-
-            ExposedDropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = false },
-                modifier = Modifier.background(
-                    color = Color.White
-                )
-            ) {
-                cidades.forEach { cidadeNome ->
-                    DropdownMenuItem(
-                        text = { Text(cidadeNome.nome, color = Contraste2) },
-                        onClick = {
-                            cidade = cidadeNome.nome
-                            isExpanded = false
-                            viewModelCidade.bairroID = cidadeNome.id
-                            Log.e("PEGA", "DropdownCidade: ${viewModelCidade.bairroID}" )
+                    textStyle = TextStyle(
+                        color = Color.Black,
+                        fontSize = 16.sp
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    singleLine = true,
+                    trailingIcon = {
+                        IconButton(onClick = { isExpanded = !isExpanded }) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                imageVector = Icons.Rounded.KeyboardArrowDown,
+                                contentDescription = "arrow",
+                                tint = Color.Black
+                            )
                         }
-                    )
+                    }
+                )
+            }
+
+            AnimatedVisibility(visible = isExpanded) {
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 5.dp)
+                        .width(textFieldSize.width.dp),
+                    elevation = 15.dp
+                ) {
+
+                    LazyColumn(
+                        modifier = Modifier.heightIn(max = 150.dp),
+                    ) {
+
+                        if (cidade.isNotEmpty()) {
+                            items(
+                                cidades.filter {
+                                    it.nome.lowercase()
+                                        .contains(cidade.lowercase()) || it.nome.lowercase()
+                                        .contains("others")
+                                }
+                                    .sorted()
+                            ) {
+                                CategoryItemsCidade(title = it.nome) { title ->
+                                    cidade = title
+                                    isExpanded = false
+                                }
+                            }
+                        } else {
+                            items(
+                                cidades.sorted()
+                            ) {
+                                CategoryItemsCidade(title = it.nome) { title ->
+                                    cidade = title
+                                    isExpanded = false
+                                }
+                            }
+                        }
+
+                    }
+
                 }
             }
 
         }
+
     }
-
-
 }
 
-//@Preview
-//@Composable
-//fun DropdownCidadePreview() {
-//    DropdownCidade()
-//}
+@Composable
+fun CategoryItemsCidade(
+    title: String,
+    onSelect: (String) -> Unit
+) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onSelect(title)
+            }
+            .padding(10.dp)
+    ) {
+        Text(text = title, fontSize = 16.sp)
+    }
+
+}
