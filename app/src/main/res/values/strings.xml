@@ -32,5 +32,27 @@
     <string name="botao_recomendacoes">Recomendações</string>
     <string name="botao_recomendados">Recomendados</string>
     <string name="texto_nome_do_seu_perfil">Nome do seu Perfil</string>
-    <string name="descricao_nome_do_seu_perfil">*O nome do seu perfil pode ser o seu nome inteiro. O nome do perfil é obrigatório.</string>
+    <string name="texto_descricao_do_seu_perfil">Descrição do seu Perfil</string>
+    <string name="texto_localizacao_do_seu_perfil">Localização</string>
+    <string name="descricao_nome_do_seu_perfil1">*O nome do seu perfil pode ser o seu nome inteiro.</string>
+    <string name="descricao_nome_do_seu_perfil2">O nome do perfil é obrigatório.</string>
+    <string name="descricao_localizacao_do_seu_perfil1">*A localização permite que você costureira ou consumidor, consiga encontratou divulgar serviços ao seu redor. </string>
+    <string name="descricao_localizacao_do_seu_perfil2"> A localização não é obrigatória e pode ser alterada depois.</string>
+    <string name="nome_do_perfil_label">Digite seu nome</string>
+    <string name="descricao_do_perfil_label">Digite uma descrição</string>
+    <string name="descricao_perfil">Olá, meu nome é Beltrana, e é uma prazer tê-la(lo) em meu perfil! Aqui você pode encontrar algumas publicações feitas por mim, e se gostar, é só entrar em contato para falarmos sobre o que você precisa.</string>
+    <string name="texto_button_tag"># VER MAIS</string>
+    <string name="texto_tipo_de_perfil">Qual seu tipo de perfil?</string>
+    <string name="perfil_costureira">Perfil de Costureira</string>
+    <string name="perfil_consumidor">Perfil de Consumidor</string>
+    <string name="texto_adicionar_descricao">Gostaria de adicionar uma descrição?</string>
+    <string name="texto_adicionar_localizacao">Selecione seu estado, sua cidade e seu bairro para uma melhor experiência:</string>
+    <string name="descricao_da_descricao_do_seu_perfil">*A descrição do seu perfil pode ser usada para que as pessoas conheçam um pouco mais sobre você ou seus projetos.</string>
+    <string name="texto_foto_de_perfil">Foto de Perfil</string>
+    <string name="descricao_foto_de_perfil1">*A foto de perfil não é obrigatória.</string>
+    <string name="descricao_foto_de_perfil2">Gostaria de adicionar uma foto de perfil?</string>
+    <string name="texto_tag_de_servico">TAGS DE SERVIÇO</string>
+    <string name="descricao_tag_de_servico">*As tags de serviço são utilizadas pelas costureiras para identificar que tipo de tipo de serviço elas prestam.</string>
+    <string name="tag_de_servico_label">Pesquise por uma tag...</string>
+
 </resources>

@@ -125,7 +125,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                         Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
-                        navController.navigate("loading")
+                        navController.navigate("home")
                     }
                 }else{
                     val errorBody = response.errorBody()?.string()
@@ -244,7 +244,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
-                                                   navController.navigate("password")
+                                            navController.navigate("password")
                                         },
                                     text = "Esqueceu a senha?",
                                     color = Color(168,155,255),
@@ -280,3 +280,9 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
         }
     }
 }
+
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PreviewLoginScreen() {
+//    LoginScreen()
+//}
