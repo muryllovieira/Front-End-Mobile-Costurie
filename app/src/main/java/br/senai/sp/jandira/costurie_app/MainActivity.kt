@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.senai.sp.jandira.costurie_app.screens.chats.ChatsScreen
@@ -27,6 +28,7 @@ import br.senai.sp.jandira.costurie_app.screens.tradePassword.TradePasswordScree
 import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.viewModel.PasswordResetViewModel
+import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -38,28 +40,28 @@ class MainActivity : ComponentActivity() {
         setContent {
             Costurie_appTheme {
                 val navController = rememberAnimatedNavController()
-                val viewModel = viewModel<PasswordResetViewModel>()
+                val viewModelPassword = viewModel<PasswordResetViewModel>()
+                val viewModelUser = viewModel<UserViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "login")
+                    startDestination = "profile")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }
                     composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope) }
-                    composable(route = "password") { PasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
-                    composable(route = "validationCode") { ValidationCodeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
-                    composable(route = "tradePassword") { TradePasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel) }
+                    composable(route = "password") { PasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModelPassword) }
+                    composable(route = "validationCode") { ValidationCodeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModelPassword) }
+                    composable(route = "tradePassword") { TradePasswordScreen(navController = navController, lifecycleScope = lifecycleScope, viewModelPassword) }
                     composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
-                    composable(route = "home") { HomeScreen(navController = navController) }
+                    composable(route = "home") { HomeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModelUser) }
                     composable(route = "explore") { ExploreScreen(navController = navController) }
                     composable(route = "services") { ServicesScreen(navController = navController) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
-                    composable(route = "profile") { ProfileScreen(navController = navController) }
+                    composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
                     composable(route = "foto") { ProfilePicScreen(navController = navController) }
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
-                    composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope) }
-                    composable(route = "profile") { ProfileScreen(lifecycleScope = lifecycleScope) }
+                    composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser) }
                     composable(route = "description") { DescriptionScreen() }
                     composable(route = "location") { LocationScreen(lifecycleScope = lifecycleScope) }
                     }

@@ -28,6 +28,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.TextMenuBar
@@ -36,11 +38,12 @@ import br.senai.sp.jandira.costurie_app.screens.explore.ExploreScreen
 import br.senai.sp.jandira.costurie_app.screens.publish.PublishScreen
 import br.senai.sp.jandira.costurie_app.screens.services.ServicesScreen
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen (navController: NavController) {
+fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineScope, viewModelUserViewModel: UserViewModel) {
 
     val items = listOf(
         BottomnavigationBarItem(
@@ -151,7 +154,7 @@ fun HomeScreen (navController: NavController) {
                     } else if (selectedIdexItem == 3) {
                         ChatsScreen(navController = navController)
                     } else {
-                        ProfileScreen(navController = navController)
+                        ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUserViewModel)
                     }
                 }
 
