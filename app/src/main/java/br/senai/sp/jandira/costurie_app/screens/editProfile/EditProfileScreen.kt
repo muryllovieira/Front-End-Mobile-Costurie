@@ -46,8 +46,6 @@ import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +58,8 @@ fun EditProfileScreen(
     val viewModelEstado = viewModel<EstadoViewModel>()
 
     val viewModelCidade = viewModel<BairroViewModel>()
+
+    val viewModelBairro = viewModel<BairroViewModel>()
 
     val viewModelIdUsuario = viewModel.id_usuario
 
@@ -102,6 +102,10 @@ fun EditProfileScreen(
 
     var estadoState by remember {
         mutableStateOf(viewModelEstadoUser)
+    }
+
+    var bairroState by remember {
+        mutableStateOf(viewModelBairroUser)
     }
 
     val scrollState = rememberScrollState()
@@ -232,7 +236,7 @@ fun EditProfileScreen(
                                                     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcyLCJpYXQiOjE2OTYwODAxNTYsImV4cCI6MTcyNjA4MDE1Nn0.4kXtV1QuyHjFHCxW6wbNiZNLOwbFzEuOJudGfKEcj8I",
                                                     viewModel,
                                                     id_localizacao = viewModelIdLocalizacao,
-                                                    bairro = viewModelBairroUser,
+                                                    bairro = bairroState,
                                                     cidade = cidadeState,
                                                     estado = estadoState,
                                                     descricao = descricaoState,
@@ -308,12 +312,21 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Text(text = "Estado", fontSize = 24.sp)
+                        DropdownEstado(lifecycleScope = lifecycleScope, viewModelEstado)
+
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(text = "Cidade", fontSize = 24.sp)
                         DropdownCidade(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
                             viewModelCidade
                         )
+
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -321,13 +334,6 @@ fun EditProfileScreen(
                     ) {
                         Text(text = "Bairro", fontSize = 24.sp)
                         DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = "Estado", fontSize = 24.sp)
-                        DropdownEstado(lifecycleScope = lifecycleScope, viewModelEstado)
                     }
 //                    Column(
 //                        modifier = Modifier

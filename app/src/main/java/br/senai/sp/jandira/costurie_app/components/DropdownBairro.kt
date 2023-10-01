@@ -96,7 +96,8 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
         lifecycleScope.launch {
             val response = locationRepository.getBairros(idBairro)
 
-            Log.e("response", "loadBairros: $response")
+            Log.e("idCidade", "loadCidades: $idBairro", )
+            Log.e("response", "loadCidades: ${response.body()}")
 
             if (response.isSuccessful) {
                 val bairrosResponse = response.body()
@@ -129,7 +130,7 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
 
     Column(
         modifier = Modifier
-            .padding(30.dp)
+            .padding(start = 30.dp, end = 30.dp, top = 10.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,

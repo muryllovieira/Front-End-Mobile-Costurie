@@ -1,13 +1,10 @@
 package br.senai.sp.jandira.costurie_app.repository
 
-import android.util.Log
-import br.senai.sp.jandira.costurie_app.model.BaseResponse
-import br.senai.sp.jandira.costurie_app.model.StateResponse
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
-import br.senai.sp.jandira.costurie_app.model.UserJsonResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.UserService
+import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Response
