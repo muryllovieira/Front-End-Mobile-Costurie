@@ -121,7 +121,7 @@ fun DropdownEstado(lifecycleScope: LifecycleCoroutineScope, viewModel: EstadoVie
 
     Column(
         modifier = Modifier
-            .padding(30.dp)
+            .padding(start = 30.dp, end = 30.dp, top = 10.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
