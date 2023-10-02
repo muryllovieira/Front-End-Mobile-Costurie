@@ -1,6 +1,12 @@
 package br.senai.sp.jandira.costurie_app.screens.editProfile
 
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,42 +29,157 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
+import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
+import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(lifecycleScope: LifecycleCoroutineScope) {
+fun EditProfileScreen(
+    lifecycleScope: LifecycleCoroutineScope,
+    navController: NavController,
+    viewModel: UserViewModel
+) {
 
-    val viewModel = viewModel<EstadoViewModel>()
+    val viewModelEstado = viewModel<EstadoViewModel>()
 
     val viewModelCidade = viewModel<BairroViewModel>()
 
+    val viewModelBairro = viewModel<BairroViewModel>()
+
+    val viewModelIdUsuario = viewModel.id_usuario
+
+    val viewModelIdLocalizacao = viewModel.id_localizacao
+
+    val viewModelNome = viewModel.nome
+
+    val viewModelDescricao = viewModel.descricao
+
+    val viewModelTagUsuario = viewModel.nome_de_usuario
+
+
     var nomeState by remember {
-        mutableStateOf("")
+        mutableStateOf(viewModelNome)
     }
 
     var tagDeUsuarioState by remember {
-        mutableStateOf("")
+        mutableStateOf(viewModelTagUsuario)
     }
 
     var descricaoState by remember {
-        mutableStateOf("")
+        mutableStateOf(viewModelDescricao)
     }
 
+    var fotoUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        fotoUri = it
+    }
+
+    var context = LocalContext.current
+
+    var painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(context).data(fotoUri).build()
+    )
+
+    var cidadeStateUser by remember { mutableStateOf("") }
+    var estadoStateUser by remember { mutableStateOf("") }
+    var bairroStateUser by remember { mutableStateOf("") }
+
+    val estados = viewModel.estados.value ?: emptyList()
+    val cidades = viewModel.cidades.value ?: emptyList()
+    val bairros = viewModel.bairros.value ?: emptyList()
+
     val scrollState = rememberScrollState()
+
+    fun updateUser(
+        id_usuario: Int,
+        token: String,
+        viewModel: UserViewModel,
+        id_localizacao: Int,
+        cidade: String,
+        estado: String,
+        bairro: String,
+        nome: String,
+        descricao: String,
+        foto: Uri?,
+        nome_de_usuario: String,
+        tags: List<TagsResponse>
+    ) {
+        val userRepository = UserRepository()
+
+        lifecycleScope.launch {
+            Log.e("ID", "user: $id_usuario")
+            Log.e("token", "user: $token")
+
+            val response = userRepository.updateUser(
+                id_usuario,
+                token,
+                id_localizacao,
+                cidade,
+                estado,
+                bairro,
+                nome,
+                descricao,
+                foto,
+                nome_de_usuario,
+                tags
+            )
+
+            Log.e("TAG", "user: $response")
+            Log.i("TAG", "user: ${response.body()}")
+
+            if (response.isSuccessful) {
+                Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
+                Log.e("user", "user: ${response.body()}")
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val descricao = response.body()?.descricao
+                if (descricao != null) {
+                    if (descricao.length > 255)
+                        Log.e(
+                            MainActivity::class.java.simpleName,
+                            "Erro durante a atualização dos dados do usuário: ${errorBody}"
+                        )
+                    Toast.makeText(
+                        context,
+                        "Descricão grande demais",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                Toast.makeText(
+                    context,
+                    "Erro durante a atualização dos dados do usuário",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
 
     Costurie_appTheme {
 
@@ -102,6 +223,9 @@ fun EditProfileScreen(lifecycleScope: LifecycleCoroutineScope) {
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(45.dp)
+                                    .clickable {
+                                        navController.navigate("profile")
+                                    }
                             )
 
                             Image(
@@ -109,21 +233,63 @@ fun EditProfileScreen(lifecycleScope: LifecycleCoroutineScope) {
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(35.dp)
+                                    .clickable {
+                                        if (viewModelIdUsuario != null) {
+                                            if (viewModelIdLocalizacao != null) {
+                                                updateUser(
+                                                    id_usuario = viewModelIdUsuario,
+                                                    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcyLCJpYXQiOjE2OTYwODAxNTYsImV4cCI6MTcyNjA4MDE1Nn0.4kXtV1QuyHjFHCxW6wbNiZNLOwbFzEuOJudGfKEcj8I",
+                                                    viewModel,
+                                                    id_localizacao = viewModelIdLocalizacao,
+                                                    bairro = bairroStateUser,
+                                                    cidade = cidadeStateUser,
+                                                    estado = estadoStateUser,
+                                                    descricao = descricaoState,
+                                                    foto = fotoUri,
+                                                    nome_de_usuario = tagDeUsuarioState,
+                                                    nome = nomeState,
+                                                    tags = listOf(
+                                                        TagsResponse(2, "Trabalho"),
+                                                        TagsResponse(3, "Formal")
+                                                    )
+                                                )
+                                            }
+                                        }
+                                        navController.navigate("profile")
+                                        Log.e(
+                                            "edit",
+                                            "EditProfileScreen: $viewModelIdUsuario + $viewModelNome",
+                                        )
+                                    }
                             )
                         }
 
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(14.dp),
+                                .padding(14.dp)
+                                .clickable {
+                                    launcher.launch("image/*")
+                                },
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.profile_pic),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(120.dp)
-                            )
+                            if (fotoUri == null) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.profile_default),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(120.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Image(
+                                    painter = painter,
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(120.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
                         }
 
                     }
@@ -168,35 +334,42 @@ fun EditProfileScreen(lifecycleScope: LifecycleCoroutineScope) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Text(text = "Estado", fontSize = 24.sp)
+                        DropdownEstado(
+                            lifecycleScope = lifecycleScope,
+                            viewModelEstado,
+                        ) { selectedEstado ->
+                            estadoStateUser = selectedEstado
+                        }
+
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(text = "Cidade", fontSize = 24.sp)
-                        DropdownCidade(lifecycleScope = lifecycleScope, viewModel, viewModelCidade)
+                        DropdownCidade(
+                            lifecycleScope = lifecycleScope,
+                            viewModelEstado,
+                            viewModelCidade
+                        ) { selectedCidade ->
+                            cidadeStateUser = selectedCidade
+                        }
+
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(text = "Bairro", fontSize = 24.sp)
-                        DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
+                        DropdownBairro(
+                            lifecycleScope = lifecycleScope,
+                            viewModelCidade
+                        ) { selectedBairro ->
+                            bairroStateUser = selectedBairro
+                        }
                     }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = "Estado", fontSize = 24.sp)
-                        DropdownEstado(lifecycleScope = lifecycleScope, viewModel)
-                    }
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(30.dp, 0.dp, 30.dp, 0.dp),
-//                        //horizontalArrangement = Arrangement.SpaceEvenly
-//                    ) {
-//                        Row(modifier = Modifier.fillMaxWidth()) {
-//                            DropdownCidade()
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                            DropdownBairro()
-//                        }
-//                    }
+
                     Text(text = "Descrição", fontSize = 24.sp)
                     CustomOutlinedTextField2(
                         value = descricaoState,

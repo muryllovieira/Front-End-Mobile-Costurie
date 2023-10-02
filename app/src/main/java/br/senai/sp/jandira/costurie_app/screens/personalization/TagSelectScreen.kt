@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.costurie_app.R
@@ -48,10 +46,14 @@ import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProfileTypeScreen() {
+fun ProfileTypeScreen(
+    viewModel: UserViewModel,
+    isSelected: Boolean
+) {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
     var pesquisaState by remember {
@@ -202,43 +204,50 @@ fun ProfileTypeScreen() {
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
-                            color2 = Destaque2
+                            color2 = Destaque2,
+                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
-                            color2 = Destaque2
+                            color2 = Destaque2,
+                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
-                            color2 = Destaque2
+                            color2 = Destaque2,
+                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
-                            color2 = Destaque2
+                            color2 = Destaque2,
+                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
-                            color2 = Destaque2
+                            color2 = Destaque2,
+                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
-                            color2 = Destaque2
+                            color2 = Destaque2,
+                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
-                            color2 = Destaque2
+                            color2 = Destaque2,
+                            viewModel,
                         )
                     }
 
@@ -248,8 +257,8 @@ fun ProfileTypeScreen() {
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun PreviewProfileTypeScreen() {
-    ProfileTypeScreen()
-}
+//@Preview(showSystemUi = true, showBackground = true)
+//@Composable
+//fun PreviewProfileTypeScreen() {
+//    ProfileTypeScreen()
+//}

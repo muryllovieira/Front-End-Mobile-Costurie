@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,13 +34,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.senai.sp.jandira.costurie_app.R
-import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
@@ -61,9 +58,14 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
     val viewModelCidade = viewModel<BairroViewModel>()
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
+
     var descriptionState by remember {
         mutableStateOf("")
     }
+
+    var cidadeStateUser by remember { mutableStateOf("") }
+    var estadoStateUser by remember { mutableStateOf("") }
+    var bairroStateUser by remember { mutableStateOf("") }
 
     Costurie_appTheme {
         Surface(
@@ -179,7 +181,9 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownEstado(lifecycleScope = lifecycleScope, viewModel)
+                DropdownEstado(lifecycleScope = lifecycleScope, viewModel) { selectedEstado ->
+                    estadoStateUser = selectedEstado
+                }
                 Text(
                     text = "Cidades:",
                     fontSize = 16.sp,
@@ -187,7 +191,13 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownCidade(lifecycleScope = lifecycleScope, viewModel, viewModelCidade)
+                DropdownCidade(
+                    lifecycleScope = lifecycleScope,
+                    viewModel,
+                    viewModelCidade
+                ) { selectedCidade ->
+                    cidadeStateUser = selectedCidade
+                }
                 Text(
                     text = "Bairros:",
                     fontSize = 16.sp,
@@ -195,7 +205,9 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
+                DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade) { selectedBairro ->
+                    bairroStateUser = selectedBairro
+                }
 
                 Column(
                     modifier = Modifier
