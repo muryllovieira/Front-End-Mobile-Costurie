@@ -1,6 +1,9 @@
+import com.google.devtools.ksp.gradle.KspTaskJvm
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -47,7 +50,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kotlin{
+        jvmToolchain(18)
+    }
 }
+tasks.withType(type = KspTaskJvm::class) {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+}
+
 
 dependencies {
 
@@ -101,4 +111,8 @@ dependencies {
     //Firebase
     implementation ("com.google.firebase:firebase-storage:20.0.0")
 
+    //SQL LITE DEPENDENCIAS
+    implementation ("androidx.room:room-runtime:2.5.2")
+    annotationProcessor ("androidx.room:room-compiler:2.5.2")
+    ksp("androidx.room:room-compiler:2.5.2")
 }
