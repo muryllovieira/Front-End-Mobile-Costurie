@@ -157,7 +157,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
 
                                     navController.navigate("home")
                                 } else {
-                                    deleteUserSQLite(context = context, id.toInt())
+                                    deleteUserSQLite(context = context )
                                     saveLogin(
                                         context = context,
                                         id = id,

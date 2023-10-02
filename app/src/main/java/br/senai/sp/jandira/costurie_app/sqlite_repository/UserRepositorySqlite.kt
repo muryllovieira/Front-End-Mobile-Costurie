@@ -24,8 +24,8 @@ class UserRepositorySqlite(context: Context) {
         return db.userDao().findUsers()
     }
 
-    fun deleteUser(id: Int): Int{
-        return  db.userDao().delete(id)
+    fun deleteUser(): Int{
+        return  db.userDao().deleteAll()
     }
 
     fun deleteAllUser(): Int{
