@@ -63,7 +63,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownEstado(lifecycleScope: LifecycleCoroutineScope, viewModel: EstadoViewModel) {
+fun DropdownEstado(
+    lifecycleScope: LifecycleCoroutineScope,
+    viewModel: EstadoViewModel,
+    onEstadoSelected: (String) -> Unit
+) {
 
     val context = LocalContext.current
 
@@ -202,6 +206,7 @@ fun DropdownEstado(lifecycleScope: LifecycleCoroutineScope, viewModel: EstadoVie
                             ) {
                                 CategoryItemsEstado(title = it) { title ->
                                     estado = title
+                                    onEstadoSelected(title)
                                     viewModel.estadoSelecionado = title
                                     isExpanded = false
                                 }
@@ -212,6 +217,7 @@ fun DropdownEstado(lifecycleScope: LifecycleCoroutineScope, viewModel: EstadoVie
                             ) {
                                 CategoryItemsEstado(title = it) { title ->
                                     estado = title
+                                    onEstadoSelected(title)
                                     viewModel.estadoSelecionado = title
                                     isExpanded = false
                                 }

@@ -1,5 +1,8 @@
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +49,8 @@ import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -81,9 +86,20 @@ fun ProfileScreen(
         mutableStateOf("")
     }
 
-    var foto by remember {
-        mutableStateOf("")
+    var fotoUri by remember {
+        mutableStateOf<Uri?>(null)
     }
+
+    //criar o objeto que abrira a galeria e retornara a uri da imagem selecionada
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        fotoUri = it
+    }
+
+    var painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(context).data(fotoUri).build()
+    )
 
     var cidade by remember {
         mutableStateOf("")
@@ -133,6 +149,8 @@ fun ProfileScreen(
                 val tagsArray = usuarioObject.getJSONArray("tags")
                 val tagsList = mutableListOf<TagsResponse>()
 
+
+
                 for (i in 0 until tagsArray.length()) {
                     val tagObject = tagsArray.getJSONObject(i)
                     val idTag = tagObject.getInt("id_tag")
@@ -145,7 +163,7 @@ fun ProfileScreen(
                 nome = usuarioObject.getString("nome")
                 descricao = usuarioObject.getString("descricao")
                 nome_de_usuario = usuarioObject.getString("nome_de_usuario")
-                foto = usuarioObject.getString("foto")
+                fotoUri = Uri.parse("foto")
                 email = usuarioObject.getString("email")
                 cidade = usuarioObject.getString("cidade")
                 estado = usuarioObject.getString("estado")
@@ -156,11 +174,11 @@ fun ProfileScreen(
                 viewModel.nome = nome
                 viewModel.descricao = descricao
                 viewModel.nome_de_usuario = nome_de_usuario
-                viewModel.foto = foto
+                viewModel.foto = fotoUri
                 viewModel.email = email
-                viewModel.cidade = cidade
-                viewModel.estado = estado
-                viewModel.bairro = bairro
+                viewModel.estados.value = listOf(estado)
+                viewModel.cidades.value = listOf(cidade)
+                viewModel.bairros.value = listOf(bairro)
                 viewModel.id_localizacao = id_localizacao
                 viewModel.tags = tagsList
 
@@ -262,7 +280,7 @@ fun ProfileScreen(
                     Arrangement.Start
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.profile_pic),
+                        painter = painter,
                         contentDescription = "",
                         modifier = Modifier
                             .size(100.dp)

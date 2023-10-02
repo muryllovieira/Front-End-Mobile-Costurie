@@ -65,6 +65,7 @@ fun DropdownCidade(
     lifecycleScope: LifecycleCoroutineScope,
     viewModel: EstadoViewModel,
     viewModelCidade: BairroViewModel,
+    onCidadeSelected: (String) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -219,6 +220,7 @@ fun DropdownCidade(
                             ) {
                                 CategoryItemsCidade(title = it.nome, id = it.id) { title, id ->
                                     cidade = title
+                                    onCidadeSelected(title)
                                     viewModelCidade.bairroID = id
                                     isExpanded = false
                                 }
@@ -229,6 +231,7 @@ fun DropdownCidade(
                             ) {
                                 CategoryItemsCidade(title = it.nome, id = it.id) { title, id ->
                                     cidade = title
+                                    onCidadeSelected(title)
                                     viewModelCidade.bairroID = id
                                     isExpanded = false
                                 }
