@@ -18,6 +18,7 @@ import br.senai.sp.jandira.costurie_app.screens.main.MainScreen
 import br.senai.sp.jandira.costurie_app.screens.password.PasswordScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.DescriptionScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.LocationScreen
+import br.senai.sp.jandira.costurie_app.screens.personalization.NameScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.ProfilePicScreen
 
 import br.senai.sp.jandira.costurie_app.screens.personalization.TypeProfileScreen
@@ -42,9 +43,10 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberAnimatedNavController()
                 val viewModelPassword = viewModel<PasswordResetViewModel>()
                 val viewModelUser = viewModel<UserViewModel>()
+                val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "main")
+                    startDestination = "login")
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }
@@ -58,11 +60,15 @@ class MainActivity : ComponentActivity() {
                     composable(route = "services") { ServicesScreen(navController = navController) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
                     composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
-                    composable(route = "foto") { ProfilePicScreen(navController = navController) }
+
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser) }
                     composable(route = "description") { DescriptionScreen() }
                     composable(route = "location") { LocationScreen(lifecycleScope = lifecycleScope) }
+                    
+                    //telas de personalização
+                    composable(route = "name") { NameScreen(navController = navController, localStorage) }
+                    composable(route = "foto") { ProfilePicScreen(navController = navController, localStorage) }
                     }
                 }
             }

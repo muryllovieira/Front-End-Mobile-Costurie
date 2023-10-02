@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -67,7 +68,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
 @Composable
-fun ProfilePicScreen(navController: NavController) {
+fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
 
