@@ -54,11 +54,16 @@ import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.function.deleteUserSQLite
+import br.senai.sp.jandira.costurie_app.function.saveLogin
 import br.senai.sp.jandira.costurie_app.repository.LoginRepository
+import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,26 +113,67 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
         return validateEmail && validatePassword
     }
 
-    fun login (
+    fun login(
         email: String,
         password: String
     ) {
-        if(validateData(email, password)){
+        if (validateData(email, password)) {
             val loginRepository = LoginRepository()
             lifecycleScope.launch {
                 val response = loginRepository.loginUser(email, password)
 
-                if(response.isSuccessful){
-                    Log.e(MainActivity::class.java.simpleName, "Login bem-sucedido" )
-                    Log.e("login", "login: ${response.body()}", )
-                    val checagem = response.body()?.get("status")
-                    if (checagem.toString() == "404") {
-                        Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
-                        navController.navigate("home")
+                if (response.isSuccessful) {
+                    Log.e(MainActivity::class.java.simpleName, "Login bem-sucedido")
+                    Log.e("login", "login: ${response.body()}")
+                    val body = response.body()
+
+                    if (body != null) {
+                        val checagem = body.get("status")?.asInt
+                        if (checagem == 404) {
+                            Toast.makeText(context, "Email ou senha inválido", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
+                            val token = body.get("token")?.asString
+                            val loginObject = body.getAsJsonObject("login")
+                            val id = loginObject?.get("id")?.asLong
+                            val nome = loginObject?.get("nome_de_usuario")?.asString
+                            val email = loginObject?.get("email")?.asString
+
+                            if (id != null && nome != null && token != null && email != null) {
+                                // Se os dados do usuário estiverem disponíveis, você pode usá-los aqui.
+                                // Faça o que for necessário com esses dados.
+                                Log.e("LOGIN - SUCESS - 201", "login: ${response.body()}")
+                                Toast.makeText(context, "Bem Vindo $nome", Toast.LENGTH_SHORT).show()
+
+                                if (UserRepositorySqlite(context).findUsers().isEmpty()) {
+                                    saveLogin(
+                                        context = context,
+                                        id = id,
+                                        nome = nome,
+                                        token = token,
+                                        email = email,
+                                        senha = password,  // Você pode definir a senha aqui
+                                    )
+
+                                    navController.navigate("home")
+                                } else {
+                                    deleteUserSQLite(context = context, id.toInt())
+                                    saveLogin(
+                                        context = context,
+                                        id = id,
+                                        nome = nome,
+                                        token = token,
+                                        email = email,
+                                        senha = password,
+                                    )
+                                    navController.navigate("home")
+                                }
+                            } else {
+                                Toast.makeText(context, "Dados do usuário inválidos", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
-                }else{
+                } else {
                     val errorBody = response.errorBody()?.string()
 
                     Log.e(MainActivity::class.java.simpleName, "Erro durante o login: $errorBody")
@@ -138,6 +184,8 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
             Toast.makeText(context, "Por favor, reveja suas caixas de texto", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     Costurie_appTheme {
         Surface(
