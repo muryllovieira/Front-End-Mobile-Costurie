@@ -48,6 +48,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -200,11 +201,17 @@ fun ProfileScreen(
     }
 
     LaunchedEffect(key1 = true) {
+        val array = UserRepositorySqlite(context).findUsers()
+
+        val user = array[0]
+
         user(
-            id = 72,
-            token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c",
+            id = user.id.toInt(),
+            token = user.token,
             viewModel
         )
+
+        Log.e("TAG@", "ProfileScreen: ${user.id}, ${user.token}", )
     }
     Costurie_appTheme {
 

@@ -44,7 +44,9 @@ import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.models_private.User
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
@@ -136,9 +138,13 @@ fun EditProfileScreen(
             Log.e("ID", "user: $id_usuario")
             Log.e("token", "user: $token")
 
+            val array = UserRepositorySqlite(context).findUsers()
+
+            val user = array[0]
+
             val response = userRepository.updateUser(
-                id_usuario,
-                token,
+                user.id.toInt(),
+                user.token,
                 id_localizacao,
                 cidade,
                 estado,
@@ -150,14 +156,15 @@ fun EditProfileScreen(
                 tags
             )
 
-            Log.e("TAG", "user: $response")
-            Log.i("TAG", "user: ${response.body()}")
+            Log.e("TAG4", "user: $response")
+            Log.i("TAG5", "user: ${response.body()}")
 
             if (response.isSuccessful) {
                 Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
-                Log.e("user", "user: ${response.body()}")
+                Log.e("user", "user: ${response.body()} ")
             } else {
                 val errorBody = response.errorBody()?.string()
+                Log.e("EDICAO DE PERFIL", "updateUser: $errorBody", )
                 val descricao = response.body()?.descricao
                 if (descricao != null) {
                     if (descricao.length > 255)
@@ -173,7 +180,7 @@ fun EditProfileScreen(
                 }
                 Toast.makeText(
                     context,
-                    "Erro durante a atualização dos dados do usuário",
+                    "Erro durante a atualização dos dados do usuário: $errorBody",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -234,31 +241,54 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                        if (viewModelIdUsuario != null) {
-                                            if (viewModelIdLocalizacao != null) {
-                                                updateUser(
-                                                    id_usuario = viewModelIdUsuario,
-                                                    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcyLCJpYXQiOjE2OTYwODAxNTYsImV4cCI6MTcyNjA4MDE1Nn0.4kXtV1QuyHjFHCxW6wbNiZNLOwbFzEuOJudGfKEcj8I",
-                                                    viewModel,
-                                                    id_localizacao = viewModelIdLocalizacao,
-                                                    bairro = bairroStateUser,
-                                                    cidade = cidadeStateUser,
-                                                    estado = estadoStateUser,
-                                                    descricao = descricaoState,
-                                                    foto = fotoUri,
-                                                    nome_de_usuario = tagDeUsuarioState,
-                                                    nome = nomeState,
-                                                    tags = listOf(
-                                                        TagsResponse(2, "Trabalho"),
-                                                        TagsResponse(3, "Formal")
-                                                    )
+                                        val array = UserRepositorySqlite(context).findUsers()
+
+                                        val user = array[0]
+
+                                        Log.e("user-teste", "EditProfileScreen: $user",)
+
+                                        if (viewModelIdLocalizacao != null) {
+                                            updateUser(
+                                                id_usuario = user.id.toInt(),
+                                                token = user.token,
+                                                viewModel,
+                                                id_localizacao = viewModelIdLocalizacao,
+                                                bairro = bairroStateUser,
+                                                cidade = cidadeStateUser,
+                                                estado = estadoStateUser,
+                                                descricao = descricaoState,
+                                                foto = fotoUri,
+                                                nome_de_usuario = tagDeUsuarioState,
+                                                nome = nomeState,
+                                                tags = listOf(
+                                                    TagsResponse(2, "Trabalho"),
+                                                    TagsResponse(3, "Formal")
                                                 )
-                                            }
+                                            )
                                         }
+
                                         navController.navigate("profile")
                                         Log.e(
-                                            "edit",
-                                            "EditProfileScreen: $viewModelIdUsuario + $viewModelNome",
+                                            "funcao edit",
+                                            "EditProfileScreen: ${
+                                                viewModelIdLocalizacao?.let {
+                                                    updateUser(id_usuario = user.id.toInt(),
+                                                        token = user.token,
+                                                        viewModel,
+                                                        id_localizacao = it,
+                                                        bairro = bairroStateUser,
+                                                        cidade = cidadeStateUser,
+                                                        estado = estadoStateUser,
+                                                        descricao = descricaoState,
+                                                        foto = fotoUri,
+                                                        nome_de_usuario = tagDeUsuarioState,
+                                                        nome = nomeState,
+                                                        tags = listOf(
+                                                            TagsResponse(2, "Trabalho"),
+                                                            TagsResponse(3, "Formal")
+                                                        ))
+                                                }
+                                            }",
                                         )
                                     }
                             )
