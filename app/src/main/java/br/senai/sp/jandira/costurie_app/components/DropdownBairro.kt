@@ -62,7 +62,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: BairroViewModel) {
+fun DropdownBairro(
+    lifecycleScope: LifecycleCoroutineScope,
+    viewModelCidade: BairroViewModel,
+    onBairroSelected: (String) -> Unit
+) {
 
     val context = LocalContext.current
 
@@ -96,7 +100,7 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
         lifecycleScope.launch {
             val response = locationRepository.getBairros(idBairro)
 
-            Log.e("idCidade", "loadCidades: $idBairro", )
+            Log.e("idCidade", "loadCidades: $idBairro")
             Log.e("response", "loadCidades: ${response.body()}")
 
             if (response.isSuccessful) {
@@ -211,6 +215,7 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
                             ) {
                                 CategoryItemsBairro(title = it.nome) { title ->
                                     bairro = title
+                                    onBairroSelected(title)
                                     isExpanded = false
                                 }
                             }
@@ -220,6 +225,7 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
                             ) {
                                 CategoryItemsBairro(title = it.nome) { title ->
                                     bairro = title
+                                    onBairroSelected(title)
                                     isExpanded = false
                                 }
                             }

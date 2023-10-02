@@ -57,11 +57,15 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
 
     val viewModelCidade = viewModel<BairroViewModel>()
 
-
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
+
     var descriptionState by remember {
         mutableStateOf("")
     }
+
+    var cidadeStateUser by remember { mutableStateOf("") }
+    var estadoStateUser by remember { mutableStateOf("") }
+    var bairroStateUser by remember { mutableStateOf("") }
 
     Costurie_appTheme {
         Surface(
@@ -177,7 +181,9 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownEstado(lifecycleScope = lifecycleScope, viewModel)
+                DropdownEstado(lifecycleScope = lifecycleScope, viewModel) { selectedEstado ->
+                    estadoStateUser = selectedEstado
+                }
                 Text(
                     text = "Cidades:",
                     fontSize = 16.sp,
@@ -189,7 +195,9 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     lifecycleScope = lifecycleScope,
                     viewModel,
                     viewModelCidade
-                )
+                ) { selectedCidade ->
+                    cidadeStateUser = selectedCidade
+                }
                 Text(
                     text = "Bairros:",
                     fontSize = 16.sp,
@@ -197,7 +205,9 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
+                DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade) { selectedBairro ->
+                    bairroStateUser = selectedBairro
+                }
 
                 Column(
                     modifier = Modifier

@@ -98,5 +98,7 @@ dependencies {
     //Modal
     implementation ("androidx.compose.material3:material3:1.0.0-alpha01")
 
+    //Firebase
+    implementation ("com.google.firebase:firebase-storage:20.0.0")
 
 }

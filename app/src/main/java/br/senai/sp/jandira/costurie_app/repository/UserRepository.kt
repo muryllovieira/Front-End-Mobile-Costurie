@@ -1,10 +1,10 @@
 package br.senai.sp.jandira.costurie_app.repository
 
+import android.net.Uri
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.UserService
-import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Response
@@ -25,7 +25,7 @@ class UserRepository {
         bairro: String,
         nome: String,
         descricao: String,
-        foto: String,
+        foto: Uri?,
         nome_de_usuario: String,
         tags: List<TagsResponse>
     ): Response<UserResponse> {
@@ -37,7 +37,10 @@ class UserRepository {
             addProperty("bairro", bairro)
             addProperty("nome", nome)
             addProperty("descricao", descricao)
-            addProperty("foto", foto)
+            if (foto != null) {
+                // Converte o Uri em uma String
+                addProperty("foto", foto.toString())
+            }
             addProperty("nome_de_usuario", nome_de_usuario)
             val tagsArray = JsonArray()
             for (tag in tags) {
