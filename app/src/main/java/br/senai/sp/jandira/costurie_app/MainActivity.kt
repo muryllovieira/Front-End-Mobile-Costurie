@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<PasswordResetViewModel>()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "login")
+                    startDestination = "home")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
