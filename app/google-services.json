@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "457549159938",
+    "project_id": "costurie-images",
+    "storage_bucket": "costurie-images.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457549159938:android:13301dc2c8c9ef826bd11b",
+        "android_client_info": {
+          "package_name": "br.senai.sp.jandira.costurie_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiB4tRJkLG6S2n8IxOvuAQOkBhxtf6Xog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

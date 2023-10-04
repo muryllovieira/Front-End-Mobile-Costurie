@@ -33,6 +33,9 @@ import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
@@ -63,12 +66,13 @@ class MainActivity : ComponentActivity() {
 
                     composable(route = "type") { TypeProfileScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser) }
-                    composable(route = "description") { DescriptionScreen() }
+
                     composable(route = "location") { LocationScreen(lifecycleScope = lifecycleScope) }
                     
                     //telas de personalização
                     composable(route = "name") { NameScreen(navController = navController, localStorage) }
                     composable(route = "foto") { ProfilePicScreen(navController = navController, localStorage) }
+                    composable(route = "description") { DescriptionScreen(navController = navController, localStorage, lifecycleScope = lifecycleScope) }
                     }
                 }
             }

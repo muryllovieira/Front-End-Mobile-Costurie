@@ -154,8 +154,6 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                         email = email,
                                         senha = password,  // Você pode definir a senha aqui
                                     )
-
-                                    navController.navigate("home")
                                 } else {
                                     deleteUserSQLite(context = context )
                                     saveLogin(
@@ -166,8 +164,8 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                         email = email,
                                         senha = password,
                                     )
-                                    navController.navigate("home")
                                 }
+                                navController.navigate("name")
                             } else {
                                 Toast.makeText(context, "Dados do usuário inválidos", Toast.LENGTH_SHORT).show()
                             }

@@ -86,7 +86,9 @@ fun NameScreen(navController: NavController, localStorage: Storage) {
                 ) {
 
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                  navController.navigate("login")
+                        },
 
                         ) {
                         Image(
@@ -99,7 +101,7 @@ fun NameScreen(navController: NavController, localStorage: Storage) {
                     Button(
                         onClick = {
                                   if(!nomeState.isEmpty()) {
-                                      localStorage.salvarValor(context, nomeState.toString(), "nome")
+                                      localStorage.salvarValor(context, nomeState, "nome")
                                       navController.navigate("foto")
                                       Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
                                   } else {

@@ -55,5 +55,24 @@ class UserRepository {
         return apiService.updateUser(requestBody, token)
     }
 
+    suspend fun updateUserNamePicDesc(
+        id: Int,
+        token: String,
+        nome: String,
+        descricao: String,
+        foto: Uri?,
+    ): Response<UserResponse> {
+        val requestBody = JsonObject().apply {
+            addProperty("id_usuario", id)
+            addProperty("nome", nome)
+            addProperty("descricao", descricao)
+            if (foto != null) {
+                // Converte o Uri em uma String
+                addProperty("foto", foto.toString())
+            }
+        }
+        return apiService.updateUser(requestBody, token)
+    }
+
 
 }
