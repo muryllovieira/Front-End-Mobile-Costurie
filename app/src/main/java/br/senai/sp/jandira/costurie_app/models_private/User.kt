@@ -10,9 +10,9 @@ data class User(
     val token: String = "",
     val email: String = "",
     val senha: String = "",
-//    val foto: String = "",
-//    val idEndereco: Int = 0,
-//    val bairro: String = "",
-//    val cidade: String = "",
-//    val ufEstado: String = ""
+    val foto: String = "",
+    val idEndereco: Int = 0,
+    val bairro: String = "",
+    val cidade: String = "",
+    val ufEstado: String = ""
 )

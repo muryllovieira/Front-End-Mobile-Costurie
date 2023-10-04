@@ -24,10 +24,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
@@ -50,6 +54,9 @@ import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
@@ -91,12 +98,7 @@ fun ProfileScreen(
         mutableStateOf<Uri?>(null)
     }
 
-    //criar o objeto que abrira a galeria e retornara a uri da imagem selecionada
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) {
-        fotoUri = it
-    }
+    val profileEditSuccess = rememberUpdatedState(viewModel.profileEditSuccess.value)
 
     var painter = rememberAsyncImagePainter(
         ImageRequest.Builder(context).data(fotoUri).build()
@@ -149,8 +151,8 @@ fun ProfileScreen(
 
                 val tagsArray = usuarioObject.getJSONArray("tags")
                 val tagsList = mutableListOf<TagsResponse>()
-
-
+                // Substitua "path_da_imagem" pelo caminho real da imagem no dispositivo
+                val imagePath = "${response.body()}"
 
                 for (i in 0 until tagsArray.length()) {
                     val tagObject = tagsArray.getJSONObject(i)
@@ -160,11 +162,13 @@ fun ProfileScreen(
                     val tagResponse = TagsResponse(idTag, nomeTag)
                     tagsList.add(tagResponse)
                 }
+
                 id_usuario = usuarioObject.getInt("id_usuario")
                 nome = usuarioObject.getString("nome")
                 descricao = usuarioObject.getString("descricao")
                 nome_de_usuario = usuarioObject.getString("nome_de_usuario")
-                fotoUri = Uri.parse("foto")
+                val fotoUrl = usuarioObject.getString("foto")
+                fotoUri = Uri.parse(fotoUrl)
                 email = usuarioObject.getString("email")
                 cidade = usuarioObject.getString("cidade")
                 estado = usuarioObject.getString("estado")
@@ -182,6 +186,8 @@ fun ProfileScreen(
                 viewModel.bairros.value = listOf(bairro)
                 viewModel.id_localizacao = id_localizacao
                 viewModel.tags = tagsList
+
+                Log.i("Thiago", "${viewModel.nome}, $fotoUri")
 
             } else {
                 val errorBody = response.errorBody()?.string()
@@ -210,6 +216,12 @@ fun ProfileScreen(
             token = user.token,
             viewModel
         )
+
+        if (profileEditSuccess.value == true) {
+            viewModel.setProfileEditSuccess(false) // Redefina o sucesso para evitar recargas repetidas
+            // A edição de perfil foi bem-sucedida, recarregue os dados do usuário.
+            user(id = user.id.toInt(), token = user.token, viewModel)
+        }
 
         Log.e("TAG@", "ProfileScreen: ${user.id}, ${user.token}", )
     }
@@ -286,12 +298,14 @@ fun ProfileScreen(
                         .width(320.dp),
                     Arrangement.Start
                 ) {
-                    Image(
-                        painter = painter,
+
+                    AsyncImage(
+                        model = "$fotoUri",
                         contentDescription = "",
                         modifier = Modifier
                             .size(100.dp)
                     )
+
 
                     Spacer(modifier = Modifier.width(5.dp))
 

@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
@@ -162,6 +164,10 @@ fun EditProfileScreen(
             if (response.isSuccessful) {
                 Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
                 Log.e("user", "user: ${response.body()} ")
+
+                viewModel.setProfileEditSuccess(true)
+
+                navController.popBackStack()
             } else {
                 val errorBody = response.errorBody()?.string()
                 Log.e("EDICAO DE PERFIL", "updateUser: $errorBody", )
@@ -231,7 +237,7 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(45.dp)
                                     .clickable {
-                                        navController.navigate("profile")
+                                        navController.popBackStack()
                                     }
                             )
 
@@ -266,13 +272,12 @@ fun EditProfileScreen(
                                                 )
                                             )
                                         }
-
-                                        navController.navigate("profile")
                                         Log.e(
                                             "funcao edit",
                                             "EditProfileScreen: ${
                                                 viewModelIdLocalizacao?.let {
-                                                    updateUser(id_usuario = user.id.toInt(),
+                                                    updateUser(
+                                                        id_usuario = user.id.toInt(),
                                                         token = user.token,
                                                         viewModel,
                                                         id_localizacao = it,
@@ -286,7 +291,8 @@ fun EditProfileScreen(
                                                         tags = listOf(
                                                             TagsResponse(2, "Trabalho"),
                                                             TagsResponse(3, "Formal")
-                                                        ))
+                                                        )
+                                                    )
                                                 }
                                             }",
                                         )
@@ -303,6 +309,7 @@ fun EditProfileScreen(
                                 },
                             horizontalArrangement = Arrangement.Center
                         ) {
+
                             if (fotoUri == null) {
                                 Image(
                                     painter = painterResource(id = R.drawable.profile_default),
@@ -311,6 +318,17 @@ fun EditProfileScreen(
                                         .size(120.dp),
                                     contentScale = ContentScale.Crop
                                 )
+                            //painter = if (fotoUri == null) {
+//                                    // Use a foto existente se não houver nova foto selecionada
+//                                    rememberAsyncImagePainter(
+//                                        ImageRequest.Builder(context).data(existingPhotoUri).build()
+//                                    )
+//                                } else {
+//                                    // Use a nova foto selecionada pelo usuário
+//                                    rememberAsyncImagePainter(
+//                                        ImageRequest.Builder(context).data(fotoUri).build()
+//                                    )
+//                                },
                             } else {
                                 Image(
                                     painter = painter,
@@ -320,6 +338,7 @@ fun EditProfileScreen(
                                     contentScale = ContentScale.Crop
                                 )
                             }
+
                         }
 
                     }
