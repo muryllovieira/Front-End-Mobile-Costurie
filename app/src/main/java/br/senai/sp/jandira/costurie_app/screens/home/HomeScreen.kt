@@ -148,7 +148,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     if (selectedIdexItem == 0) {
                         ExploreScreen(navController = navController)
                     } else if (selectedIdexItem == 1) {
-                        ServicesScreen(navController = navController)
+//                        ServicesScreen(navController = navController)
                     } else if (selectedIdexItem == 2) {
                         PublishScreen(navController = navController)
                     } else if (selectedIdexItem == 3) {
