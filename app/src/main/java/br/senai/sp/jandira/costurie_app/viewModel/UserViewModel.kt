@@ -17,7 +17,7 @@ class UserViewModel: ViewModel(){
     val estados: MutableLiveData<List<String>> = MutableLiveData()
     val cidades: MutableLiveData<List<String>> = MutableLiveData()
     val bairros: MutableLiveData<List<String>> = MutableLiveData()
-    var tags: MutableList<TagsResponse> = mutableListOf()
+    var tags: MutableList<TagsResponse>? = mutableListOf()
 
     private val _profileEditSuccess = MutableLiveData<Boolean>()
     val profileEditSuccess: LiveData<Boolean>

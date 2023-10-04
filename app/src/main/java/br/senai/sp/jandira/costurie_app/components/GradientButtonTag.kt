@@ -33,7 +33,7 @@ fun GradientButtonTag(
     color2: Color,
     viewModel: UserViewModel,
 ) {
-    for (tag in viewModel.tags) {
+    for (tag in viewModel.tags!!) {
         Button(
             onClick,
             modifier = Modifier

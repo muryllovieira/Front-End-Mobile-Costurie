@@ -105,7 +105,7 @@ fun ModalTags2(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(viewModel.tags) { tag ->
+                    items(viewModel.tags?.toList() ?: emptyList()) { tag ->
                         GradientButtonTag(
                             onClick = {  },
                             text = tag.nome_tag,

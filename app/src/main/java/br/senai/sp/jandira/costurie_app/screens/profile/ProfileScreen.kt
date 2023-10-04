@@ -149,18 +149,23 @@ fun ProfileScreen(
                 val jsonObject = JSONObject(jsonString)
                 val usuarioObject = jsonObject.getJSONObject("usuario")
 
-                val tagsArray = usuarioObject.getJSONArray("tags")
-                val tagsList = mutableListOf<TagsResponse>()
-                // Substitua "path_da_imagem" pelo caminho real da imagem no dispositivo
-                val imagePath = "${response.body()}"
+                if (usuarioObject.has("tags")) {
+                    val tagsArray = usuarioObject.getJSONArray("tags")
+                    val tagsList = mutableListOf<TagsResponse>()
 
-                for (i in 0 until tagsArray.length()) {
-                    val tagObject = tagsArray.getJSONObject(i)
-                    val idTag = tagObject.getInt("id_tag")
-                    val nomeTag = tagObject.getString("nome_tag")
+                    // Processar tags como antes
+                    for (i in 0 until tagsArray.length()) {
+                        val tagObject = tagsArray.getJSONObject(i)
+                        val idTag = tagObject.getInt("id_tag")
+                        val nomeTag = tagObject.getString("nome_tag")
 
-                    val tagResponse = TagsResponse(idTag, nomeTag)
-                    tagsList.add(tagResponse)
+                        val tagResponse = TagsResponse(idTag, nomeTag)
+                        tagsList.add(tagResponse)
+
+                        viewModel.tags = tagsList
+                    }
+                } else {
+                    viewModel.tags = null
                 }
 
                 id_usuario = usuarioObject.getInt("id_usuario")
@@ -185,7 +190,7 @@ fun ProfileScreen(
                 viewModel.cidades.value = listOf(cidade)
                 viewModel.bairros.value = listOf(bairro)
                 viewModel.id_localizacao = id_localizacao
-                viewModel.tags = tagsList
+
 
                 Log.i("Thiago", "${viewModel.nome}, $fotoUri")
 
@@ -223,7 +228,7 @@ fun ProfileScreen(
             user(id = user.id.toInt(), token = user.token, viewModel)
         }
 
-        Log.e("TAG@", "ProfileScreen: ${user.id}, ${user.token}", )
+        Log.e("TAG@", "ProfileScreen: ${user.id}, ${user.token}")
     }
     Costurie_appTheme {
 
@@ -387,27 +392,35 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(25.dp))
 
-                Row(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp)
-                        .fillMaxWidth(),
-                    Arrangement.SpaceEvenly
-                ) {
-                    viewModel.tags.take(1).forEach { tag ->
-                        GradientButtonTag(
-                            onClick = {
-                                // Faça algo quando uma tag for clicada
-                            },
-                            text = tag.nome_tag,
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                            viewModel,
-                        )
+                if (viewModel.tags == null) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+
                     }
-                    if (viewModel.tags.size > 1) {
-                        ModalTags2(color1 = Destaque1, color2 = Destaque2, viewModel)
+
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp)
+                            .fillMaxWidth(),
+                        Arrangement.SpaceEvenly
+                    ) {
+                        viewModel.tags?.take(1)?.forEach { tag ->
+                            GradientButtonTag(
+                                onClick = {
+                                    // Faça algo quando uma tag for clicada
+                                },
+                                text = tag.nome_tag,
+                                color1 = Destaque1,
+                                color2 = Destaque2,
+                                viewModel,
+                            )
+                        }
+                        if ((viewModel.tags?.size ?: 0) > 1) {
+                            ModalTags2(color1 = Destaque1, color2 = Destaque2, viewModel)
+                        }
                     }
                 }
+
 
             }
         }
