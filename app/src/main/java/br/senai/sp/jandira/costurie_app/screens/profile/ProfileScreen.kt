@@ -46,6 +46,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
@@ -337,7 +338,7 @@ fun ProfileScreen(
                 ) {
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    WhiteButton(
+                    WhiteButtonSmall(
                         onClick = {
 
                         },
@@ -346,7 +347,7 @@ fun ProfileScreen(
 
                     Spacer(modifier = Modifier.width(20.dp))
 
-                    WhiteButton(
+                    WhiteButtonSmall(
                         onClick = {},
                         text = stringResource(id = R.string.botao_recomendados).uppercase()
                     )
