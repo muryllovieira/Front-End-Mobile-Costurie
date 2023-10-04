@@ -95,7 +95,7 @@ fun EditProfileScreen(
     }
 
     var fotoUri by remember {
-        mutableStateOf<Uri?>(null)
+        mutableStateOf<Uri?>(viewModel.foto)
     }
 
     val launcher = rememberLauncherForActivityResult(
@@ -272,30 +272,30 @@ fun EditProfileScreen(
                                                 )
                                             )
                                         }
-                                        Log.e(
-                                            "funcao edit",
-                                            "EditProfileScreen: ${
-                                                viewModelIdLocalizacao?.let {
-                                                    updateUser(
-                                                        id_usuario = user.id.toInt(),
-                                                        token = user.token,
-                                                        viewModel,
-                                                        id_localizacao = it,
-                                                        bairro = bairroStateUser,
-                                                        cidade = cidadeStateUser,
-                                                        estado = estadoStateUser,
-                                                        descricao = descricaoState,
-                                                        foto = fotoUri,
-                                                        nome_de_usuario = tagDeUsuarioState,
-                                                        nome = nomeState,
-                                                        tags = listOf(
-                                                            TagsResponse(2, "Trabalho"),
-                                                            TagsResponse(3, "Formal")
-                                                        )
-                                                    )
-                                                }
-                                            }",
-                                        )
+//                                        Log.e(
+//                                            "funcao edit",
+//                                            "EditProfileScreen: ${
+//                                                viewModelIdLocalizacao?.let {
+//                                                    updateUser(
+//                                                        id_usuario = user.id.toInt(),
+//                                                        token = user.token,
+//                                                        viewModel,
+//                                                        id_localizacao = it,
+//                                                        bairro = bairroStateUser,
+//                                                        cidade = cidadeStateUser,
+//                                                        estado = estadoStateUser,
+//                                                        descricao = descricaoState,
+//                                                        foto = fotoUri,
+//                                                        nome_de_usuario = tagDeUsuarioState,
+//                                                        nome = nomeState,
+//                                                        tags = listOf(
+//                                                            TagsResponse(2, "Trabalho"),
+//                                                            TagsResponse(3, "Formal")
+//                                                        )
+//                                                    )
+//                                                }
+//                                            }",
+//                                        )
                                     }
                             )
                         }
@@ -311,6 +311,7 @@ fun EditProfileScreen(
                         ) {
 
                             if (fotoUri == null) {
+                                //rememberAsyncImagePainter(model = fotoUri)
                                 AsyncImage(
                                     model = "$fotoUri",
                                     contentDescription = "",
@@ -331,11 +332,12 @@ fun EditProfileScreen(
 //                                    )
 //                                },
                             } else {
-                                Image(
-                                    painter = painterResource(id = R.drawable.profile_default),
+
+                                AsyncImage(
+                                    model = "$fotoUri",
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(120.dp),
+                                        .size(100.dp),
                                     contentScale = ContentScale.Crop
                                 )
                             }
