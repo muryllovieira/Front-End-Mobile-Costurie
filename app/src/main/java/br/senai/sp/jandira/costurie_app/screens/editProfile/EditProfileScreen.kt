@@ -311,13 +311,14 @@ fun EditProfileScreen(
                         ) {
 
                             if (fotoUri == null) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.profile_default),
+                                AsyncImage(
+                                    model = "$fotoUri",
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(120.dp),
+                                        .size(100.dp),
                                     contentScale = ContentScale.Crop
                                 )
+
                             //painter = if (fotoUri == null) {
 //                                    // Use a foto existente se não houver nova foto selecionada
 //                                    rememberAsyncImagePainter(
@@ -331,7 +332,7 @@ fun EditProfileScreen(
 //                                },
                             } else {
                                 Image(
-                                    painter = painter,
+                                    painter = painterResource(id = R.drawable.profile_default),
                                     contentDescription = "",
                                     modifier = Modifier
                                         .size(120.dp),
