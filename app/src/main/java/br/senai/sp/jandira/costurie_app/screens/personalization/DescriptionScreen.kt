@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,7 +41,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -74,19 +72,20 @@ fun DescriptionScreen(
     }
     val context = LocalContext.current
 
+    val userRepository = UserRepository()
+
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
     //funcao update de nome, foto e descricao
     fun updateUser(
-        nome: String?,
-        descricao: String?,
-        foto: Url?
+        nome: String,
+        descricao: String,
+        foto: Uri?
     ) {
-        val userRepository = UserRepository()
 
         lifecycleScope.launch {
-            val array = UserRepositorySqlite(context).findUsers()
-
-            val user = array[0]
-
             userRepository.updateUserNamePicDesc(
                 id = user.id.toInt(),
                 token = user.token,
@@ -139,11 +138,21 @@ fun DescriptionScreen(
                                 Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
                                 Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
                                 Log.i("localstorage", "${localStorage.lerValor(context, "descricao")}")
+
                                 updateUser(
-                                    nome = localStorage.lerValor(context, "nome"),
-                                    descricao = localStorage.lerValor(context, "descricao"),
-                                    foto = localStorage.lerValor(context, "foto")
+                                    nome = localStorage.lerValor(context, "nome") ?: "",
+                                    descricao = localStorage.lerValor(context, "descricao") ?: "",
+                                    foto = Uri.parse(localStorage.lerValor(context, "foto"))
                                 )
+
+                                Log.i("teste", "${
+                                    lifecycleScope.launch {
+                                        UserRepository().getUser(
+                                            user.id.toInt(), user.token
+                                        )
+                                    }
+                                }")
+
                             } else {
                                 Toast.makeText(
                                     context,
