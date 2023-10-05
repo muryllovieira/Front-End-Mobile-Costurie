@@ -76,9 +76,9 @@ fun DescriptionScreen(
 
     //funcao update de nome, foto e descricao
     fun updateUser(
-        nome: String?,
-        descricao: String?,
-        foto: Url?
+        nome: String,
+        descricao: String,
+        foto: Uri?
     ) {
         val userRepository = UserRepository()
 
@@ -139,11 +139,13 @@ fun DescriptionScreen(
                                 Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
                                 Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
                                 Log.i("localstorage", "${localStorage.lerValor(context, "descricao")}")
+
                                 updateUser(
-                                    nome = localStorage.lerValor(context, "nome"),
-                                    descricao = localStorage.lerValor(context, "descricao"),
-                                    foto = localStorage.lerValor(context, "foto")
+                                    nome = localStorage.lerValor(context, "nome") ?: "",
+                                    descricao = localStorage.lerValor(context, "descricao") ?: "",
+                                    foto = Uri.parse(localStorage.lerValor(context, "foto"))
                                 )
+
                             } else {
                                 Toast.makeText(
                                     context,
