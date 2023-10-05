@@ -20,9 +20,7 @@ import br.senai.sp.jandira.costurie_app.screens.personalization.DescriptionScree
 import br.senai.sp.jandira.costurie_app.screens.personalization.LocationScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.NameScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.ProfilePicScreen
-
 import br.senai.sp.jandira.costurie_app.screens.personalization.TypeProfileScreen
-
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 import br.senai.sp.jandira.costurie_app.screens.services.ServicesScreen
 import br.senai.sp.jandira.costurie_app.screens.tradePassword.TradePasswordScreen
@@ -33,7 +31,6 @@ import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
