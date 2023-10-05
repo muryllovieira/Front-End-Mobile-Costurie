@@ -247,6 +247,6 @@ fun CategoryItemsEstado(
             }
             .padding(10.dp)
     ) {
-        Text(text = title, fontSize = 16.sp)
+        Text(text = title, color = Color.Black, fontSize = 16.sp)
     }
 }

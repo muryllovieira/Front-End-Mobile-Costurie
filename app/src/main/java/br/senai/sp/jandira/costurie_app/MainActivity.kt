@@ -63,16 +63,14 @@ class MainActivity : ComponentActivity() {
 //                    composable(route = "services") { ServicesScreen(navController = navController) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
                     composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
-
-                    composable(route = "type") { TypeProfileScreen(navController = navController) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser) }
 
-                    composable(route = "location") { LocationScreen(lifecycleScope = lifecycleScope) }
-                    
                     //telas de personalização
                     composable(route = "name") { NameScreen(navController = navController, localStorage) }
-                    composable(route = "foto") { ProfilePicScreen(navController = navController, localStorage) }
+                    composable(route = "foto") { ProfilePicScreen(navController = navController, localStorage, lifecycleScope = lifecycleScope) }
                     composable(route = "description") { DescriptionScreen(navController = navController, localStorage, lifecycleScope = lifecycleScope) }
+                    composable(route = "location") { LocationScreen(navController = navController,lifecycleScope = lifecycleScope) }
+                    //composable(route = "profileType") { TypeProfileScreen(navController = navController,lifecycleScope = lifecycleScope) }
                     }
                 }
             }

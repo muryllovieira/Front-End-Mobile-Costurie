@@ -5,8 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,12 +32,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -50,8 +57,8 @@ import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
 //}
 
 @Composable
-fun TypeProfileScreen(navController: NavController) {
-
+fun TypeProfileScreen() {
+    //navController: NavController, lifecycleScope: LifecycleCoroutineScope
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
     var nomeState by remember {
         mutableStateOf("")
@@ -77,15 +84,16 @@ fun TypeProfileScreen(navController: NavController) {
                 ) {
 
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            //navController.navigate("location")
+                        },
 
                         ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_back),
+                        Image(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(35.dp),
-                            tint = Color.Magenta
+                                .size(45.dp)
                         )
                     }
                     Button(
@@ -156,14 +164,16 @@ fun TypeProfileScreen(navController: NavController) {
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Row {
+                            Row (
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.bola_de_la2),
                                     contentDescription = "",
                                     modifier = Modifier
                                         .size(24.dp, 36.dp)
                                 )
-
+                                Spacer(modifier = Modifier.width(16.dp))
                                 Text(
                                     text = stringResource(id = R.string.perfil_costureira),
                                     fontSize = 18.sp,
@@ -211,7 +221,7 @@ fun TypeProfileScreen(navController: NavController) {
                                     modifier = Modifier
                                         .size(24.dp, 36.dp)
                                 )
-
+                                Spacer(modifier = Modifier.width(16.dp))
                                 Text(
                                     text = stringResource(id = R.string.perfil_consumidor),
                                     fontSize = 18.sp,
@@ -234,4 +244,10 @@ fun TypeProfileScreen(navController: NavController) {
 
         }
     }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewTypeProfileScreen() {
+    TypeProfileScreen()
 }

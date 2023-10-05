@@ -59,6 +59,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.Storage
@@ -78,7 +79,7 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
+fun ProfilePicScreen(navController: NavController, localStorage: Storage, lifecycleScope: LifecycleCoroutineScope) {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
 
@@ -106,6 +107,10 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
     var painter = rememberAsyncImagePainter(
         ImageRequest.Builder(context).data(fotoUri).build()
     )
+
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
 
     Costurie_appTheme {
         Surface(
@@ -160,6 +165,7 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
                                                     Toast.makeText(context, "ERRO AO TENTAR REALIZAR O UPLOAD", Toast.LENGTH_SHORT).show()
                                                 }
 
+                                                localStorage.salvarValor(context, uri.toString(), "foto")
                                                 //BARRA DE PROGRESSO DO UPLOAD
                                             }
                                         }
@@ -175,7 +181,7 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
                                 }
                             }
 
-                            localStorage.salvarValor(context, fotoUri.toString(), "foto")
+
                             Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
                             Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
                             navController.navigate("description")
@@ -248,23 +254,29 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
                             launcher.launch("image/*")
                         }
                 ) {
-                    Card(
+                    Surface(
                         modifier = Modifier
                             .fillMaxSize()
                             .align(Alignment.Center),
                         shape = CircleShape,
-                        colors = CardDefaults.cardColors(Color.Transparent)
+                        color = Color.Transparent
                     ) {
 
                         AsyncImage(
-                            model = painter,
+                            model = user.foto,
                             contentDescription = "",
                             modifier = Modifier
                                 .fillMaxSize(),
                             contentScale = ContentScale.Crop,
                             error = painterResource(id = R.drawable.profile_default)
                         )
-
+                        Image(
+                            painter = painter,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
 
                     }
                     Image(
@@ -286,7 +298,7 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
                 ) {
                     WhiteButtonSmall(
                         onClick = {
-
+                            navController.navigate("description")
                         },
                         text = "Pular".uppercase()
                     )
