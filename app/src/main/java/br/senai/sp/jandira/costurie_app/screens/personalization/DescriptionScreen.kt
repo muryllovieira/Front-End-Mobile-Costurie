@@ -79,22 +79,24 @@ fun DescriptionScreen(
     val user = array[0]
 
     //funcao update de nome, foto e descricao
-    fun updateUser(
-        nome: String,
-        descricao: String,
-        foto: Uri?
-    ) {
-
-        lifecycleScope.launch {
-            userRepository.updateUserNamePicDesc(
-                id = user.id.toInt(),
-                token = user.token,
-                nome = nome,
-                descricao = descricao,
-                foto = foto
-            )
-        }
-    }
+//    fun updateUser(
+//        id_usuario: Int,
+//        token: String,
+//        nome: String,
+//        descricao: String,
+//        foto: Uri?
+//    ) {
+//
+//        lifecycleScope.launch {
+//            userRepository.updateUserNamePicDesc(
+//                id = user.id.toInt(),
+//                token = user.token,
+//                nome = nome,
+//                descricao = descricao,
+//                foto = foto
+//            )
+//        }
+//    }
 
     Costurie_appTheme {
         Surface(
@@ -134,11 +136,19 @@ fun DescriptionScreen(
                         onClick = {
                             if (!descriptionState.isEmpty()) {
                                 localStorage.salvarValor(context, descriptionState, "descricao")
-                                navController.navigate("location")
+
                                 Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
                                 Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
                                 Log.i("localstorage", "${localStorage.lerValor(context, "descricao")}")
 
+                                lifecycleScope.launch {
+                                    userRepository.updateUserNamePicDesc(
+                                        id = user.id.toInt(),
+                                        nome = localStorage.lerValor(context, "nome") ?: "nao foi",
+                                        descricao = localStorage.lerValor(context, "descricao") ?: "nao foi",
+                                        foto = localStorage.lerValor(context, "foto")
+                                    )
+                                }
                                 updateUser(
                                     nome = localStorage.lerValor(context, "nome") ?: "",
                                     descricao = localStorage.lerValor(context, "descricao") ?: "",
@@ -152,13 +162,19 @@ fun DescriptionScreen(
                                         )
                                     }
                                 }")
-
+                                navController.navigate("location")
                             } else {
                                 Toast.makeText(
                                     context,
                                     "Erro: preencha o campo",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                            }
+                            lifecycleScope.launch {
+                                var costureira = userRepository.getUser(
+                                    user.id.toInt(), user.token
+                                )
+                                Log.i("usuario", "${costureira.body()}")
                             }
                         },
                         modifier = Modifier
@@ -244,9 +260,6 @@ fun DescriptionScreen(
                         onClick = {
                             localStorage.salvarValor(context, descriptionState, "descricao")
                             navController.navigate("location")
-                            Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
-                            Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
-                            Log.i("localstorage", "${localStorage.lerValor(context, "descricao")}")
                         },
                         text = "Pular".uppercase()
                     )

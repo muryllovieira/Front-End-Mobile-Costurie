@@ -58,13 +58,12 @@ class UserRepository {
 
     suspend fun updateUserNamePicDesc(
         id: Int,
-        token: String,
         nome: String,
         descricao: String,
-        foto: Uri?,
+        foto: String?,
     ): Response<UserResponse> {
         val requestBody = JsonObject().apply {
-            addProperty("id_usuario", id)
+            addProperty("id", id)
             addProperty("nome", nome)
             addProperty("descricao", descricao)
             if (foto != null) {
@@ -72,8 +71,23 @@ class UserRepository {
                 addProperty("foto", foto.toString())
             }
         }
-        return apiService.updateUser(requestBody, token)
+        return apiService.updateUserNamePicDesc(requestBody)
     }
 
+    suspend fun updateLocation(
+        id: Int,
+        token: String,
+        cidade: String,
+        estado: String,
+        bairro: String
+    ): Response<UserResponse> {
+        val requestBody = JsonObject().apply {
+            addProperty("id_usuario", id)
+            addProperty("cidade", cidade)
+            addProperty("estado", estado)
+            addProperty("bairro", bairro)
+        }
+        return apiService.updateLocation(requestBody, token)
+    }
 
 }
