@@ -144,7 +144,7 @@ fun DescriptionScreen(
                                     descricao = localStorage.lerValor(context, "descricao") ?: "",
                                     foto = Uri.parse(localStorage.lerValor(context, "foto"))
                                 )
-
+=
                                 Log.i("teste", "${
                                     lifecycleScope.launch {
                                         UserRepository().getUser(
