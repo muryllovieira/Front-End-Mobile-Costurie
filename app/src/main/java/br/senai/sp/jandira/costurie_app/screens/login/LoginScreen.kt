@@ -166,6 +166,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                     )
                                 }
                                 navController.navigate("profileType")
+
                             } else {
                                 Toast.makeText(context, "Dados do usuário inválidos", Toast.LENGTH_SHORT).show()
                             }
