@@ -142,11 +142,6 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
                     }
                     Button(
                         onClick = {
-                            localStorage.salvarValor(context, fotoUri.toString(), "foto")
-                            Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
-                            Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
-                            navController.navigate("description")
-
                             fotoUri?.let {
                                 storageRef.putFile(it).addOnCompleteListener { task->
 
@@ -166,7 +161,6 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
                                                 }
 
                                                 //BARRA DE PROGRESSO DO UPLOAD
-
                                             }
                                         }
 
@@ -180,6 +174,11 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage) {
 
                                 }
                             }
+
+                            localStorage.salvarValor(context, fotoUri.toString(), "foto")
+                            Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
+                            Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
+                            navController.navigate("description")
 
                         },
                         modifier = Modifier
