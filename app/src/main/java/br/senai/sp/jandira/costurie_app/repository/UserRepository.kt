@@ -8,6 +8,7 @@ import br.senai.sp.jandira.costurie_app.service.UserService
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Response
+import retrofit2.http.Url
 
 class UserRepository {
     private val apiService = RetrofitFactory.getInstance().create(UserService::class.java)

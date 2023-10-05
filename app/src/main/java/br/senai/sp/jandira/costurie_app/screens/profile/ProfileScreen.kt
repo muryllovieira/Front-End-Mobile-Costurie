@@ -159,8 +159,11 @@ fun ProfileScreen(
                         val tagObject = tagsArray.getJSONObject(i)
                         val idTag = tagObject.getInt("id_tag")
                         val nomeTag = tagObject.getString("nome_tag")
+                        val imagem_tag = tagObject.getString("imagem_tag")
+                        val id_categoria = tagObject.getInt("id_categoria")
+                        val nome_categoria = tagObject.getString("nome_categoria")
 
-                        val tagResponse = TagsResponse(idTag, nomeTag)
+                        val tagResponse = TagsResponse(idTag, nomeTag, imagem_tag, id_categoria, nome_categoria)
                         tagsList.add(tagResponse)
 
                         viewModel.tags = tagsList

@@ -11,11 +11,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,18 +47,27 @@ import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
+import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.components.ModalTags2
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.models_private.User
+import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
+import java.lang.reflect.Type
+import java.lang.reflect.TypeVariable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,6 +132,45 @@ fun EditProfileScreen(
 
     val scrollState = rememberScrollState()
 
+
+    suspend fun getTags(
+        token: String,
+        categoria: String
+    ): List<TagsResponse> {
+        val tagRepository = TagsRepository()
+
+        val array = UserRepositorySqlite(context).findUsers()
+        val user = array[0]
+
+        val response = tagRepository.getTags(user.token, categoria)
+
+        if (response.isSuccessful) {
+            val responseBody = response.body()
+            if (responseBody != null) {
+                val tagsJson = responseBody.getAsJsonArray("tags")
+                val type: Type = object : TypeToken<List<TagsResponse>>() {}.type
+                val tagsList: List<TagsResponse> = Gson().fromJson(tagsJson, type)
+
+                // Log para verificar as tags recebidas
+                Log.e(MainActivity::class.java.simpleName, "Tags recebidas")
+                Log.e("user", "user: $tagsList")
+
+                return tagsList
+            }
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e("TODAS AS TAGS", "Tags: $errorBody")
+            Toast.makeText(
+                context,
+                "Erro durante trazer todas as tags: $errorBody",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        // Se algo deu errado ou não há tags, retorne uma lista vazia
+        return emptyList()
+    }
+
     fun updateUser(
         id_usuario: Int,
         token: String,
@@ -170,7 +221,7 @@ fun EditProfileScreen(
                 navController.popBackStack()
             } else {
                 val errorBody = response.errorBody()?.string()
-                Log.e("EDICAO DE PERFIL", "updateUser: $errorBody", )
+                Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
                 val descricao = response.body()?.descricao
                 if (descricao != null) {
                     if (descricao.length > 255)
@@ -192,6 +243,17 @@ fun EditProfileScreen(
             }
         }
     }
+
+    LaunchedEffect(Unit) {
+        val array = UserRepositorySqlite(context).findUsers()
+        val user = array[0]
+
+        // Obtenha as tags e converta para uma lista mutável
+        val tags = getTags(user.token, "GERAL").toMutableList()
+
+        viewModel.tags = tags
+    }
+
 
 
     Costurie_appTheme {
@@ -251,7 +313,7 @@ fun EditProfileScreen(
 
                                         val user = array[0]
 
-                                        Log.e("user-teste", "EditProfileScreen: $user",)
+                                        Log.e("user-teste", "EditProfileScreen: $user")
 
                                         if (viewModelIdLocalizacao != null) {
                                             updateUser(
@@ -267,8 +329,7 @@ fun EditProfileScreen(
                                                 nome_de_usuario = tagDeUsuarioState,
                                                 nome = nomeState,
                                                 tags = listOf(
-                                                    TagsResponse(2, "Trabalho"),
-                                                    TagsResponse(3, "Formal")
+
                                                 )
                                             )
                                         }
@@ -320,7 +381,7 @@ fun EditProfileScreen(
                                     contentScale = ContentScale.Crop
                                 )
 
-                            //painter = if (fotoUri == null) {
+                                //painter = if (fotoUri == null) {
 //                                    // Use a foto existente se não houver nova foto selecionada
 //                                    rememberAsyncImagePainter(
 //                                        ImageRequest.Builder(context).data(existingPhotoUri).build()
@@ -392,6 +453,7 @@ fun EditProfileScreen(
                             viewModelEstado,
                         ) { selectedEstado ->
                             estadoStateUser = selectedEstado
+
                         }
 
                     }
@@ -433,11 +495,39 @@ fun EditProfileScreen(
                             .fillMaxWidth()
                             .height(250.dp)
                     )
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        LazyVerticalGrid(
+                            //modifier = Modifier
+                                //.fillMaxSize() // Preenche o tamanho máximo disponível
+                                //.verticalScroll(state = scrollState), // Adiciona a capacidade de rolagem vertical,
+                            columns = GridCells.Fixed(2),
+                            content = {
+                                viewModel.tags?.let {
+                                    items(it.size) { index ->
+                                        val tag = viewModel.tags!![index]
+                                        GradientButtonTag(
+                                            onClick = {
+                                            },
+                                            text = tag.nome_tag,
+                                            color1 = Destaque1,
+                                            color2 = Destaque2,
+                                            viewModel
+                                        )
+                                    }
+                                }
+                            }
+                        )
+
+                    }
                 }
-
-
             }
+
+
         }
     }
 }
+
 
