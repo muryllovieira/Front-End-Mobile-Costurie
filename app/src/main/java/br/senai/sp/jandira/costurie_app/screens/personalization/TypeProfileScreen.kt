@@ -157,38 +157,31 @@ fun TypeProfileScreen() {
                             containerColor = Color.Transparent
                         ),
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .height(100.dp)
-                                .width(288.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row (
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.bola_de_la2),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .size(24.dp, 36.dp)
+                            Image(
+                                painter = painterResource(id = R.drawable.bola_de_la2),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(24.dp, 36.dp)
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = stringResource(id = R.string.perfil_costureira),
+                                fontSize = 18.sp,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(
+                                    168,
+                                    155,
+                                    255,
+                                    255
                                 )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Text(
-                                    text = stringResource(id = R.string.perfil_costureira),
-                                    fontSize = 18.sp,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color(
-                                        168,
-                                        155,
-                                        255,
-                                        255
-                                    )
-                                )
-                            }
-
+                            )
                         }
+
+
                     }
                     Button(
                         { },
@@ -204,39 +197,32 @@ fun TypeProfileScreen() {
                             containerColor = Color.Transparent
                         ),
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .height(100.dp)
-                                .width(288.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row (
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Image(
-                                    painter = painterResource(id = R.drawable.person),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .size(24.dp, 36.dp)
+                            Image(
+                                painter = painterResource(id = R.drawable.person),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(24.dp, 36.dp)
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = stringResource(id = R.string.perfil_consumidor),
+                                fontSize = 18.sp,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(
+                                    168,
+                                    155,
+                                    255,
+                                    255
                                 )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Text(
-                                    text = stringResource(id = R.string.perfil_consumidor),
-                                    fontSize = 18.sp,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color(
-                                        168,
-                                        155,
-                                        255,
-                                        255
-                                    )
-                                )
-                            }
-
+                            )
                         }
+
+
                     }
                 }
             }
