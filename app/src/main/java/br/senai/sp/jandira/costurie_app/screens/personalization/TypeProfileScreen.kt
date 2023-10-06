@@ -3,6 +3,7 @@ package br.senai.sp.jandira.costurie_app.screens.personalization
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -20,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -49,6 +52,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
+import kotlin.math.cos
 
 //@Preview(showBackground = true, showSystemUi = true)
 //@Composable
@@ -63,6 +67,13 @@ fun TypeProfileScreen() {
     var nomeState by remember {
         mutableStateOf("")
     }
+    var costureiraSelected: Boolean by remember {
+        mutableStateOf(false)
+    }
+    var consumidorSelected: Boolean by remember {
+        mutableStateOf(false)
+    }
+
 
     Costurie_appTheme {
         Surface(
@@ -143,8 +154,9 @@ fun TypeProfileScreen() {
                     modifier = Modifier.height(288.dp),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button(
-                        { },
+                    Button({
+                        costureiraSelected = true
+                    },
                         modifier = Modifier
                             .height(100.dp)
                             .width(288.dp)
@@ -155,7 +167,7 @@ fun TypeProfileScreen() {
                         ),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent
-                        ),
+                        )
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -167,24 +179,30 @@ fun TypeProfileScreen() {
                                     .size(24.dp, 36.dp)
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = stringResource(id = R.string.perfil_costureira),
-                                fontSize = 18.sp,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(
-                                    168,
-                                    155,
-                                    255,
-                                    255
-                                )
-                            )
+//                            Text(
+//                                text = stringResource(id = R.string.perfil_costureira),
+//                                fontSize = 18.sp,
+//                                style = MaterialTheme.typography.bodySmall,
+//                                fontWeight = FontWeight.SemiBold,
+//                                color = if(costureiraSelected) {
+//                                    Color(168, 155, 255, 255)
+//                                    consumidorSelected = false
+//                                } else {
+//                                    Color.Transparent
+//                                }
+//                            )
                         }
 
 
                     }
+
+
                     Button(
-                        { },
+                        {
+
+                        consumidorSelected = true
+
+                        },
                         modifier = Modifier
                             .height(100.dp)
                             .width(288.dp)
