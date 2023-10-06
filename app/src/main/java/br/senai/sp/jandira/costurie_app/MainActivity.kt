@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.senai.sp.jandira.costurie_app.screens.chats.ChatsScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.EditProfileScreen
+import br.senai.sp.jandira.costurie_app.screens.editProfile.TagsEditProfileScreen
 import br.senai.sp.jandira.costurie_app.screens.explore.ExploreScreen
 import br.senai.sp.jandira.costurie_app.screens.home.HomeScreen
 import br.senai.sp.jandira.costurie_app.screens.loading.LoadingScreen
@@ -27,6 +28,7 @@ import br.senai.sp.jandira.costurie_app.screens.tradePassword.TradePasswordScree
 import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.viewModel.PasswordResetViewModel
+import br.senai.sp.jandira.costurie_app.viewModel.TagsViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -43,6 +45,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberAnimatedNavController()
                 val viewModelPassword = viewModel<PasswordResetViewModel>()
                 val viewModelUser = viewModel<UserViewModel>()
+                val viewModelTags = viewModel<TagsViewModel>()
                 val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
@@ -61,6 +64,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "chats") { ChatsScreen(navController = navController) }
                     composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser) }
+                    composable(route = "tagsEditProfile") { TagsEditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModelUser = viewModelUser, viewModelTags = viewModelTags) }
 
                     //telas de personalização
                     composable(route = "name") { NameScreen(navController = navController, localStorage) }
