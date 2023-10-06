@@ -11,14 +11,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,9 +45,7 @@ import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
-import br.senai.sp.jandira.costurie_app.components.ModalTags2
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
-import br.senai.sp.jandira.costurie_app.models_private.User
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
@@ -67,7 +62,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
-import java.lang.reflect.TypeVariable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,45 +125,6 @@ fun EditProfileScreen(
     val bairros = viewModel.bairros.value ?: emptyList()
 
     val scrollState = rememberScrollState()
-
-
-    suspend fun getTags(
-        token: String,
-        categoria: String
-    ): List<TagsResponse> {
-        val tagRepository = TagsRepository()
-
-        val array = UserRepositorySqlite(context).findUsers()
-        val user = array[0]
-
-        val response = tagRepository.getTags(user.token, categoria)
-
-        if (response.isSuccessful) {
-            val responseBody = response.body()
-            if (responseBody != null) {
-                val tagsJson = responseBody.getAsJsonArray("tags")
-                val type: Type = object : TypeToken<List<TagsResponse>>() {}.type
-                val tagsList: List<TagsResponse> = Gson().fromJson(tagsJson, type)
-
-                // Log para verificar as tags recebidas
-                Log.e(MainActivity::class.java.simpleName, "Tags recebidas")
-                Log.e("user", "user: $tagsList")
-
-                return tagsList
-            }
-        } else {
-            val errorBody = response.errorBody()?.string()
-            Log.e("TODAS AS TAGS", "Tags: $errorBody")
-            Toast.makeText(
-                context,
-                "Erro durante trazer todas as tags: $errorBody",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        // Se algo deu errado ou não há tags, retorne uma lista vazia
-        return emptyList()
-    }
 
     fun updateUser(
         id_usuario: Int,
@@ -244,18 +199,6 @@ fun EditProfileScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        val array = UserRepositorySqlite(context).findUsers()
-        val user = array[0]
-
-        // Obtenha as tags e converta para uma lista mutável
-        val tags = getTags(user.token, "GERAL").toMutableList()
-
-        viewModel.tags = tags
-    }
-
-
-
     Costurie_appTheme {
 
         Surface(
@@ -302,6 +245,16 @@ fun EditProfileScreen(
                                         navController.popBackStack()
                                     }
                             )
+                            Image(
+                                painter = painterResource(id = R.drawable.icon_edit),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(35.dp)
+                                    .clickable {
+                                       navController.navigate("tagsEditProfile")
+                                    },
+                                alignment = Alignment.TopEnd
+                            )
 
                             Image(
                                 painter = painterResource(id = R.drawable.save_icon),
@@ -333,30 +286,6 @@ fun EditProfileScreen(
                                                 )
                                             )
                                         }
-//                                        Log.e(
-//                                            "funcao edit",
-//                                            "EditProfileScreen: ${
-//                                                viewModelIdLocalizacao?.let {
-//                                                    updateUser(
-//                                                        id_usuario = user.id.toInt(),
-//                                                        token = user.token,
-//                                                        viewModel,
-//                                                        id_localizacao = it,
-//                                                        bairro = bairroStateUser,
-//                                                        cidade = cidadeStateUser,
-//                                                        estado = estadoStateUser,
-//                                                        descricao = descricaoState,
-//                                                        foto = fotoUri,
-//                                                        nome_de_usuario = tagDeUsuarioState,
-//                                                        nome = nomeState,
-//                                                        tags = listOf(
-//                                                            TagsResponse(2, "Trabalho"),
-//                                                            TagsResponse(3, "Formal")
-//                                                        )
-//                                                    )
-//                                                }
-//                                            }",
-//                                        )
                                     }
                             )
                         }
@@ -380,18 +309,6 @@ fun EditProfileScreen(
                                         .size(100.dp),
                                     contentScale = ContentScale.Crop
                                 )
-
-                                //painter = if (fotoUri == null) {
-//                                    // Use a foto existente se não houver nova foto selecionada
-//                                    rememberAsyncImagePainter(
-//                                        ImageRequest.Builder(context).data(existingPhotoUri).build()
-//                                    )
-//                                } else {
-//                                    // Use a nova foto selecionada pelo usuário
-//                                    rememberAsyncImagePainter(
-//                                        ImageRequest.Builder(context).data(fotoUri).build()
-//                                    )
-//                                },
                             } else {
 
                                 AsyncImage(
@@ -415,6 +332,7 @@ fun EditProfileScreen(
                         .padding(20.dp, 8.dp, 20.dp, 0.dp)
                         .verticalScroll(scrollState)
                 ) {
+
                     Text(
                         text = "NOME",
                         fontSize = 24.sp
@@ -495,37 +413,8 @@ fun EditProfileScreen(
                             .fillMaxWidth()
                             .height(250.dp)
                     )
-
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        LazyVerticalGrid(
-                            //modifier = Modifier
-                                //.fillMaxSize() // Preenche o tamanho máximo disponível
-                                //.verticalScroll(state = scrollState), // Adiciona a capacidade de rolagem vertical,
-                            columns = GridCells.Fixed(2),
-                            content = {
-                                viewModel.tags?.let {
-                                    items(it.size) { index ->
-                                        val tag = viewModel.tags!![index]
-                                        GradientButtonTag(
-                                            onClick = {
-                                            },
-                                            text = tag.nome_tag,
-                                            color1 = Destaque1,
-                                            color2 = Destaque2,
-                                            viewModel
-                                        )
-                                    }
-                                }
-                            }
-                        )
-
-                    }
                 }
             }
-
-
         }
     }
 }

@@ -149,12 +149,12 @@ fun DescriptionScreen(
                                         foto = localStorage.lerValor(context, "foto")
                                     )
                                 }
-                                updateUser(
-                                    nome = localStorage.lerValor(context, "nome") ?: "",
-                                    descricao = localStorage.lerValor(context, "descricao") ?: "",
-                                    foto = Uri.parse(localStorage.lerValor(context, "foto"))
-                                )
-=
+//                                updateUser(
+//                                    nome = localStorage.lerValor(context, "nome") ?: "",
+//                                    descricao = localStorage.lerValor(context, "descricao") ?: "",
+//                                    foto = Uri.parse(localStorage.lerValor(context, "foto"))
+//                                )
+
                                 Log.i("teste", "${
                                     lifecycleScope.launch {
                                         UserRepository().getUser(

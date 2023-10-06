@@ -28,7 +28,7 @@ class UserRepository {
         descricao: String,
         foto: Uri?,
         nome_de_usuario: String,
-        tags: List<TagsResponse>
+        tags: List<TagsResponse>?
     ): Response<UserResponse> {
         val requestBody = JsonObject().apply {
             addProperty("id_usuario", id)
@@ -44,12 +44,14 @@ class UserRepository {
             }
             addProperty("nome_de_usuario", nome_de_usuario)
             val tagsArray = JsonArray()
-            for (tag in tags) {
-                val tagObject = JsonObject().apply {
-                    addProperty("id_tag", tag.id_tag)
-                    addProperty("nome", tag.nome_tag)
+            if (tags != null) {
+                for (tag in tags) {
+                    val tagObject = JsonObject().apply {
+                        addProperty("id_tag", tag.id)
+                        addProperty("nome", tag.nome_tag)
+                    }
+                    tagsArray.add(tagObject)
                 }
-                tagsArray.add(tagObject)
             }
             add("tags", tagsArray)
         }
