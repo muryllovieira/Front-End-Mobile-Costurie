@@ -45,6 +45,7 @@ import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTags
+import br.senai.sp.jandira.costurie_app.model.TagResponse
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
@@ -209,6 +210,8 @@ fun TagsEditProfileScreen(
                                 "Dados em viewModelUser.tags: ${viewModelTags.tags}"
                             )
 
+                            var arrayTags by remember { mutableStateOf(listOf<TagResponse>()) }
+
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(2),
                                 contentPadding = PaddingValues(horizontal = 16.dp),
@@ -240,16 +243,23 @@ fun TagsEditProfileScreen(
                                                 onClick = {
                                                     val nome = tag.nome_tag
                                                     val id = tag.id
+                                                    val imagem = tag.imagem
+                                                    val id_categoria = tag.id_categoria
+                                                    //val nome_categoria = tag.nome_categoria
 
                                                     if (!isChecked) {
                                                         isChecked = true
                                                         cor1 = 0xFFFCF6FF.toInt()
                                                         cor2 = 0xFFA89BFF.toInt()
+                                                        var jsonTags = TagResponse(id, nome)
+                                                        arrayTags = arrayTags + jsonTags
                                                         Log.e("Eu", "$nome + $id")
                                                     } else {
                                                         isChecked = false
                                                         cor1 = 0xFFC98FEC.toInt()
                                                         cor2 = 0xFFA89BFF.toInt()
+                                                        arrayTags = arrayTags.filter { it.id != id }
+                                                        Log.e("Murilo e Luiz e Eu", "${arrayTags}")
                                                     }
                                                 },
                                                 text = tag.nome_tag,

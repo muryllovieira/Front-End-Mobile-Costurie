@@ -36,7 +36,7 @@ fun GradientButtonTags(
     val backgroundColor = if (isClicked) Color.White else color1
     Button(
         onClick = {
-            //isClicked = !isClicked
+            isClicked = !isClicked
             onClick()
         },
         modifier = Modifier
