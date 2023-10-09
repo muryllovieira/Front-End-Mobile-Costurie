@@ -23,6 +23,7 @@ import br.senai.sp.jandira.costurie_app.screens.personalization.DescriptionScree
 import br.senai.sp.jandira.costurie_app.screens.personalization.LocationScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.NameScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.ProfilePicScreen
+import br.senai.sp.jandira.costurie_app.screens.personalization.TagSelectScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.TypeProfileScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 import br.senai.sp.jandira.costurie_app.screens.services.ServicesScreen
@@ -41,6 +42,8 @@ import com.google.firebase.storage.StorageReference
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContent {
             Costurie_appTheme {
@@ -51,7 +54,10 @@ class MainActivity : ComponentActivity() {
                 val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
+
                     startDestination = "services")
+
+
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }
@@ -73,7 +79,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = "foto") { ProfilePicScreen(navController = navController, localStorage, lifecycleScope = lifecycleScope) }
                     composable(route = "description") { DescriptionScreen(navController = navController, localStorage, lifecycleScope = lifecycleScope) }
                     composable(route = "location") { LocationScreen(navController = navController,lifecycleScope = lifecycleScope) }
-                    //composable(route = "profileType") { TypeProfileScreen(navController = navController,lifecycleScope = lifecycleScope) }
+                    composable(route = "profileType") { TypeProfileScreen(navController = navController,lifecycleScope = lifecycleScope) }
+                    composable(route = "tagSelection") { TagSelectScreen(lifecycleScope = lifecycleScope) }
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.costurie_app.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -22,10 +23,8 @@ fun GradientButtonTag(
     onClick: () -> Unit,
     text: String,
     color1: Color,
-    color2: Color,
-    viewModel: UserViewModel,
+    color2: Color
 ) {
-    for (tag in viewModel.tags!!) {
         Button(
             onClick,
             modifier = Modifier
@@ -39,7 +38,7 @@ fun GradientButtonTag(
                     shape = ShapeButton.large,
                 )
                 .height(37.dp)
-                .width(115.dp),
+                .width(IntrinsicSize.Min),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
             ),
@@ -52,7 +51,7 @@ fun GradientButtonTag(
         ) {
 
             Text(
-                text = tag.nome_tag,
+                text = text,
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.SemiBold
@@ -60,7 +59,7 @@ fun GradientButtonTag(
 
 
         }
-    }
+
 }
 
 //@Preview(showBackground = true)

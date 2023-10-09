@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.costurie_app.screens.personalization
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,32 +34,63 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.repository.TagsRepository
+import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProfileTypeScreen(
-    viewModel: UserViewModel,
-    isSelected: Boolean
+fun TagSelectScreen(
+    //viewModel: UserViewModel,
+    //navController: NavController,
+    lifecycleScope: LifecycleCoroutineScope
 ) {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
+
     var pesquisaState by remember {
         mutableStateOf("")
     }
+
+    var context = LocalContext.current
+
+    val tagsRepository = TagsRepository()
+
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
+    fun teste () {
+        lifecycleScope.launch {
+            var result = tagsRepository.getAllTags(user.token).body()
+            var arr: Array<Any>
+
+            if (result != null) {
+                Log.i("tags", "${result}")
+            }
+        }
+    }
+
+    teste()
 
     Costurie_appTheme {
         Surface(
@@ -81,7 +113,9 @@ fun ProfileTypeScreen(
                 ) {
 
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            //navController.navigate("profileType")
+                        },
 
                         ) {
                         Image(
@@ -134,47 +168,11 @@ fun ProfileTypeScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Text( text = stringResource(id = R.string.descricao_tag_de_servico),
+                    Text(
+                        text = stringResource(id = R.string.descricao_tag_de_servico),
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
                     )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        Text(
-                            text = "geral".uppercase(),
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 1.sp,
-                            fontSize = 10.sp,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "roupas".uppercase(),
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 1.sp,
-                            fontSize = 10.sp,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "acessórios".uppercase(),
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 1.sp,
-                            fontSize = 10.sp,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "ajustes".uppercase(),
-                            fontWeight = FontWeight.SemiBold,
-                            letterSpacing = 1.sp,
-                            fontSize = 10.sp,
-                            color = Color.Black
-                        )
-
-                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -202,52 +200,45 @@ fun ProfileTypeScreen(
                     ) {
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
-                            text = "crochê",
+                            text = "modainfantil",
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            viewModel,
+                        )
+                        GradientButtonTag(
+                            onClick = { /*TODO*/ },
+                            text = "crochê",
+                            color1 = Destaque1,
+                            color2 = Destaque2
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            viewModel,
                         )
                         GradientButtonTag(
                             onClick = { /*TODO*/ },
                             text = "crochê",
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            viewModel,
-                        )
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "crochê",
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                            viewModel,
                         )
                     }
 
@@ -260,5 +251,5 @@ fun ProfileTypeScreen(
 //@Preview(showSystemUi = true, showBackground = true)
 //@Composable
 //fun PreviewProfileTypeScreen() {
-//    ProfileTypeScreen()
+//    TagSelectScreen()
 //}
