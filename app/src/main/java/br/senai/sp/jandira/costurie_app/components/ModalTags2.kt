@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.costurie_app.R
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
@@ -105,13 +104,13 @@ fun ModalTags2(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(viewModel.tags) { tag ->
+                    items(viewModel.tags?.toList() ?: emptyList()) { tag ->
                         GradientButtonTag(
                             onClick = {  },
                             text = tag.nome_tag,
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            viewModel
+                            //viewModel
                         )
                     }
                 }

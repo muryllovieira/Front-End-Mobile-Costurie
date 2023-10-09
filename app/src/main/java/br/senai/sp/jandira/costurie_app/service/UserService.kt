@@ -70,4 +70,17 @@ interface UserService {
         @Body body: JsonObject,
         @Header("x-access-token") token: String
     ): Response<UserResponse>
+
+    @Headers("Content-Type: application/json")
+    @PUT("/usuario/personalizar_perfil")
+    suspend fun updateUserNamePicDesc(
+        @Body body: JsonObject
+    ): Response<UserResponse>
+
+    @Headers("Content-Type: application/json")
+    @POST("/usuario/inserir_localizacao")
+    suspend fun updateLocation(
+        @Body body: JsonObject,
+        @Header("x-access-token") token: String
+    ): Response<UserResponse>
 }

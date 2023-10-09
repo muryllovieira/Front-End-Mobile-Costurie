@@ -1,6 +1,10 @@
+import com.google.devtools.ksp.gradle.KspTaskJvm
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -47,7 +51,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kotlin{
+        jvmToolchain(18)
+    }
 }
+tasks.withType(type = KspTaskJvm::class) {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+}
+
 
 dependencies {
 
@@ -59,6 +70,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("com.google.firebase:firebase-storage-ktx:20.2.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -80,6 +92,7 @@ dependencies {
 
 
     implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation("io.coil-kt:coil:2.3.0")
 
 
     // Navigation
@@ -98,5 +111,12 @@ dependencies {
     //Modal
     implementation ("androidx.compose.material3:material3:1.0.0-alpha01")
 
+    //Firebase
+    implementation ("com.google.firebase:firebase-storage:20.0.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.8.1")
 
+    //SQL LITE DEPENDENCIAS
+    implementation ("androidx.room:room-runtime:2.5.2")
+    annotationProcessor ("androidx.room:room-compiler:2.5.2")
+    ksp("androidx.room:room-compiler:2.5.2")
 }

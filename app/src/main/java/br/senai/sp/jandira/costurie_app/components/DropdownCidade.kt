@@ -65,6 +65,7 @@ fun DropdownCidade(
     lifecycleScope: LifecycleCoroutineScope,
     viewModel: EstadoViewModel,
     viewModelCidade: BairroViewModel,
+    onCidadeSelected: (String) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -98,7 +99,8 @@ fun DropdownCidade(
         lifecycleScope.launch {
             val response = locationRepository.getCidades(siglaEstado)
 
-            Log.e("response", "loadCidades: $response")
+            Log.e("siglaEstado", "loadCidades: $siglaEstado", )
+            Log.e("response", "loadCidades: ${response.body()}")
 
             if (response.isSuccessful) {
                 val cidadesResponse = response.body()
@@ -137,7 +139,7 @@ fun DropdownCidade(
 
     Column(
         modifier = Modifier
-            .padding(30.dp)
+            .padding(start = 30.dp, end = 30.dp, top = 10.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
@@ -216,8 +218,10 @@ fun DropdownCidade(
                                 }
                                     .sorted()
                             ) {
-                                CategoryItemsCidade(title = it.nome) { title ->
+                                CategoryItemsCidade(title = it.nome, id = it.id) { title, id ->
                                     cidade = title
+                                    onCidadeSelected(title)
+                                    viewModelCidade.bairroID = id
                                     isExpanded = false
                                 }
                             }
@@ -225,8 +229,10 @@ fun DropdownCidade(
                             items(
                                 cidades.sorted()
                             ) {
-                                CategoryItemsCidade(title = it.nome) { title ->
+                                CategoryItemsCidade(title = it.nome, id = it.id) { title, id ->
                                     cidade = title
+                                    onCidadeSelected(title)
+                                    viewModelCidade.bairroID = id
                                     isExpanded = false
                                 }
                             }
@@ -245,18 +251,19 @@ fun DropdownCidade(
 @Composable
 fun CategoryItemsCidade(
     title: String,
-    onSelect: (String) -> Unit
+    id: Int,
+    onSelect: (String, Int) -> Unit
 ) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                onSelect(title)
+                onSelect(title, id)
             }
             .padding(10.dp)
     ) {
-        Text(text = title, fontSize = 16.sp)
+        Text(text = title, color = Color.Black, fontSize = 16.sp)
     }
 
 }

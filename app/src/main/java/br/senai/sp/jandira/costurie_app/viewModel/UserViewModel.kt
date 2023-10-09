@@ -1,5 +1,8 @@
 package br.senai.sp.jandira.costurie_app.viewModel
 
+import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 
@@ -9,12 +12,20 @@ class UserViewModel: ViewModel(){
     var descricao: String = ""
     var nome_de_usuario: String = ""
     var email: String = ""
-    var foto: String = ""
+    var foto: Uri? = null
     var id_localizacao: Int? = 0
-    var cidade: String = ""
-    var estado: String = ""
-    var bairro: String = ""
-    var tags: MutableList<TagsResponse> = mutableListOf()
+    val estados: MutableLiveData<List<String>> = MutableLiveData()
+    val cidades: MutableLiveData<List<String>> = MutableLiveData()
+    val bairros: MutableLiveData<List<String>> = MutableLiveData()
+    var tags: MutableList<TagsResponse>? = mutableListOf()
+
+    private val _profileEditSuccess = MutableLiveData<Boolean>()
+    val profileEditSuccess: LiveData<Boolean>
+        get() = _profileEditSuccess
+
+    fun setProfileEditSuccess(success: Boolean) {
+        _profileEditSuccess.value = success
+    }
 }
 
 

@@ -1,3 +1,4 @@
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -21,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,10 +44,14 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
-import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -81,9 +87,15 @@ fun ProfileScreen(
         mutableStateOf("")
     }
 
-    var foto by remember {
-        mutableStateOf("")
+    var fotoUri by remember {
+        mutableStateOf<Uri?>(null)
     }
+
+    val profileEditSuccess = rememberUpdatedState(viewModel.profileEditSuccess.value)
+
+    var painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(context).data(fotoUri).build()
+    )
 
     var cidade by remember {
         mutableStateOf("")
@@ -130,22 +142,34 @@ fun ProfileScreen(
                 val jsonObject = JSONObject(jsonString)
                 val usuarioObject = jsonObject.getJSONObject("usuario")
 
-                val tagsArray = usuarioObject.getJSONArray("tags")
-                val tagsList = mutableListOf<TagsResponse>()
+                if (usuarioObject.has("tags")) {
+                    val tagsArray = usuarioObject.getJSONArray("tags")
+                    val tagsList = mutableListOf<TagsResponse>()
 
-                for (i in 0 until tagsArray.length()) {
-                    val tagObject = tagsArray.getJSONObject(i)
-                    val idTag = tagObject.getInt("id_tag")
-                    val nomeTag = tagObject.getString("nome_tag")
+                    // Processar tags como antes
+                    for (i in 0 until tagsArray.length()) {
+                        val tagObject = tagsArray.getJSONObject(i)
+                        val idTag = tagObject.getInt("id_tag")
+                        val nomeTag = tagObject.getString("nome_tag")
+                        val imagem_tag = tagObject.getString("imagem_tag")
+                        val id_categoria = tagObject.getInt("id_categoria")
+                        //val nome_categoria = tagObject.getString("nome_categoria")
 
-                    val tagResponse = TagsResponse(idTag, nomeTag)
-                    tagsList.add(tagResponse)
+                        val tagResponse = TagsResponse(idTag, nomeTag, imagem_tag, id_categoria)
+                        tagsList.add(tagResponse)
+
+                        viewModel.tags = tagsList
+                    }
+                } else {
+                    viewModel.tags = null
                 }
+
                 id_usuario = usuarioObject.getInt("id_usuario")
                 nome = usuarioObject.getString("nome")
                 descricao = usuarioObject.getString("descricao")
                 nome_de_usuario = usuarioObject.getString("nome_de_usuario")
-                foto = usuarioObject.getString("foto")
+                val fotoUrl = usuarioObject.getString("foto")
+                fotoUri = Uri.parse(fotoUrl)
                 email = usuarioObject.getString("email")
                 cidade = usuarioObject.getString("cidade")
                 estado = usuarioObject.getString("estado")
@@ -156,13 +180,15 @@ fun ProfileScreen(
                 viewModel.nome = nome
                 viewModel.descricao = descricao
                 viewModel.nome_de_usuario = nome_de_usuario
-                viewModel.foto = foto
+                viewModel.foto = fotoUri
                 viewModel.email = email
-                viewModel.cidade = cidade
-                viewModel.estado = estado
-                viewModel.bairro = bairro
+                viewModel.estados.value = listOf(estado)
+                viewModel.cidades.value = listOf(cidade)
+                viewModel.bairros.value = listOf(bairro)
                 viewModel.id_localizacao = id_localizacao
-                viewModel.tags = tagsList
+
+
+                Log.i("Thiago", "${viewModel.nome}, $fotoUri")
 
             } else {
                 val errorBody = response.errorBody()?.string()
@@ -182,11 +208,23 @@ fun ProfileScreen(
     }
 
     LaunchedEffect(key1 = true) {
+        val array = UserRepositorySqlite(context).findUsers()
+
+        val user = array[0]
+
         user(
-            id = 72,
-            token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcwLCJpYXQiOjE2OTUwNjUzMTgsImV4cCI6MTcyNTA2NTMxOH0.zr9S70ynlICRSmCybejcI4L481Kl4lBTID2MZJ4PG8c",
+            id = user.id.toInt(),
+            token = user.token,
             viewModel
         )
+
+        if (profileEditSuccess.value == true) {
+            viewModel.setProfileEditSuccess(false) // Redefina o sucesso para evitar recargas repetidas
+            // A edição de perfil foi bem-sucedida, recarregue os dados do usuário.
+            user(id = user.id.toInt(), token = user.token, viewModel)
+        }
+
+        Log.e("TAG@", "ProfileScreen: ${user.id}, ${user.token}")
     }
     Costurie_appTheme {
 
@@ -261,12 +299,14 @@ fun ProfileScreen(
                         .width(320.dp),
                     Arrangement.Start
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.profile_pic),
+
+                    AsyncImage(
+                        model = "$fotoUri",
                         contentDescription = "",
                         modifier = Modifier
                             .size(100.dp)
                     )
+
 
                     Spacer(modifier = Modifier.width(5.dp))
 
@@ -319,7 +359,7 @@ fun ProfileScreen(
                 ) {
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    WhiteButton(
+                    WhiteButtonSmall(
                         onClick = {
 
                         },
@@ -328,7 +368,7 @@ fun ProfileScreen(
 
                     Spacer(modifier = Modifier.width(20.dp))
 
-                    WhiteButton(
+                    WhiteButtonSmall(
                         onClick = {},
                         text = stringResource(id = R.string.botao_recomendados).uppercase()
                     )
@@ -348,27 +388,35 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(25.dp))
 
-                Row(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp)
-                        .fillMaxWidth(),
-                    Arrangement.SpaceEvenly
-                ) {
-                    viewModel.tags.take(1).forEach { tag ->
-                        GradientButtonTag(
-                            onClick = {
-                                // Faça algo quando uma tag for clicada
-                            },
-                            text = tag.nome_tag,
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                            viewModel,
-                        )
+                if (viewModel.tags == null) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+
                     }
-                    if (viewModel.tags.size > 1) {
-                        ModalTags2(color1 = Destaque1, color2 = Destaque2, viewModel)
+
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp)
+                            .fillMaxWidth(),
+                        Arrangement.SpaceEvenly
+                    ) {
+//                        viewModel.tags?.take(1)?.forEach { tag ->
+//                            GradientButtonTag(
+//                                onClick = {
+//                                    // Faça algo quando uma tag for clicada
+//                                },
+//                                text = tag.nome_tag,
+//                                color1 = Destaque1,
+//                                color2 = Destaque2,
+//                                viewModel,
+//                            )
+//                        }
+                        if ((viewModel.tags?.size ?: 0) > 1) {
+                            ModalTags2(color1 = Destaque1, color2 = Destaque2, viewModel)
+                        }
                     }
                 }
+
 
             }
         }

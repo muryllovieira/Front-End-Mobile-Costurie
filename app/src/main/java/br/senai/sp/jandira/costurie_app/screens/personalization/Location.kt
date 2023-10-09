@@ -1,5 +1,8 @@
 package br.senai.sp.jandira.costurie_app.screens.personalization
 
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,8 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -38,30 +44,46 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
+fun LocationScreen(navController: NavController, lifecycleScope: LifecycleCoroutineScope) {
 
     val viewModel = viewModel<EstadoViewModel>()
 
     val viewModelCidade = viewModel<BairroViewModel>()
 
-
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
+
     var descriptionState by remember {
         mutableStateOf("")
     }
+
+    val context = LocalContext.current
+
+    val userRepository = UserRepository()
+
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
+    var cidadeStateUser by remember { mutableStateOf("") }
+    var estadoStateUser by remember { mutableStateOf("") }
+    var bairroStateUser by remember { mutableStateOf("") }
 
     Costurie_appTheme {
         Surface(
@@ -85,19 +107,45 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                 ) {
 
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            navController.navigate("description")
+                        },
 
                         ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_back),
+                        Image(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(35.dp),
-                            tint = Color.Magenta
+                                .size(45.dp)
                         )
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            if (cidadeStateUser.isNotEmpty() || estadoStateUser.isNotEmpty() || bairroStateUser.isNotEmpty()) {
+                                lifecycleScope.launch {
+                                    userRepository.updateLocation(
+                                        id = user.id.toInt(),
+                                        token = user.token,
+                                        cidade = cidadeStateUser,
+                                        estado = estadoStateUser,
+                                        bairro = bairroStateUser
+                                    )
+                                }
+                                navController.navigate("profileType")
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Erro: preencha o campo",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            lifecycleScope.launch {
+                                var costureira = userRepository.getUser(
+                                    user.id.toInt(), user.token
+                                )
+                                Log.i("usuario", "${costureira.body()}")
+                            }
+                        },
                         modifier = Modifier
                             .size(45.dp)
                             .background(
@@ -172,14 +220,18 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
 
                 Text(
                     text = "Estados:",
+                    color = Color.Black,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownEstado(lifecycleScope = lifecycleScope, viewModel)
+                DropdownEstado(lifecycleScope = lifecycleScope, viewModel) { selectedEstado ->
+                    estadoStateUser = selectedEstado
+                }
                 Text(
                     text = "Cidades:",
+                    color = Color.Black,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Left,
@@ -189,15 +241,20 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     lifecycleScope = lifecycleScope,
                     viewModel,
                     viewModelCidade
-                )
+                ) { selectedCidade ->
+                    cidadeStateUser = selectedCidade
+                }
                 Text(
                     text = "Bairros:",
+                    color = Color.Black,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Left,
                     modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 0.dp)
                 )
-                DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
+                DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade) { selectedBairro ->
+                    bairroStateUser = selectedBairro
+                }
 
                 Column(
                     modifier = Modifier
@@ -206,7 +263,9 @@ fun LocationScreen(lifecycleScope: LifecycleCoroutineScope) {
                     horizontalAlignment = Alignment.End
                 ) {
                     WhiteButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                  navController.navigate("profileType")
+                                  },
                         text = "Pular".uppercase()
                     )
                 }

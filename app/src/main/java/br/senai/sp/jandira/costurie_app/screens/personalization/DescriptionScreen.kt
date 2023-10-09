@@ -1,11 +1,14 @@
 package br.senai.sp.jandira.costurie_app.screens.personalization
 
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,33 +31,72 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.components.WhiteButtonSmall
+import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import kotlinx.coroutines.launch
+import retrofit2.http.Url
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DescriptionScreen() {
+fun DescriptionScreen(
+    navController: NavController,
+    localStorage: Storage,
+    lifecycleScope: LifecycleCoroutineScope
+) {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
     var descriptionState by remember {
         mutableStateOf("")
     }
+    val context = LocalContext.current
+
+    val userRepository = UserRepository()
+
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
+    //funcao update de nome, foto e descricao
+//    fun updateUser(
+//        id_usuario: Int,
+//        token: String,
+//        nome: String,
+//        descricao: String,
+//        foto: Uri?
+//    ) {
+//
+//        lifecycleScope.launch {
+//            userRepository.updateUserNamePicDesc(
+//                id = user.id.toInt(),
+//                token = user.token,
+//                nome = nome,
+//                descricao = descricao,
+//                foto = foto
+//            )
+//        }
+//    }
 
     Costurie_appTheme {
         Surface(
@@ -78,19 +120,63 @@ fun DescriptionScreen() {
                 ) {
 
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            navController.navigate("foto")
+                        },
 
                         ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_back),
+                        Image(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(35.dp),
-                            tint = Color.Magenta
+                                .size(35.dp)
                         )
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            if (!descriptionState.isEmpty()) {
+                                localStorage.salvarValor(context, descriptionState, "descricao")
+
+                                Log.i("localstorage", "${localStorage.lerValor(context, "foto")}")
+                                Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
+                                Log.i("localstorage", "${localStorage.lerValor(context, "descricao")}")
+
+                                lifecycleScope.launch {
+                                    userRepository.updateUserNamePicDesc(
+                                        id = user.id.toInt(),
+                                        nome = localStorage.lerValor(context, "nome") ?: "nao foi",
+                                        descricao = localStorage.lerValor(context, "descricao") ?: "nao foi",
+                                        foto = localStorage.lerValor(context, "foto")
+                                    )
+                                }
+//                                updateUser(
+//                                    nome = localStorage.lerValor(context, "nome") ?: "",
+//                                    descricao = localStorage.lerValor(context, "descricao") ?: "",
+//                                    foto = Uri.parse(localStorage.lerValor(context, "foto"))
+//                                )
+
+                                Log.i("teste", "${
+                                    lifecycleScope.launch {
+                                        UserRepository().getUser(
+                                            user.id.toInt(), user.token
+                                        )
+                                    }
+                                }")
+                                navController.navigate("location")
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Erro: preencha o campo",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            lifecycleScope.launch {
+                                var costureira = userRepository.getUser(
+                                    user.id.toInt(), user.token
+                                )
+                                Log.i("usuario", "${costureira.body()}")
+                            }
+                        },
                         modifier = Modifier
                             .size(45.dp)
                             .background(
@@ -122,7 +208,6 @@ fun DescriptionScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-
                         text = stringResource(id = R.string.texto_descricao_do_seu_perfil).uppercase(),
                         modifier = Modifier.height(30.dp),
                         fontWeight = FontWeight.Bold,
@@ -172,7 +257,10 @@ fun DescriptionScreen() {
                     horizontalAlignment = Alignment.End
                 ) {
                     WhiteButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            localStorage.salvarValor(context, descriptionState, "descricao")
+                            navController.navigate("location")
+                        },
                         text = "Pular".uppercase()
                     )
                 }
@@ -184,8 +272,8 @@ fun DescriptionScreen() {
 }
 
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewDescriptionScreen() {
-    DescriptionScreen()
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PreviewDescriptionScreen() {
+//    DescriptionScreen()
+//}

@@ -1,5 +1,7 @@
 package br.senai.sp.jandira.costurie_app.screens.personalization
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -47,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
@@ -54,12 +58,13 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NameScreen() {
+fun NameScreen(navController: NavController, localStorage: Storage) {
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
     var nomeState by remember {
         mutableStateOf("")
     }
+    val context = LocalContext.current
 
     Costurie_appTheme {
         Surface(
@@ -81,7 +86,9 @@ fun NameScreen() {
                 ) {
 
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                  navController.navigate("login")
+                        },
 
                         ) {
                         Image(
@@ -92,7 +99,15 @@ fun NameScreen() {
                         )
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                  if(!nomeState.isEmpty()) {
+                                      localStorage.salvarValor(context, nomeState, "nome")
+                                      navController.navigate("foto")
+                                      Log.i("localstorage", "${localStorage.lerValor(context, "nome")}")
+                                  } else {
+                                      Toast.makeText(context, "Erro: preencha os campos", Toast.LENGTH_SHORT).show()
+                                  }
+                                  },
                         modifier = Modifier
                             .size(45.dp)
                             .background(
@@ -170,8 +185,8 @@ fun NameScreen() {
     }
 
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewNameScreen() {
-    NameScreen()
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PreviewNameScreen() {
+//    NameScreen()
+//}

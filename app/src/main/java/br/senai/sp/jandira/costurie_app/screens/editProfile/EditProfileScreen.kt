@@ -1,7 +1,10 @@
 package br.senai.sp.jandira.costurie_app.screens.editProfile
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -39,15 +44,24 @@ import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
+import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
+import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import kotlin.math.log
+import java.lang.reflect.Type
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +75,8 @@ fun EditProfileScreen(
 
     val viewModelCidade = viewModel<BairroViewModel>()
 
+    val viewModelBairro = viewModel<BairroViewModel>()
+
     val viewModelIdUsuario = viewModel.id_usuario
 
     val viewModelIdLocalizacao = viewModel.id_localizacao
@@ -71,13 +87,6 @@ fun EditProfileScreen(
 
     val viewModelTagUsuario = viewModel.nome_de_usuario
 
-    val viewModelEstadoUser = viewModel.estado
-
-    val viewModelCidadeUser = viewModel.cidade
-
-    val viewModelBairroUser = viewModel.bairro
-
-    val viewModelFotoUser = viewModel.foto
 
     var nomeState by remember {
         mutableStateOf(viewModelNome)
@@ -91,21 +100,31 @@ fun EditProfileScreen(
         mutableStateOf(viewModelDescricao)
     }
 
-    var fotoState by remember {
-        mutableStateOf(viewModelFotoUser)
+    var fotoUri by remember {
+        mutableStateOf<Uri?>(viewModel.foto)
     }
 
-    var cidadeState by remember {
-        mutableStateOf(viewModelCidadeUser)
-
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        fotoUri = it
     }
 
-    var estadoState by remember {
-        mutableStateOf(viewModelEstadoUser)
-    }
+    var context = LocalContext.current
+
+    var painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(context).data(fotoUri).build()
+    )
+
+    var cidadeStateUser by remember { mutableStateOf("") }
+    var estadoStateUser by remember { mutableStateOf("") }
+    var bairroStateUser by remember { mutableStateOf("") }
+
+    val estados = viewModel.estados.value ?: emptyList()
+    val cidades = viewModel.cidades.value ?: emptyList()
+    val bairros = viewModel.bairros.value ?: emptyList()
 
     val scrollState = rememberScrollState()
-    val context = LocalContext.current
 
     fun updateUser(
         id_usuario: Int,
@@ -117,7 +136,7 @@ fun EditProfileScreen(
         bairro: String,
         nome: String,
         descricao: String,
-        foto: String,
+        foto: Uri?,
         nome_de_usuario: String,
         tags: List<TagsResponse>
     ) {
@@ -127,9 +146,13 @@ fun EditProfileScreen(
             Log.e("ID", "user: $id_usuario")
             Log.e("token", "user: $token")
 
+            val array = UserRepositorySqlite(context).findUsers()
+
+            val user = array[0]
+
             val response = userRepository.updateUser(
-                id_usuario,
-                token,
+                user.id.toInt(),
+                user.token,
                 id_localizacao,
                 cidade,
                 estado,
@@ -141,14 +164,19 @@ fun EditProfileScreen(
                 tags
             )
 
-            Log.e("TAG", "user: $response")
-            Log.i("TAG", "user: ${response.body()}")
+            Log.e("TAG4", "user: $response")
+            Log.i("TAG5", "user: ${response.body()}")
 
             if (response.isSuccessful) {
                 Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
-                Log.e("user", "user: ${response.body()}")
+                Log.e("user", "user: ${response.body()} ")
+
+                viewModel.setProfileEditSuccess(true)
+
+                navController.popBackStack()
             } else {
                 val errorBody = response.errorBody()?.string()
+                Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
                 val descricao = response.body()?.descricao
                 if (descricao != null) {
                     if (descricao.length > 255)
@@ -164,13 +192,12 @@ fun EditProfileScreen(
                 }
                 Toast.makeText(
                     context,
-                    "Erro durante a atualização dos dados do usuário",
+                    "Erro durante a atualização dos dados do usuário: $errorBody",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
-
 
     Costurie_appTheme {
 
@@ -215,8 +242,18 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(45.dp)
                                     .clickable {
-                                        navController.navigate("profile")
+                                        navController.popBackStack()
                                     }
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.icon_edit),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(35.dp)
+                                    .clickable {
+                                       navController.navigate("tagsEditProfile")
+                                    },
+                                alignment = Alignment.TopEnd
                             )
 
                             Image(
@@ -225,29 +262,30 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                        if (viewModelIdUsuario != null) {
-                                            if (viewModelIdLocalizacao != null) {
-                                                updateUser(
-                                                    id_usuario = viewModelIdUsuario,
-                                                    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjcyLCJpYXQiOjE2OTYwODAxNTYsImV4cCI6MTcyNjA4MDE1Nn0.4kXtV1QuyHjFHCxW6wbNiZNLOwbFzEuOJudGfKEcj8I",
-                                                    viewModel,
-                                                    id_localizacao = viewModelIdLocalizacao,
-                                                    bairro = viewModelBairroUser,
-                                                    cidade = cidadeState,
-                                                    estado = estadoState,
-                                                    descricao = descricaoState,
-                                                    foto = fotoState,
-                                                    nome_de_usuario = tagDeUsuarioState,
-                                                    nome = nomeState,
-                                                    tags = listOf(
-                                                        TagsResponse(2, "Trabalho"),
-                                                        TagsResponse(3, "Formal")
-                                                    )
+                                        val array = UserRepositorySqlite(context).findUsers()
+
+                                        val user = array[0]
+
+                                        Log.e("user-teste", "EditProfileScreen: $user")
+
+                                        if (viewModelIdLocalizacao != null) {
+                                            updateUser(
+                                                id_usuario = user.id.toInt(),
+                                                token = user.token,
+                                                viewModel,
+                                                id_localizacao = viewModelIdLocalizacao,
+                                                bairro = bairroStateUser,
+                                                cidade = cidadeStateUser,
+                                                estado = estadoStateUser,
+                                                descricao = descricaoState,
+                                                foto = fotoUri,
+                                                nome_de_usuario = tagDeUsuarioState,
+                                                nome = nomeState,
+                                                tags = listOf(
+
                                                 )
-                                            }
+                                            )
                                         }
-                                        navController.navigate("profile")
-                                        Log.e("edit", "EditProfileScreen: $viewModelIdUsuario + $viewModelNome", )
                                     }
                             )
                         }
@@ -255,15 +293,33 @@ fun EditProfileScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(14.dp),
+                                .padding(14.dp)
+                                .clickable {
+                                    launcher.launch("image/*")
+                                },
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.profile_pic),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(120.dp)
-                            )
+
+                            if (fotoUri == null) {
+                                //rememberAsyncImagePainter(model = fotoUri)
+                                AsyncImage(
+                                    model = "$fotoUri",
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(100.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+
+                                AsyncImage(
+                                    model = "$fotoUri",
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(100.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+
                         }
 
                     }
@@ -276,6 +332,7 @@ fun EditProfileScreen(
                         .padding(20.dp, 8.dp, 20.dp, 0.dp)
                         .verticalScroll(scrollState)
                 ) {
+
                     Text(
                         text = "NOME",
                         fontSize = 24.sp
@@ -308,39 +365,43 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Text(text = "Estado", fontSize = 24.sp)
+                        DropdownEstado(
+                            lifecycleScope = lifecycleScope,
+                            viewModelEstado,
+                        ) { selectedEstado ->
+                            estadoStateUser = selectedEstado
+
+                        }
+
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(text = "Cidade", fontSize = 24.sp)
                         DropdownCidade(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
                             viewModelCidade
-                        )
+                        ) { selectedCidade ->
+                            cidadeStateUser = selectedCidade
+                        }
+
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(text = "Bairro", fontSize = 24.sp)
-                        DropdownBairro(lifecycleScope = lifecycleScope, viewModelCidade)
+                        DropdownBairro(
+                            lifecycleScope = lifecycleScope,
+                            viewModelCidade
+                        ) { selectedBairro ->
+                            bairroStateUser = selectedBairro
+                        }
                     }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = "Estado", fontSize = 24.sp)
-                        DropdownEstado(lifecycleScope = lifecycleScope, viewModelEstado)
-                    }
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(30.dp, 0.dp, 30.dp, 0.dp),
-//                        //horizontalArrangement = Arrangement.SpaceEvenly
-//                    ) {
-//                        Row(modifier = Modifier.fillMaxWidth()) {
-//                            DropdownCidade()
-//                            Spacer(modifier = Modifier.width(20.dp))
-//                            DropdownBairro()
-//                        }
-//                    }
+
                     Text(text = "Descrição", fontSize = 24.sp)
                     CustomOutlinedTextField2(
                         value = descricaoState,
@@ -353,10 +414,9 @@ fun EditProfileScreen(
                             .height(250.dp)
                     )
                 }
-
-
             }
         }
     }
 }
+
 

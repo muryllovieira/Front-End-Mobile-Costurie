@@ -1,16 +1,14 @@
 package br.senai.sp.jandira.costurie_app.repository
 
-import android.util.Log
-import br.senai.sp.jandira.costurie_app.model.BaseResponse
-import br.senai.sp.jandira.costurie_app.model.StateResponse
+import android.net.Uri
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
-import br.senai.sp.jandira.costurie_app.model.UserJsonResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.UserService
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Response
+import retrofit2.http.Url
 
 class UserRepository {
     private val apiService = RetrofitFactory.getInstance().create(UserService::class.java)
@@ -28,9 +26,9 @@ class UserRepository {
         bairro: String,
         nome: String,
         descricao: String,
-        foto: String,
+        foto: Uri?,
         nome_de_usuario: String,
-        tags: List<TagsResponse>
+        tags: List<TagsResponse>?
     ): Response<UserResponse> {
         val requestBody = JsonObject().apply {
             addProperty("id_usuario", id)
@@ -40,20 +38,58 @@ class UserRepository {
             addProperty("bairro", bairro)
             addProperty("nome", nome)
             addProperty("descricao", descricao)
-            addProperty("foto", foto)
+            if (foto != null) {
+                // Converte o Uri em uma String
+                addProperty("foto", foto.toString())
+            }
             addProperty("nome_de_usuario", nome_de_usuario)
             val tagsArray = JsonArray()
-            for (tag in tags) {
-                val tagObject = JsonObject().apply {
-                    addProperty("id_tag", tag.id_tag)
-                    addProperty("nome", tag.nome_tag)
+            if (tags != null) {
+                for (tag in tags) {
+                    val tagObject = JsonObject().apply {
+                        addProperty("id_tag", tag.id)
+                        addProperty("nome", tag.nome_tag)
+                    }
+                    tagsArray.add(tagObject)
                 }
-                tagsArray.add(tagObject)
             }
             add("tags", tagsArray)
         }
         return apiService.updateUser(requestBody, token)
     }
 
+    suspend fun updateUserNamePicDesc(
+        id: Int,
+        nome: String,
+        descricao: String,
+        foto: String?,
+    ): Response<UserResponse> {
+        val requestBody = JsonObject().apply {
+            addProperty("id", id)
+            addProperty("nome", nome)
+            addProperty("descricao", descricao)
+            if (foto != null) {
+                // Converte o Uri em uma String
+                addProperty("foto", foto.toString())
+            }
+        }
+        return apiService.updateUserNamePicDesc(requestBody)
+    }
+
+    suspend fun updateLocation(
+        id: Int,
+        token: String,
+        cidade: String,
+        estado: String,
+        bairro: String
+    ): Response<UserResponse> {
+        val requestBody = JsonObject().apply {
+            addProperty("id_usuario", id)
+            addProperty("cidade", cidade)
+            addProperty("estado", estado)
+            addProperty("bairro", bairro)
+        }
+        return apiService.updateLocation(requestBody, token)
+    }
 
 }

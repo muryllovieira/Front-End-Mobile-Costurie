@@ -62,7 +62,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: BairroViewModel) {
+fun DropdownBairro(
+    lifecycleScope: LifecycleCoroutineScope,
+    viewModelCidade: BairroViewModel,
+    onBairroSelected: (String) -> Unit
+) {
 
     val context = LocalContext.current
 
@@ -96,7 +100,8 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
         lifecycleScope.launch {
             val response = locationRepository.getBairros(idBairro)
 
-            Log.e("response", "loadBairros: $response")
+            Log.e("idCidade", "loadCidades: $idBairro")
+            Log.e("response", "loadCidades: ${response.body()}")
 
             if (response.isSuccessful) {
                 val bairrosResponse = response.body()
@@ -129,7 +134,7 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
 
     Column(
         modifier = Modifier
-            .padding(30.dp)
+            .padding(start = 30.dp, end = 30.dp, top = 10.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
@@ -210,6 +215,7 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
                             ) {
                                 CategoryItemsBairro(title = it.nome) { title ->
                                     bairro = title
+                                    onBairroSelected(title)
                                     isExpanded = false
                                 }
                             }
@@ -219,6 +225,7 @@ fun DropdownBairro(lifecycleScope: LifecycleCoroutineScope, viewModelCidade: Bai
                             ) {
                                 CategoryItemsBairro(title = it.nome) { title ->
                                     bairro = title
+                                    onBairroSelected(title)
                                     isExpanded = false
                                 }
                             }
@@ -250,7 +257,7 @@ fun CategoryItemsBairro(
             }
             .padding(10.dp)
     ) {
-        Text(text = title, fontSize = 16.sp)
+        Text(text = title, color = Color.Black, fontSize = 16.sp)
     }
 
 }
