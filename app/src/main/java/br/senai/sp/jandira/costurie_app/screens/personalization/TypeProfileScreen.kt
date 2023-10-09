@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -61,7 +62,7 @@ import kotlin.math.cos
 //}
 
 @Composable
-fun TypeProfileScreen() {
+fun TypeProfileScreen(navController: NavController, lifecycleScope: LifecycleCoroutineScope) {
     //navController: NavController, lifecycleScope: LifecycleCoroutineScope
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
     var nomeState by remember {
@@ -96,7 +97,7 @@ fun TypeProfileScreen() {
 
                     IconButton(
                         onClick = {
-                            //navController.navigate("location")
+                            navController.navigate("location")
                         },
 
                         ) {
@@ -108,7 +109,13 @@ fun TypeProfileScreen() {
                         )
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                  if(costureiraSelected && consumidorSelected == false) {
+                                      navController.navigate("tagSelection")
+                                  } else if (consumidorSelected && costureiraSelected == false) {
+                                      navController.navigate("home")
+                                  }
+                        },
                         modifier = Modifier
                             .size(45.dp)
                             .background(
@@ -154,9 +161,11 @@ fun TypeProfileScreen() {
                     modifier = Modifier.height(288.dp),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button({
-                        costureiraSelected = true
-                    },
+                    Button(
+                        {
+                            costureiraSelected = true
+                            consumidorSelected = false
+                        },
                         modifier = Modifier
                             .height(100.dp)
                             .width(288.dp)
@@ -165,32 +174,42 @@ fun TypeProfileScreen() {
                         border = BorderStroke(
                             2.dp, Color(168, 155, 255, 255)
                         ),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        )
+                        colors = if (costureiraSelected) {
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color(168, 155, 255, 255)
+                            )
+                        } else {
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent
+                            )
+                        }
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.bola_de_la2),
+                                painter = if (costureiraSelected) {
+                                    painterResource(id = R.drawable.bola_de_la_branca)
+                                } else {
+                                    painterResource(id = R.drawable.bola_de_la2)
+                                },
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(24.dp, 36.dp)
                             )
                             Spacer(modifier = Modifier.width(16.dp))
-//                            Text(
-//                                text = stringResource(id = R.string.perfil_costureira),
-//                                fontSize = 18.sp,
-//                                style = MaterialTheme.typography.bodySmall,
-//                                fontWeight = FontWeight.SemiBold,
-//                                color = if(costureiraSelected) {
-//                                    Color(168, 155, 255, 255)
-//                                    consumidorSelected = false
-//                                } else {
-//                                    Color.Transparent
-//                                }
-//                            )
+                            Text(
+                                text = stringResource(id = R.string.perfil_costureira),
+                                fontSize = 18.sp,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (costureiraSelected) {
+                                    Color.White
+                                } else {
+                                    Color(168, 155, 255, 255)
+                                }
+
+                            )
                         }
 
 
@@ -200,7 +219,8 @@ fun TypeProfileScreen() {
                     Button(
                         {
 
-                        consumidorSelected = true
+                            consumidorSelected = true
+                            costureiraSelected = false
 
                         },
                         modifier = Modifier
@@ -211,16 +231,26 @@ fun TypeProfileScreen() {
                         border = BorderStroke(
                             2.dp, Color(168, 155, 255, 255)
                         ),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        ),
+                        colors = if (consumidorSelected) {
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color(168, 155, 255, 255)
+                            )
+                        } else {
+                            ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent
+                            )
+                        },
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.person),
+                                painter = if (consumidorSelected) {
+                                    painterResource(id = R.drawable.person_white)
+                                } else {
+                                    painterResource(id = R.drawable.person)
+                                },
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(24.dp, 36.dp)
@@ -231,12 +261,11 @@ fun TypeProfileScreen() {
                                 fontSize = 18.sp,
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color(
-                                    168,
-                                    155,
-                                    255,
-                                    255
-                                )
+                                color = if (consumidorSelected) {
+                                    Color.White
+                                } else {
+                                    Color(168, 155, 255, 255)
+                                }
                             )
                         }
 
@@ -250,8 +279,8 @@ fun TypeProfileScreen() {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewTypeProfileScreen() {
-    TypeProfileScreen()
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PreviewTypeProfileScreen() {
+//    TypeProfileScreen()
+//}
