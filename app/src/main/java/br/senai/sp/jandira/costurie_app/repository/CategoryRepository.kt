@@ -12,44 +12,20 @@ class CategoryRepository {
             return listOf<Category>(
                 Category(
                     id = 1,
-                    name = "Teste",
-                    image = ""
+                    name = "Teste"
                 ),
                 Category(
                     id = 2,
-                    name = "Crochê",
-                    image = ""
+                    name = "Crochê"
                 ),
                 Category(
                     id = 3,
-                    name = "Teste2",
-                    image = ""
+                    name = "Teste2"
                 ),
                 Category(
                     id = 4,
-                    name = "Teste4",
-                    image = ""
-                ),
-                Category(
-                    id = 5,
-                    name = "Teste4",
-                    image = ""
-                ),
-                Category(
-                    id = 6,
-                    name = "Teste4",
-                    image = ""
-                ),
-                Category(
-                    id = 7,
-                    name = "Teste4",
-                    image = ""
-                ),
-                Category(
-                    id = 8,
-                    name = "Teste4",
-                    image = ""
-                ),
+                    name = "Teste4"
+                )
             )
         }
     }

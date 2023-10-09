@@ -5,7 +5,7 @@ import androidx.compose.ui.res.stringResource
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.model.Filtering
 
-class FilteringRepository {
+class CategoriesRepository {
     companion object {
         @Composable
         fun getFiltering(): List<Filtering> {
