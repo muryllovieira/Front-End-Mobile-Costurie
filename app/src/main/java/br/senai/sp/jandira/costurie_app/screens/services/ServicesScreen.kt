@@ -66,6 +66,9 @@ import coil.compose.AsyncImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
+import br.senai.sp.jandira.costurie_app.repository.Category
+import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
+import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -226,7 +229,7 @@ fun ServicesScreen(
                 )
 
                 SearchAppBar(
-                    text = stringResource(id = R.string.servicos_filtragem_textfield),
+                    text = stringResource(id = R.string.servicos_categorias_textfield),
                     onTextChange = { },
                     onCloseClicked = { /*TODO*/ },
                     onSearchClicked = { }
@@ -329,7 +332,9 @@ fun ServicesScreen(
                                 }
                             }
                         }
+
                     }
+                }
 //                    LazyColumn(
 //                        modifier = Modifier
 //                            .padding(18.dp)
@@ -354,7 +359,6 @@ fun ServicesScreen(
 //                            }
 //                        }
 //                    }
-                }
             }
         }
     }

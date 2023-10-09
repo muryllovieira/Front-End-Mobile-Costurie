@@ -16,5 +16,6 @@ class FilteringRepository {
 
     suspend fun getCategories(token: String): Response<JsonObject> {
         return apiService.getCategory(token)
+
     }
 }
