@@ -11,7 +11,7 @@ import br.senai.sp.jandira.costurie_app.service.UserService
 import com.google.gson.JsonObject
 import retrofit2.Response
 
-class FilteringRepository {
+class CategoriesRepository {
     private val apiService = RetrofitFactory.getInstance().create(CategoriesService::class.java)
 
     suspend fun getCategories(token: String): Response<JsonObject> {

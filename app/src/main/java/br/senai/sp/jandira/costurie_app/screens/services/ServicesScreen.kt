@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -36,16 +35,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -54,10 +54,8 @@ import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.SearchAppBar
 import br.senai.sp.jandira.costurie_app.model.Filtering
-import br.senai.sp.jandira.costurie_app.model.CategoryResponse
-import br.senai.sp.jandira.costurie_app.model.TagResponse
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
-import br.senai.sp.jandira.costurie_app.repository.FilteringRepository
+import br.senai.sp.jandira.costurie_app.repository.CategoriesRepository
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
@@ -65,10 +63,8 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import coil.compose.AsyncImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 import java.lang.reflect.Type
-import br.senai.sp.jandira.costurie_app.repository.Category
-import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
-import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,7 +100,7 @@ fun ServicesScreen(
 
     suspend fun getTags(
         token: String,
-        categoria: String
+        categoria: String,
     ): List<TagsResponse> {
         val tagRepository = TagsRepository()
 
@@ -144,8 +140,7 @@ fun ServicesScreen(
         val array = UserRepositorySqlite(context).findUsers()
         val user = array[0]
 
-        // Obtenha as tags e converta para uma lista mutável
-        val tags = getTags(user.token, "Ajustes").toMutableList()
+        val tags = getTags(user.token, "GERAL").toMutableList()
 
         listTags = tags
 
@@ -156,7 +151,7 @@ fun ServicesScreen(
     suspend fun getCategories(
         token: String
     ): List<Filtering> {
-        val filteringRepository = FilteringRepository()
+        val filteringRepository = CategoriesRepository()
 
         val array = UserRepositorySqlite(context).findUsers()
         val user = array[0]
@@ -254,7 +249,16 @@ fun ServicesScreen(
                                 .size(100.dp, 45.dp)
                                 .padding(start = 16.dp, 2.dp)
                                 .clickable {
-
+                                    val categoriaSelecionada = filtering.nome
+                                    val array = UserRepositorySqlite(context).findUsers()
+                                    val user = array[0]
+                                    lifecycleScope.launch {
+                                        val tags = getTags(
+                                            user.token,
+                                            categoriaSelecionada
+                                        ).toMutableList()
+                                        listTags = tags
+                                    }
                                 },
                             backgroundColor = Color.Transparent
                         ) {
@@ -300,7 +304,11 @@ fun ServicesScreen(
                         items(listTags) { tags ->
                             Card(
                                 modifier = Modifier
-                                    .size(170.dp, 85.dp),
+                                    .size(170.dp, 85.dp)
+                                    .clickable {
+                                        val tagSelecionada = tags.nome_tag
+                                        Log.d("TAGSELECIONADA", "ServicesScreen: $tagSelecionada")
+                                    },
                                 shape = RoundedCornerShape(15.dp),
                                 border = BorderStroke(
                                     width = 1.dp,
@@ -312,6 +320,7 @@ fun ServicesScreen(
                                     )
                                 )
                             ) {
+
                                 AsyncImage(
                                     model = tags.imagem,
                                     contentDescription = "",
@@ -327,7 +336,13 @@ fun ServicesScreen(
                                         fontSize = 18.sp,
                                         color = Color.White,
                                         modifier = Modifier.padding(start = 12.dp),
-                                        fontWeight = FontWeight.SemiBold
+                                        fontWeight = FontWeight.SemiBold,
+                                        style = TextStyle(
+                                            shadow = Shadow(
+                                                color = Color.Black,
+                                                offset = Offset(0f, 6f),
+                                            )
+                                        )
                                     )
                                 }
                             }
@@ -335,38 +350,7 @@ fun ServicesScreen(
 
                     }
                 }
-//                    LazyColumn(
-//                        modifier = Modifier
-//                            .padding(18.dp)
-//                    ) {
-//                        items(listTags) { tags ->
-//                            Card(
-//                                modifier = Modifier
-//                                    .size(170.dp, 85.dp)
-//                                    .padding(2.dp, vertical = 4.dp),
-//                                backgroundColor = Color.Transparent,
-//                                shape = RoundedCornerShape(15.dp),
-//                                border = BorderStroke(
-//                                    width = 1.dp,
-//                                    Brush.horizontalGradient(
-//                                        listOf(
-//                                            Color(201, 143, 236, 255),
-//                                            Color(168, 155, 255, 255)
-//                                        )
-//                                    )
-//                                )
-//                            ) {
-//                            }
-//                        }
-//                    }
             }
         }
     }
 }
-
-
-//@Preview(showSystemUi = true)
-//@Composable
-//fun PreviewServicesScreen () {
-//    ServicesScreen(FilteringRepository.getFiltering(), CategoryRepository.getCategories())
-//}

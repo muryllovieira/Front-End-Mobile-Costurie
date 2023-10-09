@@ -1,28 +1,26 @@
 package br.senai.sp.jandira.costurie_app.repository
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.model.CategoryResponse
 
 class CategoryRepository {
     companion object {
         @Composable
-        fun getCategories(): List<Category> {
-            return listOf<Category>(
-                Category(
+        fun getCategories(): List<CategoryResponse> {
+            return listOf<CategoryResponse>(
+                CategoryResponse(
                     id = 1,
                     name = "Teste"
                 ),
-                Category(
+                CategoryResponse(
                     id = 2,
                     name = "Crochê"
                 ),
-                Category(
+                CategoryResponse(
                     id = 3,
                     name = "Teste2"
                 ),
-                Category(
+                CategoryResponse(
                     id = 4,
                     name = "Teste4"
                 )
