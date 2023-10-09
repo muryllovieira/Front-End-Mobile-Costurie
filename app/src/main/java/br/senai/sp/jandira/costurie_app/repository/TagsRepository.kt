@@ -18,7 +18,6 @@ class TagsRepository {
         }
 
         return apiService.getTags(requestBody, token)
-
     }
 
     suspend fun getAllTags(token: String): Response<CategoryAndTags> {
