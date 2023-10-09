@@ -36,9 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -75,15 +77,6 @@ fun ServicesScreen(
     filterings: List<Filtering>,
     categories: List<TagsResponse>
 ) {
-
-    var text by remember { mutableStateOf("") }
-    var active by remember { mutableStateOf(false) }
-    var items = remember {
-        mutableStateListOf(
-            "Teste",
-            "Teste2"
-        )
-    }
 
     val color = Contraste
 
@@ -321,10 +314,18 @@ fun ServicesScreen(
                                 )
                             ) {
 
+                                val fatorContraste = -0.5f
+
+                                val colorMatrix = ColorMatrix().apply {
+                                    // Aplicando o ajuste de contraste
+                                    setToScale(1f + fatorContraste, 1f + fatorContraste, 1f + fatorContraste, 1f)
+                                }
+
                                 AsyncImage(
                                     model = tags.imagem,
                                     contentDescription = "",
-                                    contentScale = ContentScale.Crop
+                                    contentScale = ContentScale.Crop,
+                                    colorFilter = ColorFilter.colorMatrix(colorMatrix)
                                 )
 
                                 Box(
@@ -347,7 +348,6 @@ fun ServicesScreen(
                                 }
                             }
                         }
-
                     }
                 }
             }
