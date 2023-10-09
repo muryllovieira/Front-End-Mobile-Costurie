@@ -8,6 +8,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.senai.sp.jandira.costurie_app.model.Filtering
+import br.senai.sp.jandira.costurie_app.repository.Category
 import br.senai.sp.jandira.costurie_app.screens.chats.ChatsScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.EditProfileScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.TagsEditProfileScreen
@@ -76,4 +78,4 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
+}
