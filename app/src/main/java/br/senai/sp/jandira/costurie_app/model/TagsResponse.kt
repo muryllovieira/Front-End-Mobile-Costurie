@@ -3,7 +3,7 @@ package br.senai.sp.jandira.costurie_app.model
 import com.google.gson.annotations.SerializedName
 
 data class TagsResponse(
-    val id: Int,
+    @SerializedName("id_tag") val id: Int,
     @SerializedName("nome") val nome_tag: String,
     val imagem: String,
     val id_categoria: Int,

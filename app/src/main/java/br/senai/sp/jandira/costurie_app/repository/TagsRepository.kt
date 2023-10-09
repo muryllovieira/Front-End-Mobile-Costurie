@@ -16,6 +16,5 @@ class TagsRepository {
         }
 
         return apiService.getTags(requestBody, token)
-
     }
 }
