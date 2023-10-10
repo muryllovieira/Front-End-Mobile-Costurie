@@ -10,7 +10,7 @@ object RetrofitFactory {
     //private const val BASE_URL = "http://10.107.144.10:3000"
 
     //IP DO MURYLLO, NÃO TIRA SÓ COMENTAAA
-    private const val BASE_URL = "http://192.168.3.7:3000"
+    private const val BASE_URL = "http://10.107.144.10:3000"
 
 
     fun getInstance(): Retrofit{
