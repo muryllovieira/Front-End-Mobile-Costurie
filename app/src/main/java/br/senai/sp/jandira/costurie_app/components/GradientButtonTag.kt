@@ -2,6 +2,7 @@ package br.senai.sp.jandira.costurie_app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -51,6 +52,7 @@ fun GradientButtonTag(
         ) {
 
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = text,
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.bodySmall,

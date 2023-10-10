@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                 AnimatedNavHost(
                     navController = navController,
 
-                    startDestination = "services")
+                    startDestination = "tagSelection")
 
 
                 {
