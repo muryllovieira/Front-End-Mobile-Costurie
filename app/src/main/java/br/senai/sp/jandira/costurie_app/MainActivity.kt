@@ -22,6 +22,7 @@ import br.senai.sp.jandira.costurie_app.screens.personalization.NameScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.ProfilePicScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.TagSelectScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.TypeProfileScreen
+import br.senai.sp.jandira.costurie_app.screens.profile.ProfileListScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 import br.senai.sp.jandira.costurie_app.screens.services.ServicesScreen
 import br.senai.sp.jandira.costurie_app.screens.tradePassword.TradePasswordScreen
@@ -50,8 +51,7 @@ class MainActivity : ComponentActivity() {
                 AnimatedNavHost(
                     navController = navController,
 
-                    startDestination = "services")
-
+                    startDestination = "main")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
@@ -66,6 +66,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = "services") { ServicesScreen(navController = navController, lifecycleScope = lifecycleScope, categories = emptyList(), filterings = emptyList()) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
                     composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
+//                    composable(route = "profileViewed") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
+                    composable(route = "profileList") { ProfileListScreen(navController = navController, lifecycleScope = lifecycleScope, profiles = emptyList(), viewModel = viewModelUser) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser) }
                     composable(route = "tagsEditProfile") { TagsEditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModelUser = viewModelUser, viewModelTags = viewModelTags) }
 
