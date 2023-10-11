@@ -110,6 +110,7 @@ fun ModalTags2(
                             text = tag.nome_tag,
                             color1 = Destaque1,
                             color2 = Destaque2,
+                            textColor = Color.White
                             //viewModel
                         )
                     }
