@@ -15,6 +15,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -48,6 +54,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
@@ -55,7 +62,13 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -71,6 +84,10 @@ fun TagSelectScreen(
         mutableStateOf("")
     }
 
+    var tagsList by remember() {
+        mutableStateOf(listOf<TagsResponse>())
+    }
+
     var context = LocalContext.current
 
     val tagsRepository = TagsRepository()
@@ -81,12 +98,7 @@ fun TagSelectScreen(
 
     fun teste () {
         lifecycleScope.launch {
-            var result = tagsRepository.getAllTags(user.token).body()
-            var arr: Array<Any>
-
-            if (result != null) {
-                Log.i("tags", "${result}")
-            }
+            tagsList = tagsRepository.getAllTags(user.token).body()!!.data
         }
     }
 
@@ -190,57 +202,73 @@ fun TagSelectScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    FlowRow(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                        verticalAlignment = Alignment.CenterVertically,
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 128.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly,
-                        maxItemsInEachRow = 3
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "modainfantil",
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                        )
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "crochê",
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                        )
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "crochê",
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                        )
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "crochê",
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                        )
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "crochê",
-                            color1 = Destaque1,
-                            color2 = Destaque2
-                        )
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "crochê",
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                        )
-                        GradientButtonTag(
-                            onClick = { /*TODO*/ },
-                            text = "crochê",
-                            color1 = Destaque1,
-                            color2 = Destaque2,
-                        )
+
+                        items(tagsList) {
+                            GradientButtonTag(
+                                onClick = { /*TODO*/ },
+                                text = it.nome_tag,
+                                color1 = Destaque1,
+                                color2 = Destaque2,
+                            )
+                        }
                     }
+
+//                    FlowRow(
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .verticalScroll(rememberScrollState()),
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        horizontalArrangement = Arrangement.SpaceEvenly,
+//                        maxItemsInEachRow = 3
+//                    ) {
+//                        GradientButtonTag(
+//                            onClick = { /*TODO*/ },
+//                            text = "modainfantil",
+//                            color1 = Destaque1,
+//                            color2 = Destaque2,
+//                        )
+//                        GradientButtonTag(
+//                            onClick = { /*TODO*/ },
+//                            text = "crochê",
+//                            color1 = Destaque1,
+//                            color2 = Destaque2,
+//                        )
+//                        GradientButtonTag(
+//                            onClick = { /*TODO*/ },
+//                            text = "crochê",
+//                            color1 = Destaque1,
+//                            color2 = Destaque2,
+//                        )
+//                        GradientButtonTag(
+//                            onClick = { /*TODO*/ },
+//                            text = "crochê",
+//                            color1 = Destaque1,
+//                            color2 = Destaque2,
+//                        )
+//                        GradientButtonTag(
+//                            onClick = { /*TODO*/ },
+//                            text = "crochê",
+//                            color1 = Destaque1,
+//                            color2 = Destaque2
+//                        )
+//                        GradientButtonTag(
+//                            onClick = { /*TODO*/ },
+//                            text = "crochê",
+//                            color1 = Destaque1,
+//                            color2 = Destaque2,
+//                        )
+//                        GradientButtonTag(
+//                            onClick = { /*TODO*/ },
+//                            text = "crochê",
+//                            color1 = Destaque1,
+//                            color2 = Destaque2,
+//                        )
+//                    }
 
                 }
             }

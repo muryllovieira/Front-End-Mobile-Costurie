@@ -1,10 +1,8 @@
 package br.senai.sp.jandira.costurie_app.repository
 
-import br.senai.sp.jandira.costurie_app.model.CategoryAndTags
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.model.BaseResponseTag
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.TagsService
-import br.senai.sp.jandira.costurie_app.service.UserService
 import com.google.gson.JsonObject
 import retrofit2.Response
 
@@ -20,7 +18,7 @@ class TagsRepository {
         return apiService.getTags(requestBody, token)
     }
 
-    suspend fun getAllTags(token: String): Response<CategoryAndTags> {
+    suspend fun getAllTags(token: String): Response<BaseResponseTag> {
 
         return apiService.getAllTags(token)
 

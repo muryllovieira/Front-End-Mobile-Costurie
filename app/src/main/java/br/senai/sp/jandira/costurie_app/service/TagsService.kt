@@ -1,7 +1,6 @@
 package br.senai.sp.jandira.costurie_app.service
 
-import br.senai.sp.jandira.costurie_app.model.CategoryAndTags
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.model.BaseResponseTag
 import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.Body
@@ -23,5 +22,5 @@ interface TagsService {
     @GET("/tag")
     suspend fun getAllTags(
         @Header("x-access-token") token: String
-    ): Response<CategoryAndTags>
+    ): Response<BaseResponseTag>
 }
