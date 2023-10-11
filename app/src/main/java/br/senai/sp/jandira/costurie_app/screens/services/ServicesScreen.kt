@@ -54,6 +54,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.SearchAppBar
 import br.senai.sp.jandira.costurie_app.model.Filtering
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
@@ -77,6 +78,10 @@ fun ServicesScreen(
     filterings: List<Filtering>,
     categories: List<TagsResponse>
 ) {
+
+    var pesquisaState by remember {
+        mutableStateOf("")
+    }
 
     val color = Contraste
 
@@ -216,11 +221,16 @@ fun ServicesScreen(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                SearchAppBar(
-                    text = stringResource(id = R.string.servicos_categorias_textfield),
-                    onTextChange = { },
-                    onCloseClicked = { /*TODO*/ },
-                    onSearchClicked = { }
+                CustomOutlinedTextField2(
+                    value = pesquisaState,
+                    onValueChange = {
+                        pesquisaState = it
+                    },
+                    label = stringResource(id = R.string.servicos_categorias_textfield),
+                    borderColor = Color.Transparent,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(62.dp)
                 )
 
                 Text(

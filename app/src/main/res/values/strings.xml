@@ -31,6 +31,7 @@
     <string name="cidade_perfil">Jandira, SP</string>
     <string name="botao_recomendacoes">Recomendações</string>
     <string name="botao_recomendados">Recomendados</string>
+    <string name="botao_recomendar">Recomendar</string>
     <string name="texto_nome_do_seu_perfil">Nome do seu Perfil</string>
     <string name="texto_descricao_do_seu_perfil">Descrição do seu Perfil</string>
     <string name="texto_localizacao_do_seu_perfil">Localização</string>
