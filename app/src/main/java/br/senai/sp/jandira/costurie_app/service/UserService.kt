@@ -6,6 +6,7 @@ import br.senai.sp.jandira.costurie_app.model.NeighborhoodResponse
 import br.senai.sp.jandira.costurie_app.model.StateResponse
 import br.senai.sp.jandira.costurie_app.model.UserJsonResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
+import br.senai.sp.jandira.costurie_app.model.UserTagsResponse
 import com.google.gson.JsonObject
 import org.json.JSONObject
 import retrofit2.Call
@@ -83,4 +84,11 @@ interface UserService {
         @Body body: JsonObject,
         @Header("x-access-token") token: String
     ): Response<UserResponse>
+
+    @Headers("Content-Type: application/json")
+    @POST("/tag/inserir_tags")
+    suspend fun updateUserTags(
+        @Body body: JsonObject,
+        @Header("x-access-token") token: String
+    ): Response<UserTagsResponse>
 }

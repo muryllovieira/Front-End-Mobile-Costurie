@@ -1,8 +1,10 @@
 package br.senai.sp.jandira.costurie_app.repository
 
 import android.net.Uri
+import br.senai.sp.jandira.costurie_app.model.TagResponseId
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
+import br.senai.sp.jandira.costurie_app.model.UserTagsResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.UserService
 import com.google.gson.JsonArray
@@ -90,6 +92,27 @@ class UserRepository {
             addProperty("bairro", bairro)
         }
         return apiService.updateLocation(requestBody, token)
+    }
+
+    suspend fun updateUserTags(
+        id: Int,
+        token: String,
+        tags: MutableList<TagResponseId>
+    ): Response<UserTagsResponse> {
+        val requestBody = JsonObject().apply {
+            addProperty("id_usuario", id)
+            val tagsArray = JsonArray()
+            if (tags != null) {
+                for (tag in tags) {
+                    val tagObject = JsonObject().apply {
+                        addProperty("id_tag", tag.id)
+                    }
+                    tagsArray.add(tagObject)
+                }
+            }
+            add("tags", tagsArray)
+        }
+        return apiService.updateUserTags(requestBody, token)
     }
 
 }

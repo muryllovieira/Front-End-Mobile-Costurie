@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 AnimatedNavHost(
                     navController = navController,
 
-                    startDestination = "main")
+                    startDestination = "tagSelection")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
