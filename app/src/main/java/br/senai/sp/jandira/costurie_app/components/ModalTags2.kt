@@ -106,7 +106,7 @@ fun ModalTags2(
                 ) {
                     items(viewModel.tags?.toList() ?: emptyList()) { tag ->
                         GradientButtonTag(
-                            onClick = {  },
+                            onClick = {},
                             text = tag.nome_tag,
                             color1 = Destaque1,
                             color2 = Destaque2,
