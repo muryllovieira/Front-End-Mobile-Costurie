@@ -38,6 +38,7 @@ import br.senai.sp.jandira.costurie_app.screens.explore.ExploreScreen
 import br.senai.sp.jandira.costurie_app.screens.publish.PublishScreen
 import br.senai.sp.jandira.costurie_app.screens.services.ServicesScreen
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.viewModel.UserTagViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -148,7 +149,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     if (selectedIdexItem == 0) {
                         ExploreScreen(navController = navController)
                     } else if (selectedIdexItem == 1) {
-                        ServicesScreen(navController = navController, lifecycleScope =  lifecycleScope, filterings = emptyList(), categories = emptyList())
+                        ServicesScreen(navController = navController, lifecycleScope =  lifecycleScope, filterings = emptyList(), categories = emptyList(), viewModelUserTags = UserTagViewModel())
                     } else if (selectedIdexItem == 2) {
                         PublishScreen(navController = navController)
                     } else if (selectedIdexItem == 3) {

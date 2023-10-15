@@ -24,6 +24,14 @@ class TagsRepository {
     suspend fun getAllTags(token: String): Response<BaseResponseTag> {
 
         return apiService.getAllTags(token)
+    }
 
+    suspend fun getUserByTag(token: String, id_tag: Int, nome_tag: String): Response<JsonObject> {
+        val requestBody = JsonObject().apply {
+            addProperty("id_tag", id_tag)
+            addProperty("nome_tag", nome_tag)
+        }
+
+        return apiService.getUserByTag(requestBody, token)
     }
 }
