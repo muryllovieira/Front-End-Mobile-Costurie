@@ -371,7 +371,6 @@ fun EditProfileScreen(
                             viewModelEstado,
                         ) { selectedEstado ->
                             estadoStateUser = selectedEstado
-
                         }
 
                     }

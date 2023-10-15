@@ -24,4 +24,11 @@ interface TagsService {
     suspend fun getAllTags(
         @Header("x-access-token") token: String
     ): Response<BaseResponseTag>
+
+    @Headers("Content-Type: application/json")
+    @POST("/usuario/select_by_tag")
+    suspend fun getUserByTag(
+        @Body requestBody: JsonObject,
+        @Header("x-access-token") token: String
+    ): Response<JsonObject>
 }

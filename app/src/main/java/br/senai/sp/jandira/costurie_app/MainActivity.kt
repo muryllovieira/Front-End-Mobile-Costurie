@@ -30,6 +30,7 @@ import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScr
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.viewModel.PasswordResetViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.TagsViewModel
+import br.senai.sp.jandira.costurie_app.viewModel.UserTagViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -47,11 +48,12 @@ class MainActivity : ComponentActivity() {
                 val viewModelPassword = viewModel<PasswordResetViewModel>()
                 val viewModelUser = viewModel<UserViewModel>()
                 val viewModelTags = viewModel<TagsViewModel>()
+                val viewModelUserTags = viewModel<UserTagViewModel>()
                 val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
 
-                    startDestination = "tagSelection")
+                    startDestination = "services")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
@@ -63,11 +65,11 @@ class MainActivity : ComponentActivity() {
                     composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
                     composable(route = "home") { HomeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModelUser) }
                     composable(route = "explore") { ExploreScreen(navController = navController) }
-                    composable(route = "services") { ServicesScreen(navController = navController, lifecycleScope = lifecycleScope, categories = emptyList(), filterings = emptyList()) }
+                    composable(route = "services") { ServicesScreen(navController = navController, lifecycleScope = lifecycleScope, categories = emptyList(), filterings = emptyList(), viewModelUserTags = viewModelUserTags) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
                     composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
 //                    composable(route = "profileViewed") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
-                    composable(route = "profileList") { ProfileListScreen(navController = navController, lifecycleScope = lifecycleScope, profiles = emptyList(), viewModel = viewModelUser) }
+                    composable(route = "profileList") { ProfileListScreen(navController = navController, lifecycleScope = lifecycleScope, profiles = emptyList(), viewModel = viewModelUser, viewModelUserTags = viewModelUserTags) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser) }
                     composable(route = "tagsEditProfile") { TagsEditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModelUser = viewModelUser, viewModelTags = viewModelTags) }
 
