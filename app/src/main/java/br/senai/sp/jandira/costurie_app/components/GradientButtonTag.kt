@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -46,19 +47,17 @@ fun GradientButtonTag(
     text: String,
     textColor: Color
 ) {
-    var isClicked by remember { mutableStateOf(false) }
+    val viewModel: TagColorViewModel = viewModel()
+    val tagColor = viewModel.getTagColor(tagId)
+    val tagTextColor = viewModel.getTagTextColor(tagId)
+
     //val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
-    val backgroundColor = if (isClicked) listOf(color1, color2) else listOf(Color.White, Color.White)
-    val tagTextColor = if (isClicked) listOf(Color.White, Color.White) else listOf(Destaque1, Destaque2)
     Button(
-        onClick = {
-            isClicked = !isClicked
-            onClick()
-        },
+        onClick,
         modifier = Modifier
             .background(
                 Brush.horizontalGradient(
-                    colors = backgroundColor
+                    colors = tagColor
                 ),
                 shape = RoundedCornerShape(15.dp),
             )
@@ -90,7 +89,8 @@ fun GradientButtonTag(
     ) {
         Text(
             text = text,
-            modifier = Modifier.graphicsLayer(alpha = 0.99f)
+            modifier = Modifier
+                .graphicsLayer(alpha = 0.99f)
                 .drawWithCache {
                     val brush = Brush.horizontalGradient(tagTextColor)
                     onDrawWithContent {

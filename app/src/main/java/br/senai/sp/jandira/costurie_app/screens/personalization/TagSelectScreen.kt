@@ -2,6 +2,7 @@ package br.senai.sp.jandira.costurie_app.screens.personalization
 
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -104,6 +105,8 @@ fun TagSelectScreen(
         mutableStateOf(false)
     }
 
+    val viewModel: TagColorViewModel = viewModel()
+
     var tagsArray = mutableListOf<TagResponseId>()
 
     Costurie_appTheme {
@@ -141,16 +144,19 @@ fun TagSelectScreen(
                     }
                     Button(
                         onClick = {
-//                            lifecycleScope.launch {
-//
-//                                userRepository.updateUserTags(
-//                                    user.id.toInt(),
-//                                    user.token,
-//                                    tagsArray)
-//
-//                                Log.i("arraytags", "${userRepository.getUser(user.id.toInt(), user.token)}")
-//                            }
-                                  navController.navigate("home")
+                            if (tagsArray.isEmpty()) {
+                                Toast.makeText(context, "É necessário escolher ao menos uma tag!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                lifecycleScope.launch {
+
+                                    userRepository.updateUserTags(
+                                        user.id.toInt(),
+                                        user.token,
+                                        tagsArray)
+
+                                    navController.navigate("home")
+                                }
+                            }
                         },
                         modifier = Modifier
                             .size(45.dp)
@@ -218,7 +224,6 @@ fun TagSelectScreen(
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
-                        contentPadding = PaddingValues(16.dp),
                         state = rememberLazyGridState(),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalArrangement = Arrangement.Center
@@ -226,15 +231,18 @@ fun TagSelectScreen(
                         items(filtro(pesquisaState)) {
                             GradientButtonTag(
                                 onClick = {
-                                    var tagId = it.id
                                         isClicked = !isClicked
                                     if (isClicked) {
-                                        if (!tagsArray.contains(TagResponseId(tagId))){
-                                            tagsArray.add(TagResponseId(tagId))
+                                        viewModel.setTagColor(it.id, Destaque1, Destaque2)
+                                        viewModel.setTagTextColor(it.id, Color.White, Color.White)
+                                        if (!tagsArray.contains(TagResponseId(it.id))){
+                                            tagsArray.add(TagResponseId(it.id))
                                         }
                                     } else {
-                                        if (tagsArray.contains(TagResponseId(tagId))) {
-                                            tagsArray.remove(TagResponseId(tagId))
+                                        viewModel.setTagColor(it.id, Color.Transparent, Color.Transparent)
+                                        viewModel.setTagTextColor(it.id, Destaque1, Destaque2)
+                                        if (tagsArray.contains(TagResponseId(it.id))) {
+                                            tagsArray.remove(TagResponseId(it.id))
                                         }
                                     }
                                 },
