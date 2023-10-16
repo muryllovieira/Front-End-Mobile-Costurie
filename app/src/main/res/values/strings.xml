@@ -26,6 +26,7 @@
     <string name="requerimentos_senha4">*É preciso ter ao menos um caractére maiúsculo</string>
     <string name="requerimentos_senha5">*É preciso ter ao menos um caractére minúsculo</string>
     <string name="texto_meu_perfil">MEU PERFIL</string>
+    <string name="texto_perfil">PERFIL</string>
     <string name="nome_perfil">Beltrana dos Santos Silva</string>
     <string name="tag_usuario">"@BELTRANA_S"</string>
     <string name="cidade_perfil">Jandira, SP</string>
