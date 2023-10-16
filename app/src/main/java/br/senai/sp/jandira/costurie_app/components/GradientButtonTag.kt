@@ -42,21 +42,23 @@ fun GradientButtonTag(
     onClick: () -> Unit,
     color1: Color,
     color2: Color,
-    tagId: Int = 0,
+    tagId: Int,
     text: String,
     textColor: Color
 ) {
-    val viewModel: TagColorViewModel = viewModel()
-    val tagColor = viewModel.getTagColor(tagId)
-    val tagTextColor = viewModel.getTagTextColor(tagId)
-
+    var isClicked by remember { mutableStateOf(false) }
     //val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
+    val backgroundColor = if (isClicked) listOf(color1, color2) else listOf(Color.White, Color.White)
+    val tagTextColor = if (isClicked) listOf(Color.White, Color.White) else listOf(Destaque1, Destaque2)
     Button(
-        onClick,
+        onClick = {
+            isClicked = !isClicked
+            onClick()
+        },
         modifier = Modifier
             .background(
                 Brush.horizontalGradient(
-                    colors = tagColor
+                    colors = backgroundColor
                 ),
                 shape = RoundedCornerShape(15.dp),
             )
@@ -128,8 +130,8 @@ class TagColorViewModel : ViewModel() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GradientButtonTagPreview() {
-    GradientButtonTag(onClick = { }, text = "teste", color1 = Destaque1, color2 = Destaque2, textColor = Color.Black)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GradientButtonTagPreview() {
+//    GradientButtonTag(onClick = { }, text = "teste", color1 = Destaque1, color2 = Destaque2, textColor = Color.Black)
+//}
