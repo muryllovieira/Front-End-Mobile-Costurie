@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
@@ -65,7 +66,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TagSelectScreen(
     //viewModel: UserViewModel,
-    //navController: NavController,
+    navController: NavController,
     lifecycleScope: LifecycleCoroutineScope
 ) {
 
@@ -102,8 +103,6 @@ fun TagSelectScreen(
     var isClicked by remember {
         mutableStateOf(false)
     }
-
-    val viewModel: TagColorViewModel = viewModel()
 
     var tagsArray = mutableListOf<TagResponseId>()
 
@@ -142,16 +141,16 @@ fun TagSelectScreen(
                     }
                     Button(
                         onClick = {
-                            lifecycleScope.launch {
-
-                                userRepository.updateUserTags(
-                                    user.id.toInt(),
-                                    user.token,
-                                    tagsArray)
-
-                                Log.i("arraytags", "${userRepository.getUser(user.id.toInt(), user.token)}")
-                            }
-
+//                            lifecycleScope.launch {
+//
+//                                userRepository.updateUserTags(
+//                                    user.id.toInt(),
+//                                    user.token,
+//                                    tagsArray)
+//
+//                                Log.i("arraytags", "${userRepository.getUser(user.id.toInt(), user.token)}")
+//                            }
+                                  navController.navigate("home")
                         },
                         modifier = Modifier
                             .size(45.dp)
@@ -227,18 +226,15 @@ fun TagSelectScreen(
                         items(filtro(pesquisaState)) {
                             GradientButtonTag(
                                 onClick = {
+                                    var tagId = it.id
                                         isClicked = !isClicked
                                     if (isClicked) {
-                                        viewModel.setTagColor(it.id, Destaque1, Destaque2)
-                                        viewModel.setTagTextColor(it.id, Color.White, Color.White)
-                                        if (!tagsArray.contains(TagResponseId(it.id))){
-                                            tagsArray.add(TagResponseId(it.id))
+                                        if (!tagsArray.contains(TagResponseId(tagId))){
+                                            tagsArray.add(TagResponseId(tagId))
                                         }
                                     } else {
-                                        viewModel.setTagColor(it.id, Color.Transparent, Color.Transparent)
-                                        viewModel.setTagTextColor(it.id, Destaque1, Destaque2)
-                                        if (tagsArray.contains(TagResponseId(it.id))) {
-                                            tagsArray.remove(TagResponseId(it.id))
+                                        if (tagsArray.contains(TagResponseId(tagId))) {
+                                            tagsArray.remove(TagResponseId(tagId))
                                         }
                                     }
                                 },

@@ -107,7 +107,8 @@ fun ModalFilter(
                             text = tag.nome_tag,
                             color1 = Destaque1,
                             color2 = Destaque2,
-                            textColor = Color.White
+                            textColor = Color.White,
+                            tagId = 0
                             //viewModel
                         )
                     }
