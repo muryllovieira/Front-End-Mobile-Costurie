@@ -5,7 +5,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -249,7 +252,7 @@ fun EditProfileScreen(
                                     }
                             )
                             Image(
-                                painter = painterResource(id = R.drawable.icon_edit),
+                                painter = painterResource(id = R.drawable.edit_icon),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(35.dp)
@@ -320,7 +323,12 @@ fun EditProfileScreen(
                                     contentDescription = "",
                                     modifier = Modifier
                                         .size(100.dp)
-                                        .clip(CircleShape),
+                                        .border(
+                                            BorderStroke(borderWidth, Color.White),
+                                            RoundedCornerShape(10.dp)
+                                        )
+                                        .padding(borderWidth)
+                                        .clip(RoundedCornerShape(10.dp)),
                                     contentScale = ContentScale.Crop
                                 )
                             }
@@ -423,4 +431,5 @@ fun EditProfileScreen(
     }
 }
 
+val borderWidth = 1.dp
 

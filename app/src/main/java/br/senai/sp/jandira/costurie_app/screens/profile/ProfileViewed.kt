@@ -1,7 +1,9 @@
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,7 +30,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -256,7 +262,7 @@ fun ProfileViewedScreen(
                 Row(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
-                        .height(40.dp)
+                        .height(35.dp)
                         .fillMaxWidth(),
                     Arrangement.SpaceBetween
                 ) {
@@ -276,7 +282,7 @@ fun ProfileViewedScreen(
                     )
 
                     Image(
-                            painter = painterResource(id = R.drawable.chat_icon),
+                            painter = painterResource(id = R.drawable.icon_chat),
                             contentDescription = "",
                             modifier = Modifier
                                 .size(35.dp)
@@ -299,6 +305,13 @@ fun ProfileViewedScreen(
                         contentDescription = "",
                         modifier = Modifier
                             .size(100.dp)
+                            .border(
+                                BorderStroke(br.senai.sp.jandira.costurie_app.screens.editProfile.borderWidth, Color.White),
+                                RoundedCornerShape(10.dp)
+                            )
+                            .padding(br.senai.sp.jandira.costurie_app.screens.editProfile.borderWidth)
+                            .clip(RoundedCornerShape(10.dp)),
+                        contentScale = ContentScale.Crop
                     )
 
                     Spacer(modifier = Modifier.width(5.dp))
@@ -309,7 +322,7 @@ fun ProfileViewedScreen(
                             color = Color.White,
                             text = nome,
                             style = MaterialTheme.typography.bodySmall,
-                            fontSize = 22.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.height(28.dp)
                         )
@@ -318,7 +331,7 @@ fun ProfileViewedScreen(
                             color = Color.White,
                             text = nome_de_usuario,
                             style = MaterialTheme.typography.bodySmall,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.height(22.dp)
                         )
@@ -335,7 +348,7 @@ fun ProfileViewedScreen(
                                 color = Color.White,
                                 text = "$cidade, $estado",
                                 style = MaterialTheme.typography.bodySmall,
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier.height(20.dp)
                             )
@@ -343,7 +356,7 @@ fun ProfileViewedScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(60.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -358,7 +371,7 @@ fun ProfileViewedScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
