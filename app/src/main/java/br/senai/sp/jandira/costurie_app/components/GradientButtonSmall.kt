@@ -31,9 +31,6 @@ fun GradientButtonSmall (
     Button(
         onClick,
         modifier = Modifier
-            .height(30.dp)
-            .width(140.dp)
-            .fillMaxWidth()
             .background(
                 Brush.horizontalGradient(
                     colors = listOf(
@@ -42,7 +39,9 @@ fun GradientButtonSmall (
                     )
                 ),
                 shape = ShapeButton.large
-            ),
+            )
+            .height(30.dp)
+            .width(125.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
         ),
