@@ -153,7 +153,7 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                             Toast.makeText(context, "Campos obrigatórios não foram preenchidos.", Toast.LENGTH_LONG).show()
                         } else {
                             Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
-                            navController.navigate("login")
+                            navController.navigate("name")
                         }
                         Log.d(MainActivity::class.java.simpleName, "Registro bem-sucedido")
                     } else {

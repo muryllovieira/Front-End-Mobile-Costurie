@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
                 val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
+
                     startDestination = "main")
 
                 {

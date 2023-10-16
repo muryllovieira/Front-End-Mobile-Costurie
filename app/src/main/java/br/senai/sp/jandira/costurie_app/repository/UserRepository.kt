@@ -105,7 +105,7 @@ class UserRepository {
             if (tags != null) {
                 for (tag in tags) {
                     val tagObject = JsonObject().apply {
-                        addProperty("id_tag", tag.id)
+                        addProperty("id", tag.id)
                     }
                     tagsArray.add(tagObject)
                 }
