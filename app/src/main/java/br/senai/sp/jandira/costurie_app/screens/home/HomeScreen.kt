@@ -32,6 +32,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.TextMenuBar
 import br.senai.sp.jandira.costurie_app.screens.chats.ChatsScreen
 import br.senai.sp.jandira.costurie_app.screens.explore.ExploreScreen
@@ -146,10 +147,11 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center
                 ) {
+                    val localStorage: Storage = Storage()
                     if (selectedIdexItem == 0) {
                         ExploreScreen(navController = navController)
                     } else if (selectedIdexItem == 1) {
-                        ServicesScreen(navController = navController, lifecycleScope =  lifecycleScope, filterings = emptyList(), categories = emptyList(), viewModelUserTags = UserTagViewModel())
+                        ServicesScreen(navController = navController, lifecycleScope =  lifecycleScope, filterings = emptyList(), categories = emptyList(), viewModelUserTags = UserTagViewModel(), localStorage = localStorage)
                     } else if (selectedIdexItem == 2) {
                         PublishScreen(navController = navController)
                     } else if (selectedIdexItem == 3) {

@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,6 +45,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.ModalFilter
 import br.senai.sp.jandira.costurie_app.model.UsersTagResponse
@@ -69,7 +72,8 @@ fun ProfileListScreen(
     lifecycleScope: LifecycleCoroutineScope,
     viewModel: UserViewModel,
     profiles: List<UsersTagResponse>,
-    viewModelUserTags: UserTagViewModel
+    viewModelUserTags: UserTagViewModel,
+    localStorage: Storage
 ) {
 
     var context = LocalContext.current
@@ -86,9 +90,12 @@ fun ProfileListScreen(
         mutableStateOf<Uri?>(null)
     }
 
+    var id = localStorage.lerValor(context, "idSelecionado")
+    var nome = localStorage.lerValor(context, "tagSelecionada")
+
     val idTag = viewModelUserTags.id
     val tagSelecionada = viewModelUserTags.nome
-    Log.w("TAG", "ProfileListScreen: $idTag, $tagSelecionada" )
+    Log.w("TAG", "ProfileListScreen: $idTag, $tagSelecionada")
 
     suspend fun getUsersByTag(
         token: String,
@@ -133,7 +140,7 @@ fun ProfileListScreen(
         val array = UserRepositorySqlite(context).findUsers()
         val user = array[0]
 
-        val tags = getUsersByTag(user.token, idTag, tagSelecionada).toMutableList()
+        val tags = getUsersByTag(user.token, id!!.toInt(), nome!!).toMutableList()
 
         listUsersTag = tags
 
@@ -152,7 +159,7 @@ fun ProfileListScreen(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box (){
+                Box() {
                     Image(
                         painter = painterResource(id = R.drawable.retangulo_topo),
                         contentDescription = "",
@@ -161,17 +168,18 @@ fun ProfileListScreen(
                             .height(100.dp),
                         alignment = Alignment.TopEnd
                     )
-                    Row (
+                    Row(
                         modifier = Modifier
                             .width(370.dp)
                             .padding(top = 15.dp, start = 15.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         Image(
                             painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "",
-                            modifier = Modifier.size(45.dp)
+                            modifier = Modifier
+                                .size(45.dp)
                                 .clickable {
                                     navController.popBackStack()
                                 }
@@ -197,7 +205,7 @@ fun ProfileListScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    items(listUsersTag) {profile ->
+                    items(listUsersTag) { profile ->
                         Card(
                             modifier = Modifier
                                 .size(380.dp, 85.dp)
@@ -206,19 +214,28 @@ fun ProfileListScreen(
                             shape = RoundedCornerShape(15.dp),
                             elevation = AppBarDefaults.TopAppBarElevation
                         ) {
-                            Row (
+                            Row(
                                 modifier = Modifier
                                     .width(300.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
-                            ){
-                                AsyncImage(
-                                    model = profile.foto,
-                                    contentDescription = "",
+                            ) {
+                                Box(
                                     modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(CircleShape)
-                                )
+                                        .size(60.dp)
+                                        .clip(shape = RoundedCornerShape(10.dp))
+                                        .background(Color(168, 155, 255, 102))
+                                ) {
+                                    AsyncImage(
+                                        model = profile.foto,
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(bottom = 5.dp, end = 2.dp)
+                                            .clip(shape = RoundedCornerShape(10.dp)),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
 
                                 Text(
                                     text = profile.nome,
