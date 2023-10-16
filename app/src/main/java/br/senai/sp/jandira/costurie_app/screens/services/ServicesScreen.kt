@@ -267,7 +267,8 @@ fun ServicesScreen(
                                         listTags = tags
                                     }
                                 },
-                            backgroundColor = Color.Transparent
+                            backgroundColor = Color.Transparent,
+                            border = BorderStroke(0.dp, Color.Transparent)
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,

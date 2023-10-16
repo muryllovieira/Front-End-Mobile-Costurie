@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,7 +52,13 @@ fun GradientButtonSmall (
             hoveredElevation = 0.dp
         )
     ) {
-        Text(text = text, fontSize = 18.sp, style = MaterialTheme.typography.bodySmall)
+        Text(
+            text = text.uppercase(),
+            fontSize = 10.sp,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.White
+        )
     }
 }
 
