@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.screens.chats.ChatsScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.EditProfileScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.TagsEditProfileScreen
@@ -56,6 +57,7 @@ class MainActivity : ComponentActivity() {
 
                     startDestination = "profileViewed")
 
+
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }
@@ -80,7 +82,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "description") { DescriptionScreen(navController = navController, localStorage, lifecycleScope = lifecycleScope) }
                     composable(route = "location") { LocationScreen(navController = navController,lifecycleScope = lifecycleScope) }
                     composable(route = "profileType") { TypeProfileScreen(navController = navController,lifecycleScope = lifecycleScope) }
-                    composable(route = "tagSelection") { TagSelectScreen(lifecycleScope = lifecycleScope) }
+                    composable(route = "tagSelection") { TagSelectScreen(lifecycleScope = lifecycleScope, navController = navController) }
                     }
                 }
             }
