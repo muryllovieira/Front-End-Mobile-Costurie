@@ -51,7 +51,9 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.DropdownServicesTag
+import br.senai.sp.jandira.costurie_app.function.saveLogin
 import br.senai.sp.jandira.costurie_app.model.Filtering
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.CategoriesRepository
@@ -74,7 +76,8 @@ fun ServicesScreen(
     lifecycleScope: LifecycleCoroutineScope,
     filterings: List<Filtering>,
     categories: List<TagsResponse>,
-    viewModelUserTags: UserTagViewModel
+    viewModelUserTags: UserTagViewModel,
+    localStorage: Storage
 ) {
 
     var pesquisaState by remember {
@@ -314,11 +317,16 @@ fun ServicesScreen(
                                 modifier = Modifier
                                     .size(170.dp, 85.dp)
                                     .clickable {
-                                        val idTagSelecionada = tags.id
+                                        val idTagSelecionada = tags.id.toString()
                                         val tagSelecionada = tags.nome_tag
 
-                                        viewModelUserTags.id = idTagSelecionada
-                                        viewModelUserTags.nome = tagSelecionada
+                                        localStorage.salvarValor(context, idTagSelecionada, "idSelecionado")
+                                        localStorage.salvarValor(context, tagSelecionada, "tagSelecionada")
+
+//                                        viewModelUserTags.id = idTagSelecionada
+//                                        viewModelUserTags.nome = tagSelecionada
+
+
 
                                         navController.navigate("profileList")
                                         Log.d(
