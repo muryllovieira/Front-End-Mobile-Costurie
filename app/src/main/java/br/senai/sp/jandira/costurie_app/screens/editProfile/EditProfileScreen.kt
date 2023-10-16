@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +47,7 @@ import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.model.TagResponse
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
@@ -282,7 +285,7 @@ fun EditProfileScreen(
                                                 nome_de_usuario = tagDeUsuarioState,
                                                 nome = nomeState,
                                                 tags = listOf(
-
+                                                    TagsResponse(id = 2, nome_tag = "Casual", id_categoria = 1, imagem = "https://img.freepik.com/free-photo/male-belt-sweater-accessories-clothes_1203-6421.jpg?w=740&t=st=1694351721~exp=1694352321~hmac=cebea3dc3c1f0bbb3b224d66947feddf4550fee45b41f3bfb7e9142ba1a5bc71")
                                                 )
                                             )
                                         }
@@ -306,7 +309,8 @@ fun EditProfileScreen(
                                     model = "$fotoUri",
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(100.dp),
+                                        .size(100.dp)
+                                        .clip(CircleShape),
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
@@ -315,7 +319,8 @@ fun EditProfileScreen(
                                     model = "$fotoUri",
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(100.dp),
+                                        .size(100.dp)
+                                        .clip(CircleShape),
                                     contentScale = ContentScale.Crop
                                 )
                             }
