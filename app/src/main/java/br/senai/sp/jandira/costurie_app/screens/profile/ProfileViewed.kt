@@ -256,24 +256,26 @@ fun ProfileViewedScreen(
                 Row(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
+                        .height(40.dp)
                         .fillMaxWidth(),
                     Arrangement.SpaceBetween
                 ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrow_back),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(35.dp)
+                    )
+
                     Text(
                         color = Color.White,
-                        text = stringResource(id = R.string.texto_meu_perfil),
+                        text = stringResource(id = R.string.texto_perfil),
                         style = MaterialTheme.typography.bodySmall,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    Row(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .width(280.dp),
-                        Arrangement.End
-                    ) {
-                        Image(
+                    Image(
                             painter = painterResource(id = R.drawable.chat_icon),
                             contentDescription = "",
                             modifier = Modifier
@@ -282,8 +284,7 @@ fun ProfileViewedScreen(
 
                                 },
                             alignment = Alignment.TopEnd
-                        )
-                    }
+                    )
                 }
 
                 Row(
@@ -356,6 +357,8 @@ fun ProfileViewedScreen(
                         color2 = Color(168, 155, 255, 255)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(20.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
