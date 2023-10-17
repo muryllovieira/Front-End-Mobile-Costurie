@@ -265,7 +265,7 @@ fun ServicesScreen(
                                 .size(100.dp, 45.dp)
                                 .padding(start = 16.dp, 2.dp)
                                 .clickable {
-                                    categoryClickedViewModel.setClickedCategory(filtering.id, state = true)
+                                    categoryClickedViewModel.setClickedCategory(filtering.id)
                                     val categoriaSelecionada = filtering.nome
                                     val array = UserRepositorySqlite(context).findUsers()
                                     val user = array[0]
@@ -409,12 +409,27 @@ fun ServicesScreen(
 
 class CategoryClickedViewModel : ViewModel() {
     private var isClicked = mutableStateMapOf<Int, Boolean>()
-    private var array = mutableListOf<Int>()
+    private var arrayFalse = mutableListOf<Int>()
+    private var valueTrue: Int = 0
     fun getClickedCategory(categoryId: Int): Boolean {
+        if (!arrayFalse.contains(categoryId)) {
+            arrayFalse.add(categoryId)
+        }
+
         return isClicked[categoryId] ?: false
     }
 
-    fun setClickedCategory(categoryId: Int, state: Boolean) {
-        isClicked[categoryId] = state
+    fun setClickedCategory(categoryId: Int) {
+        valueTrue = categoryId
+
+        for (i in arrayFalse) {
+            if (i != valueTrue) {
+                isClicked[i] = false
+            } else {
+                isClicked[categoryId] = true
+            }
+        }
     }
+
+
 }
