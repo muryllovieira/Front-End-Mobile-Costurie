@@ -347,7 +347,7 @@ fun EditProfileScreen(
                 ) {
 
                     Text(
-                        text = "NOME",
+                        text = "Nome",
                         fontSize = 24.sp
                     )
                     CustomOutlinedTextField2(

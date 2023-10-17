@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import br.senai.sp.jandira.costurie_app.ui.theme.Kufam
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -37,7 +38,7 @@ fun TextMenuBar (text: String) {
     ) {
         Text(text = text,
             modifier = Modifier
-                .padding(bottom = 6.dp),
+                .height(20.dp),
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             style = TextStyle(
@@ -48,7 +49,8 @@ fun TextMenuBar (text: String) {
                     ),
                     tileMode = TileMode.Mirror
                 )
-            )
+            ),
+            fontFamily = Kufam
 
         )
         Canvas(
