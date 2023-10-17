@@ -130,7 +130,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                                             } else {
                                                 Image(
                                                     painter = item.unselected,
-                                                    modifier = Modifier.size(16.dp),
+                                                    modifier = Modifier.size(20.dp),
                                                     contentDescription = item.route
                                                 )
                                             }
