@@ -2,7 +2,9 @@ package br.senai.sp.jandira.costurie_app.screens.editProfile
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -32,11 +35,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -133,146 +138,131 @@ fun TagsEditProfileScreen(
                 .fillMaxSize(),
             color = Color.White
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.forma_tela_perfil),
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxSize(),
-                alignment = Alignment.TopStart
-            )
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
 
-                    Column(
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalArrangement = Arrangement.SpaceBetween
+                            .padding(12.dp)
+                            .shadow(elevation = 5.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.arrow_back),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(45.dp)
-                                    .clickable {
-                                        navController.popBackStack()
-                                    }
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    color = Color.White,
-                                    text = "Escolha uma ou mais",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontSize = 32.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    //modifier = Modifier.height(22.dp)
-                                )
-                                //Spacer(modifier = Modifier.height(15.dp))
-                                Text(
-                                    color = Color.White,
-                                    text = "tags para seu perfil",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontSize = 32.sp,
-                                    fontWeight = FontWeight.Medium,
-                                   //modifier = Modifier.height(22.dp)
-                                )
-                            }
-
-                        }
-                        Spacer(modifier = Modifier.height(35.dp))
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Log.i(
-                                "TAGSjhkgvsdakjgh",
-                                "Dados em viewModelUser.tags: ${viewModelTags.tags}"
-                            )
-
-                            var arrayTags by remember { mutableStateOf(listOf<TagResponse>()) }
-
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                contentPadding = PaddingValues(horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                                verticalArrangement = Arrangement.spacedBy(16.dp),
-                                modifier = Modifier.fillMaxHeight(0.85f)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                viewModelTags.tags?.let { tags ->
-                                    items(tags) { tag ->
-                                        var cor1 by remember {
-                                            mutableStateOf(0x5C2C0C)
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.arrow_back),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(45.dp)
+                                        .clickable {
+                                            navController.popBackStack()
                                         }
-                                        var cor2 by remember {
-                                            mutableStateOf(0x5C2C0C)
-                                        }
+                                )
+                            }
+                            Text(
+                                color = Color.Black,
+                                text = "Você pode escolher uma tag para seu perfil",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.width(310.dp),
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Log.i(
+                                    "TAGSjhkgvsdakjgh",
+                                    "Dados em viewModelUser.tags: ${viewModelTags.tags}"
+                                )
 
-                                        var isChecked by remember { mutableStateOf(false) }
+                                var arrayTags by remember { mutableStateOf(listOf<TagResponse>()) }
 
-                                        var altura = 30
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(2),
+                                    contentPadding = PaddingValues(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                                    modifier = Modifier.fillMaxHeight(0.85f)
+                                ) {
+                                    viewModelTags.tags?.let { tags ->
+                                        items(tags) { tag ->
+                                            var cor1 by remember {
+                                                mutableStateOf(0x5C2C0C)
+                                            }
+                                            var cor2 by remember {
+                                                mutableStateOf(0x5C2C0C)
+                                            }
 
-                                        if (tag.nome_tag.length > 26) {
-                                            altura = 48
-                                        }
+                                            var isChecked by remember { mutableStateOf(false) }
 
-                                        Row(
+                                            var altura = 30
 
-                                        ) {
-                                            GradientButtonTags(
-                                                onClick = {
-                                                    val nome = tag.nome_tag
-                                                    val id = tag.id
-                                                    val imagem = tag.imagem
-                                                    val id_categoria = tag.id_categoria
-                                                    //val nome_categoria = tag.nome_categoria
+                                            if (tag.nome_tag.length > 26) {
+                                                altura = 48
+                                            }
 
-                                                    if (!isChecked) {
-                                                        isChecked = true
-                                                        cor1 = 0xFFFCF6FF.toInt()
-                                                        cor2 = 0xFFA89BFF.toInt()
-                                                        var jsonTags = TagResponse(id, nome)
-                                                        arrayTags = arrayTags + jsonTags
-                                                        Log.e("Eu", "$nome + $id")
-                                                    } else {
-                                                        isChecked = false
-                                                        cor1 = 0xFFC98FEC.toInt()
-                                                        cor2 = 0xFFA89BFF.toInt()
-                                                        arrayTags = arrayTags.filter { it.id != id }
-                                                        Log.e("Murilo e Luiz e Eu", "${arrayTags}")
-                                                    }
-                                                },
-                                                text = tag.nome_tag,
-                                                color1 = Destaque1,
-                                                color2 = Destaque2,
-                                            )
+                                            Row(
+
+                                            ) {
+                                                GradientButtonTags(
+                                                    onClick = {
+                                                        val nome = tag.nome_tag
+                                                        val id = tag.id
+                                                        val imagem = tag.imagem
+                                                        val id_categoria = tag.id_categoria
+                                                        //val nome_categoria = tag.nome_categoria
+
+                                                        if (!isChecked) {
+                                                            isChecked = true
+                                                            cor1 = 0xFFFCF6FF.toInt()
+                                                            cor2 = 0xFFA89BFF.toInt()
+                                                            var jsonTags = TagResponse(id, nome)
+                                                            arrayTags = arrayTags + jsonTags
+                                                            Log.e("Eu", "$nome + $id")
+                                                        } else {
+                                                            isChecked = false
+                                                            cor1 = 0xFFC98FEC.toInt()
+                                                            cor2 = 0xFFA89BFF.toInt()
+                                                            arrayTags = arrayTags.filter { it.id != id }
+                                                            Log.e("Murilo e Luiz e Eu", "${arrayTags}")
+                                                        }
+                                                    },
+                                                    text = tag.nome_tag,
+                                                    color1 = Destaque1,
+                                                    color2 = Destaque2,
+                                                )
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+
                     }
-                }
+
             }
         }
     }

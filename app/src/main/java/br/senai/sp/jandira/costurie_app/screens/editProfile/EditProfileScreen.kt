@@ -257,7 +257,7 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                       navController.navigate("tagsEditProfile")
+                                        navController.navigate("tagsEditProfile")
                                     },
                                 alignment = Alignment.TopEnd
                             )
@@ -288,7 +288,12 @@ fun EditProfileScreen(
                                                 nome_de_usuario = tagDeUsuarioState,
                                                 nome = nomeState,
                                                 tags = listOf(
-                                                    TagsResponse(id = 2, nome_tag = "Casual", id_categoria = 1, imagem = "https://img.freepik.com/free-photo/male-belt-sweater-accessories-clothes_1203-6421.jpg?w=740&t=st=1694351721~exp=1694352321~hmac=cebea3dc3c1f0bbb3b224d66947feddf4550fee45b41f3bfb7e9142ba1a5bc71")
+                                                    TagsResponse(
+                                                        id = 2,
+                                                        nome_tag = "Casual",
+                                                        id_categoria = 1,
+                                                        imagem = "https://img.freepik.com/free-photo/male-belt-sweater-accessories-clothes_1203-6421.jpg?w=740&t=st=1694351721~exp=1694352321~hmac=cebea3dc3c1f0bbb3b224d66947feddf4550fee45b41f3bfb7e9142ba1a5bc71"
+                                                    )
                                                 )
                                             )
                                         }
@@ -299,10 +304,7 @@ fun EditProfileScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(14.dp)
-                                .clickable {
-                                    launcher.launch("image/*")
-                                },
+                                .padding(14.dp),
                             horizontalArrangement = Arrangement.Center
                         ) {
 
@@ -313,7 +315,10 @@ fun EditProfileScreen(
                                     contentDescription = "",
                                     modifier = Modifier
                                         .size(100.dp)
-                                        .clip(CircleShape),
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                        },
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
@@ -328,7 +333,10 @@ fun EditProfileScreen(
                                             RoundedCornerShape(10.dp)
                                         )
                                         .padding(borderWidth)
-                                        .clip(RoundedCornerShape(10.dp)),
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                        },
                                     contentScale = ContentScale.Crop
                                 )
                             }
@@ -348,7 +356,8 @@ fun EditProfileScreen(
 
                     Text(
                         text = "NOME",
-                        fontSize = 24.sp
+                        fontSize = 20.sp,
+                        color = Color.Black
                     )
                     CustomOutlinedTextField2(
                         value = nomeState,
@@ -362,7 +371,8 @@ fun EditProfileScreen(
                     )
                     Text(
                         text = "Tag De Usuário",
-                        fontSize = 24.sp
+                        fontSize = 20.sp,
+                        color = Color.Black
                     )
                     CustomOutlinedTextField2(
                         value = tagDeUsuarioState,
@@ -378,7 +388,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Estado", fontSize = 24.sp)
+                        Text(text = "Estado", fontSize = 20.sp, color = Color.Black)
                         DropdownEstado(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
@@ -391,7 +401,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Cidade", fontSize = 24.sp)
+                        Text(text = "Cidade", fontSize = 20.sp, color = Color.Black)
                         DropdownCidade(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
@@ -405,7 +415,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Bairro", fontSize = 24.sp)
+                        Text(text = "Bairro", fontSize = 20.sp, color = Color.Black)
                         DropdownBairro(
                             lifecycleScope = lifecycleScope,
                             viewModelCidade
@@ -414,7 +424,7 @@ fun EditProfileScreen(
                         }
                     }
 
-                    Text(text = "Descrição", fontSize = 24.sp)
+                    Text(text = "Descrição", fontSize = 20.sp, color = Color.Black)
                     CustomOutlinedTextField2(
                         value = descricaoState,
                         onValueChange = {
