@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.costurie_app.components
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -45,26 +47,43 @@ fun CustomOutlinedTextField2(
     onValueChange: (String) -> Unit,
     label: String = "",
     borderColor: Color,
-    modifier: Modifier
+    modifier: Modifier,
+    searchIcon: Boolean = false,
 ) {
 
-        OutlinedTextField(
-            value = value,
-            onValueChange = { onValueChange(it) },
-            modifier = modifier
-                .background(
-                    colorResource(id = R.color.principal_2),
-                    shape = RoundedCornerShape(20.dp)
-                ),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = borderColor,
-                unfocusedBorderColor = borderColor,
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        modifier = modifier
+            .background(
+                colorResource(id = R.color.principal_2),
+                shape = RoundedCornerShape(20.dp)
             ),
-            label = { Text(label, fontSize = 15.sp, color = Contraste2) },
-            textStyle = TextStyle.Default.copy(fontSize = 18.sp, color = Color.Black),
-            //singleLine = true
-        )
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = borderColor,
+            unfocusedBorderColor = borderColor,
+        ),
+        label = { Text(label, fontSize = 15.sp, color = Contraste2) },
+        textStyle = TextStyle.Default.copy(fontSize = 18.sp, color = Color.Black),
+        singleLine = true,
+        trailingIcon = {
+            if (searchIcon) {
+                Icon(
+                    painter = painterResource(id = R.drawable.search_icon),
+                    contentDescription = "",
+                    modifier = Modifier.size(30.dp)
+                        .padding(bottom = 4.dp, end = 2.dp)
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.search_icon),
+                    contentDescription = "",
+                    tint = Color.Transparent
+                )
+            }
+        }
 
+    )
 
 
 }

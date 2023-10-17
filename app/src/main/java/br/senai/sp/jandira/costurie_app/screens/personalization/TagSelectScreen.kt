@@ -131,7 +131,7 @@ fun TagSelectScreen(
 
                     IconButton(
                         onClick = {
-                            //navController.navigate("profileType")
+                            navController.navigate("profileType")
                         },
 
                         ) {
@@ -225,8 +225,8 @@ fun TagSelectScreen(
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         state = rememberLazyGridState(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(filtro(pesquisaState)) {
                             GradientButtonTag(

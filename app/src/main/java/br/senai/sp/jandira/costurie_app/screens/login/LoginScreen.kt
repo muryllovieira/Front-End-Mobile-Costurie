@@ -155,7 +155,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                         senha = password,  // Você pode definir a senha aqui
                                     )
                                 } else {
-                                    deleteUserSQLite(context = context )
+                                    deleteUserSQLite(context = context)
                                     saveLogin(
                                         context = context,
                                         id = id,

@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.components.GradientButtonTags
 import br.senai.sp.jandira.costurie_app.components.ModalTags2
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -414,15 +415,11 @@ fun ProfileScreen(
                         Arrangement.SpaceEvenly
                     ) {
                         viewModel.tags?.take(1)?.forEach { tag ->
-                            GradientButtonTag(
-                                onClick = {
-                                    // Faça algo quando uma tag for clicada
-                                },
+                            GradientButtonTags(
+                                onClick = {},
                                 text = tag.nome_tag,
                                 color1 = Destaque1,
                                 color2 = Destaque2,
-                                tagId = 0,
-                                textColor = Color(168, 155, 255, 255)
                             )
                         }
                         if ((viewModel.tags?.size ?: 0) > 1) {
