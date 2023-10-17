@@ -321,7 +321,7 @@ fun ProfileScreen(
                     )
 
 
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
 
                     Column(
                     ) {

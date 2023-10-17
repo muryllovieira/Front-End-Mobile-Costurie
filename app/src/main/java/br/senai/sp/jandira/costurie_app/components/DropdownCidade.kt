@@ -139,7 +139,7 @@ fun DropdownCidade(
 
     Column(
         modifier = Modifier
-            .padding(start = 30.dp, end = 30.dp, top = 10.dp, bottom = 6.dp)
+            .padding(start = 30.dp, end = 30.dp, top = 4.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
