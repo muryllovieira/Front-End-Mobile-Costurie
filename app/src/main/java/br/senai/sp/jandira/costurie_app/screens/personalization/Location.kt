@@ -123,6 +123,7 @@ fun LocationScreen(navController: NavController, lifecycleScope: LifecycleCorout
                         onClick = {
                             if (cidadeStateUser.isNotEmpty() || estadoStateUser.isNotEmpty() || bairroStateUser.isNotEmpty()) {
                                 lifecycleScope.launch {
+
                                     userRepository.updateLocation(
                                         id = user.id.toInt(),
                                         token = user.token,
@@ -130,6 +131,7 @@ fun LocationScreen(navController: NavController, lifecycleScope: LifecycleCorout
                                         estado = estadoStateUser,
                                         bairro = bairroStateUser
                                     )
+                                    Log.i("location", "${userRepository.getUser(user.id.toInt(), user.token).body()}")
                                 }
                                 navController.navigate("profileType")
                             } else {
