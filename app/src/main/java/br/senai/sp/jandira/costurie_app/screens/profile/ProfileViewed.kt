@@ -45,6 +45,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.GradientButtonSmall
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.components.ModalTags2
@@ -69,6 +70,7 @@ fun ProfileViewedScreen(
     lifecycleScope: LifecycleCoroutineScope,
     navController: NavController,
     viewModel: UserViewModel,
+    localStorage: Storage
 ) {
 
     var isModalOpen by remember { mutableStateOf(false) }
@@ -98,6 +100,8 @@ fun ProfileViewedScreen(
     var fotoUri by remember {
         mutableStateOf<Uri?>(null)
     }
+
+    var id = localStorage.lerValor(context, "idUsuario")
 
     val profileEditSuccess = rememberUpdatedState(viewModel.profileEditSuccess.value)
 
@@ -169,7 +173,6 @@ fun ProfileViewedScreen(
                         viewModel.tags = tagsList
                     }
                 } else {
-                    viewModel.tags = null
                 }
 
                 id_usuario = usuarioObject.getInt("id_usuario")
@@ -183,18 +186,6 @@ fun ProfileViewedScreen(
                 estado = usuarioObject.getString("estado")
                 bairro = usuarioObject.getString("bairro")
                 id_localizacao = usuarioObject.getInt("id_localizacao")
-
-                viewModel.id_usuario = id_usuario
-                viewModel.nome = nome
-                viewModel.descricao = descricao
-                viewModel.nome_de_usuario = nome_de_usuario
-                viewModel.foto = fotoUri
-                viewModel.email = email
-                viewModel.estados.value = listOf(estado)
-                viewModel.cidades.value = listOf(cidade)
-                viewModel.bairros.value = listOf(bairro)
-                viewModel.id_localizacao = id_localizacao
-
 
                 Log.i("Thiago", "${viewModel.nome}, $fotoUri")
 
@@ -221,7 +212,7 @@ fun ProfileViewedScreen(
         val user = array[0]
 
         user(
-            id = user.id.toInt(),
+            id = id!!.toInt(),
             token = user.token,
             viewModel
         )
@@ -271,6 +262,9 @@ fun ProfileViewedScreen(
                         contentDescription = "",
                         modifier = Modifier
                             .size(35.dp)
+                            .clickable {
+                                navController.popBackStack()
+                            }
                     )
 
                     Text(
