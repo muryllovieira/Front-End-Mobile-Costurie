@@ -51,13 +51,13 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
         BottomnavigationBarItem(
             route = "explore",
             selected = "Home",
-            unselected = painterResource(id = R.drawable.home_bar),
+            unselected = painterResource(id = R.drawable.home_icon),
             hasNews = false
         ),
         BottomnavigationBarItem(
             route = "services",
             selected = "Serviços",
-            unselected = painterResource(id = R.drawable.servicos_bar),
+            unselected = painterResource(id = R.drawable.services_icon),
             hasNews = false
         ),
         BottomnavigationBarItem(
@@ -69,13 +69,13 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
         BottomnavigationBarItem(
             route = "chats",
             selected = "Conversas",
-            unselected = painterResource(id = R.drawable.conversas_bar),
+            unselected = painterResource(id = R.drawable.messages_icon),
             hasNews = false
         ),
         BottomnavigationBarItem(
             route = "profile",
             selected = "Perfil",
-            unselected = painterResource(id = R.drawable.perfil_bar),
+            unselected = painterResource(id = R.drawable.profile_icon),
             hasNews = false
         )
     )
@@ -97,7 +97,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     NavigationBar(
                         modifier = Modifier
                             .height(80.dp)
-                            .padding(start = 17.dp, end = 17.dp, bottom = 15.dp)
+                            .padding(start = 14.dp, end = 14.dp, bottom = 13.dp)
                             .clip(shape = RoundedCornerShape(15.dp)),
                         containerColor = Color.White,
                         contentColor = Color.Transparent
@@ -119,7 +119,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                                         }
                                     ) {
                                         if (selectedIdexItem == index) {
-                                            TextMenuBar(text = item.selected)
+                                            TextMenuBar(text = item.selected.uppercase())
                                         } else {
                                             if (index == 2) {
                                                 Image(
@@ -130,7 +130,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                                             } else {
                                                 Image(
                                                     painter = item.unselected,
-                                                    modifier = Modifier.size(20.dp),
+                                                    modifier = Modifier.size(22.dp),
                                                     contentDescription = item.route
                                                 )
                                             }
