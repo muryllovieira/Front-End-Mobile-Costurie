@@ -413,17 +413,18 @@ fun ProfileScreen(
                             .fillMaxWidth(),
                         Arrangement.SpaceEvenly
                     ) {
-//                        viewModel.tags?.take(1)?.forEach { tag ->
-//                            GradientButtonTag(
-//                                onClick = {
-//                                    // Faça algo quando uma tag for clicada
-//                                },
-//                                text = tag.nome_tag,
-//                                color1 = Destaque1,
-//                                color2 = Destaque2,
-//                                viewModel,
-//                            )
-//                        }
+                        viewModel.tags?.take(1)?.forEach { tag ->
+                            GradientButtonTag(
+                                onClick = {
+                                    // Faça algo quando uma tag for clicada
+                                },
+                                text = tag.nome_tag,
+                                color1 = Destaque1,
+                                color2 = Destaque2,
+                                tagId = 0,
+                                textColor = Color(168, 155, 255, 255)
+                            )
+                        }
                         if ((viewModel.tags?.size ?: 0) > 1) {
                             ModalTags2(color1 = Destaque1, color2 = Destaque2, viewModel)
                         }

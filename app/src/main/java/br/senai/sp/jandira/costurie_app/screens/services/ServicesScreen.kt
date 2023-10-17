@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,6 +49,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
@@ -79,6 +82,8 @@ fun ServicesScreen(
     viewModelUserTags: UserTagViewModel,
     localStorage: Storage
 ) {
+
+    val categoryClickedViewModel: CategoryClickedViewModel = viewModel()
 
     var pesquisaState by remember {
         mutableStateOf("")
@@ -245,6 +250,7 @@ fun ServicesScreen(
                         .padding(top = 15.dp)
                         .fillMaxWidth()
                         .padding(start = 30.dp),
+                    color = Color.Black,
                     text = stringResource(id = R.string.servicos_filtros_text),
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 22.sp,
@@ -259,6 +265,7 @@ fun ServicesScreen(
                                 .size(100.dp, 45.dp)
                                 .padding(start = 16.dp, 2.dp)
                                 .clickable {
+                                    categoryClickedViewModel.setClickedCategory(filtering.id, state = true)
                                     val categoriaSelecionada = filtering.nome
                                     val array = UserRepositorySqlite(context).findUsers()
                                     val user = array[0]
@@ -285,14 +292,16 @@ fun ServicesScreen(
                                     color = Contraste
                                 )
 
-                                Canvas(
-                                    modifier = Modifier.size(6.dp),
-                                    onDraw = {
-                                        drawCircle(
-                                            color = color
-                                        )
-                                    }
-                                )
+                                if (categoryClickedViewModel.getClickedCategory(filtering.id)) {
+                                    Canvas(
+                                        modifier = Modifier.size(6.dp),
+                                        onDraw = {
+                                            drawCircle(
+                                                color = color
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -319,12 +328,19 @@ fun ServicesScreen(
                                         val idTagSelecionada = tags.id.toString()
                                         val tagSelecionada = tags.nome_tag
 
-                                        localStorage.salvarValor(context, idTagSelecionada, "idSelecionado")
-                                        localStorage.salvarValor(context, tagSelecionada, "tagSelecionada")
+                                        localStorage.salvarValor(
+                                            context,
+                                            idTagSelecionada,
+                                            "idSelecionado"
+                                        )
+                                        localStorage.salvarValor(
+                                            context,
+                                            tagSelecionada,
+                                            "tagSelecionada"
+                                        )
 
 //                                        viewModelUserTags.id = idTagSelecionada
 //                                        viewModelUserTags.nome = tagSelecionada
-
 
 
                                         navController.navigate("profileList")
@@ -388,5 +404,17 @@ fun ServicesScreen(
                 }
             }
         }
+    }
+}
+
+class CategoryClickedViewModel : ViewModel() {
+    private var isClicked = mutableStateMapOf<Int, Boolean>()
+    private var array = mutableListOf<Int>()
+    fun getClickedCategory(categoryId: Int): Boolean {
+        return isClicked[categoryId] ?: false
+    }
+
+    fun setClickedCategory(categoryId: Int, state: Boolean) {
+        isClicked[categoryId] = state
     }
 }
