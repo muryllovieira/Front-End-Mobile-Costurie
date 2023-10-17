@@ -209,7 +209,13 @@ fun ProfileListScreen(
                         Card(
                             modifier = Modifier
                                 .size(380.dp, 85.dp)
-                                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp),
+                                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp).
+                            clickable {
+                                      var id = profile.id
+                                localStorage.salvarValor(context, id.toString(), "idUsuario")
+
+                                navController.navigate("profileViewed")
+                            },
                             backgroundColor = Color.White,
                             shape = RoundedCornerShape(15.dp),
                             elevation = AppBarDefaults.TopAppBarElevation
