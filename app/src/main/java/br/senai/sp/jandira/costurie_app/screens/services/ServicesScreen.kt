@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,6 +56,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.Storage
+import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownServicesTag
 import br.senai.sp.jandira.costurie_app.function.saveLogin
 import br.senai.sp.jandira.costurie_app.model.Filtering
@@ -99,6 +101,13 @@ fun ServicesScreen(
 
     var listTags by remember {
         mutableStateOf(listOf<TagsResponse>())
+    }
+
+    fun filtro(text: String): List<TagsResponse> {
+        var newList: List<TagsResponse> = listTags.filter {
+            it.nome_tag.contains(text, ignoreCase = true)
+        }
+        return newList
     }
 
     suspend fun getTags(
@@ -227,22 +236,26 @@ fun ServicesScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 30.dp, top = 10.dp),
+                    color = Color.Black,
                     text = stringResource(id = R.string.servicos_titulo),
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold
                 )
 
-                DropdownServicesTag(
-                    lifecycleScope = lifecycleScope,
-                    list = listTags,
-                    onTagSelected = { selectedTag ->
-                        pesquisaState = selectedTag
-
-                        navController.navigate("profileList")
+                CustomOutlinedTextField2(
+                    value = pesquisaState,
+                    onValueChange = {
+                        pesquisaState = it
+                        filtro(pesquisaState)
                     },
-                    viewModelUserTags = viewModelUserTags,
-                    navController = navController
+                    label = stringResource(id = R.string.tag_de_servico_label),
+                    borderColor = Color.Transparent,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(62.dp)
+                        .padding(horizontal = 32.dp),
+                    searchIcon = true
                 )
 
                 Text(
@@ -310,7 +323,8 @@ fun ServicesScreen(
                 Row(
                     modifier = Modifier
                         .padding(top = 28.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     LazyVerticalGrid(
@@ -320,7 +334,7 @@ fun ServicesScreen(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
-                        items(listTags) { tags ->
+                        items(filtro(pesquisaState)) { tags ->
                             Card(
                                 modifier = Modifier
                                     .size(170.dp, 85.dp)

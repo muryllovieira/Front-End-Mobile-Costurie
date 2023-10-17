@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.costurie_app.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,10 +21,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,17 +90,15 @@ fun ModalTags2(
                     onClick = { isDialogOpen = false },
 
                     ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrow_back),
+                    Image(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.baseline_arrow_back_24),
                         contentDescription = "",
                         modifier = Modifier
-                            .size(35.dp),
-                        tint = Color.Magenta
+                            .size(45.dp)
                     )
                 }
             },
             text = {
-                Text(text = "Este é o conteúdo do modal.")
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2), // Define o número de colunas por linha
                     modifier = Modifier.fillMaxWidth(),
@@ -105,14 +106,11 @@ fun ModalTags2(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(viewModel.tags?.toList() ?: emptyList()) { tag ->
-                        GradientButtonTag(
+                        GradientButtonTags(
                             onClick = {},
                             text = tag.nome_tag,
                             color1 = Destaque1,
-                            color2 = Destaque2,
-                            textColor = Color.White,
-                            tagId = 0
-                            //viewModel
+                            color2 = Destaque2
                         )
                     }
                 }
