@@ -169,7 +169,7 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                                     )
                                 }
                             } else {
-                                deleteUserSQLite(context = context)
+                                deleteUserSQLite(context = context, id = resultId?.get("id_usuario")?.asInt)
                                 resultId?.get("id_usuario")?.asLong?.let {
                                     saveLogin(
                                         context = context,
