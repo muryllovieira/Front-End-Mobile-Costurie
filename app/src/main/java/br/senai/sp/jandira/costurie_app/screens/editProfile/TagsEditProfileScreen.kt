@@ -1,15 +1,14 @@
 package br.senai.sp.jandira.costurie_app.screens.editProfile
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,13 +21,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,31 +37,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
-import br.senai.sp.jandira.costurie_app.components.GradientButtonTags
+import br.senai.sp.jandira.costurie_app.components.TagColorViewModel
+import br.senai.sp.jandira.costurie_app.model.TagEditResponse
 import br.senai.sp.jandira.costurie_app.model.TagResponse
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.model.TagResponseId
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
+import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.TagsViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,66 +72,132 @@ fun TagsEditProfileScreen(
     navController: NavController,
     viewModelUser: UserViewModel,
     viewModelTags: TagsViewModel,
+    localStorage: Storage
 ) {
 
     var context = LocalContext.current
 
+    var id = localStorage.lerValor(context, "id")
+    var nome = localStorage.lerValor(context, "nome")
+    var estado = localStorage.lerValor(context, "estado")
+    var bairro = localStorage.lerValor(context, "bairro")
+    var cidade = localStorage.lerValor(context, "cidade")
+    var descricao = localStorage.lerValor(context, "descricao")
+    var foto = localStorage.lerValor(context, "foto")
+    val fotoUri: Uri? = Uri.parse(foto)
+    var id_localizacao = localStorage.lerValor(context, "id_localizacao")
+    var token = localStorage.lerValor(context, "token")
+    var nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")
+
+    Log.w("Chega", "vendo se os dados: $id, $nome, $nome_de_usuario, $estado, $bairro, $cidade, $descricao, $foto, $id_localizacao, $token", )
 
     val scrollState = rememberScrollState()
 
-
-    suspend fun getTags(
+    fun updateUser(
+        id_usuario: Int,
         token: String,
-        categoria: String
-    ): List<TagsResponse> {
-        val tagRepository = TagsRepository()
+        viewModel: UserViewModel,
+        id_localizacao: Int,
+        cidade: String,
+        estado: String,
+        bairro: String,
+        nome: String,
+        descricao: String,
+        foto: Uri?,
+        nome_de_usuario: String,
+        tags: MutableList<TagResponseId>
+    ) {
+        val userRepository = UserRepository()
 
-        val array = UserRepositorySqlite(context).findUsers()
-        val user = array[0]
+        lifecycleScope.launch {
+            Log.e("ID", "user: $id_usuario")
+            Log.e("token", "user: $token")
 
-        val response = tagRepository.getTags(user.token, categoria)
+            val array = UserRepositorySqlite(context).findUsers()
 
-        if (response.isSuccessful) {
-            val responseBody = response.body()
-            if (responseBody != null) {
-                val tagsJson = responseBody.getAsJsonArray("tags")
-                val type: Type = object : TypeToken<List<TagsResponse>>() {}.type
-                val tagsList: List<TagsResponse> = Gson().fromJson(tagsJson, type)
+            val user = array[0]
 
-                // Log para verificar as tags recebidas
-                Log.e(MainActivity::class.java.simpleName, "Tags recebidas")
-                Log.e("user", "user: $tagsList")
+            val response = userRepository.updateUser(
+                user.id.toInt(),
+                user.token,
+                id_localizacao,
+                cidade,
+                estado,
+                bairro,
+                nome,
+                descricao,
+                foto,
+                nome_de_usuario,
+                tags
+            )
 
-                return tagsList
+            Log.e("TAG4", "user: $response")
+            Log.i("TAG5", "user: ${response.body()}")
+
+            if (response.isSuccessful) {
+                Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
+                Log.e("user", "user: ${response.body()} ")
+
+                viewModel.setProfileEditSuccess(true)
+
+                navController.navigate("profile")
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
+                val descricao = response.body()?.descricao
+                if (descricao != null) {
+                    if (descricao.length > 255)
+                        Log.e(
+                            MainActivity::class.java.simpleName,
+                            "Erro durante a atualização dos dados do usuário: ${errorBody}"
+                        )
+                    Toast.makeText(
+                        context,
+                        "Descricão grande demais",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                Toast.makeText(
+                    context,
+                    "Erro durante a atualização dos dados do usuário: $errorBody",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        } else {
-            val errorBody = response.errorBody()?.string()
-            Log.e("TODAS AS TAGS", "Tags: $errorBody")
-            Toast.makeText(
-                context,
-                "Erro durante trazer todas as tags: $errorBody",
-                Toast.LENGTH_SHORT
-            ).show()
         }
-
-        // Se algo deu errado ou não há tags, retorne uma lista vazia
-        return emptyList()
     }
 
-    LaunchedEffect(Unit) {
-        val array = UserRepositorySqlite(context).findUsers()
-        val user = array[0]
 
-        // Obtenha as tags e converta para uma lista mutável
-        val tags = getTags(user.token, "GERAL").toMutableList()
-
-        viewModelTags.tags = tags
-
-        Log.d("TAGS", "Número de tags recebidas: ${tags.size}")
-        Log.d("TAGS3333", "kkkkkkkkkk: ${viewModelTags.tags}")
-
+    var tagsList by remember() {
+        mutableStateOf(listOf<TagEditResponse>())
     }
 
+    var pesquisaState by remember {
+        mutableStateOf("")
+    }
+
+    val viewModel: TagColorViewModel = viewModel()
+
+    var tagsArray = mutableListOf<TagResponseId>()
+
+    val tagsRepository = TagsRepository()
+
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
+    fun filtro(text: String): List<TagEditResponse> {
+        lifecycleScope.launch {
+            tagsList = tagsRepository.getAllTags2(user.token).body()!!.data
+        }
+        var newList: List<TagEditResponse> = tagsList.filter {
+            it.nome_tag.contains(text, ignoreCase = true)
+        }
+        return newList
+    }
+
+    var isClicked by remember {
+        mutableStateOf(false)
+    }
 
     Costurie_appTheme {
 
@@ -148,120 +216,136 @@ fun TagsEditProfileScreen(
             }
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
+                    .fillMaxHeight(),
+                //.padding(20.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp)
-                            .shadow(elevation = 5.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(20.dp)
+                        .shadow(elevation = 2.dp)
+                        .border(
+                            width = 1.dp, // Espessura da borda
+                            color = Color.Black, // Cor da borda
+                            shape = RoundedCornerShape(24.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
 
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+
+                            Image(
+                                painter = painterResource(id = R.drawable.arrow_back),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(45.dp)
+//                                    .padding(15.dp)
+                                    .clickable {
+                                        navController.popBackStack()
+                                    },
+                                colorFilter = ColorFilter.tint(Color.Black)
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.save_icon),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(35.dp)
+                                    //.padding(15.dp)
+                                    .clickable {
+                                        if (tagsArray.isEmpty()) {
+                                            Toast.makeText(context, "É necessário escolher ao menos uma tag!", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            lifecycleScope.launch {
+                                                updateUser(
+                                                    id_usuario = user.id.toInt(),
+                                                    token = user.token,
+                                                    viewModelUser,
+                                                    id_localizacao = id_localizacao!!.toInt(),
+                                                    bairro = bairro!!,
+                                                    cidade = cidade!!,
+                                                    estado = estado!!,
+                                                    descricao = descricao!!,
+                                                    foto = fotoUri,
+                                                    nome_de_usuario = nome_de_usuario!!,
+                                                    nome = nome!!,
+                                                    tags = tagsArray
+                                                )
+                                            }
+                                        }
+                                    },
+                                colorFilter = ColorFilter.tint(Color(0xFFC98FEC))
+                            )
+                        }
+                        Text(
+                            color = Color.Black,
+                            text = "Você pode escolher uma tag para seu perfil",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.width(310.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-
-                                Image(
-                                    painter = painterResource(id = R.drawable.arrow_back),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .size(45.dp)
-                                        .clickable {
-                                            navController.popBackStack()
-                                        }
-                                )
-                            }
-                            Text(
-                                color = Color.Black,
-                                text = "Você pode escolher uma tag para seu perfil",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.width(310.dp),
-                                textAlign = TextAlign.Center
+                            Log.i(
+                                "TAGSjhkgvsdakjgh",
+                                "Dados em viewModelUser.tags: ${viewModelTags.tags}"
                             )
-                            Spacer(modifier = Modifier.height(20.dp))
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally
+
+                            var arrayTags by remember { mutableStateOf(listOf<TagResponse>()) }
+
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+                                state = rememberLazyGridState(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
-                                Log.i(
-                                    "TAGSjhkgvsdakjgh",
-                                    "Dados em viewModelUser.tags: ${viewModelTags.tags}"
-                                )
-
-                                var arrayTags by remember { mutableStateOf(listOf<TagResponse>()) }
-
-                                LazyVerticalGrid(
-                                    columns = GridCells.Fixed(2),
-                                    contentPadding = PaddingValues(horizontal = 16.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(5.dp),
-                                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                                    modifier = Modifier.fillMaxHeight(0.85f)
-                                ) {
-                                    viewModelTags.tags?.let { tags ->
-                                        items(tags) { tag ->
-                                            var cor1 by remember {
-                                                mutableStateOf(0x5C2C0C)
-                                            }
-                                            var cor2 by remember {
-                                                mutableStateOf(0x5C2C0C)
+                                items(filtro(pesquisaState)) {
+                                    GradientButtonTag(
+                                        onClick = {
+                                            isClicked = !isClicked
+                                            if (isClicked) {
+                                                viewModel.setTagColor(it.id, Destaque1, Destaque2)
+                                                viewModel.setTagTextColor(it.id, Color.White, Color.White)
+                                                if (!tagsArray.contains(TagResponseId(it.id))){
+                                                    tagsArray.add(TagResponseId(it.id))
+                                                }
+                                            } else {
+                                                viewModel.setTagColor(it.id, Color.Transparent, Color.Transparent)
+                                                viewModel.setTagTextColor(it.id, Destaque1, Destaque2)
+                                                if (tagsArray.contains(TagResponseId(it.id))) {
+                                                    tagsArray.remove(TagResponseId(it.id))
+                                                }
                                             }
 
-                                            var isChecked by remember { mutableStateOf(false) }
+                                            Log.e("it.nome", "mometag: ${it.nome_tag}", )
+                                            Log.e("it.id", "id: ${it.id}", )
+                                            Log.e("array", "array: ${tagsArray}", )
+                                        },
+                                        tagId = it.id,
+                                        color1 = Destaque1,
+                                        color2 = Destaque2,
+                                        text = it.nome_tag,
+                                        textColor = Color(168, 155, 255, 255),
 
-                                            var altura = 30
-
-                                            if (tag.nome_tag.length > 26) {
-                                                altura = 48
-                                            }
-
-                                            Row(
-
-                                            ) {
-                                                GradientButtonTags(
-                                                    onClick = {
-                                                        val nome = tag.nome_tag
-                                                        val id = tag.id
-                                                        val imagem = tag.imagem
-                                                        val id_categoria = tag.id_categoria
-                                                        //val nome_categoria = tag.nome_categoria
-
-                                                        if (!isChecked) {
-                                                            isChecked = true
-                                                            cor1 = 0xFFFCF6FF.toInt()
-                                                            cor2 = 0xFFA89BFF.toInt()
-                                                            var jsonTags = TagResponse(id, nome)
-                                                            arrayTags = arrayTags + jsonTags
-                                                            Log.e("Eu", "$nome + $id")
-                                                        } else {
-                                                            isChecked = false
-                                                            cor1 = 0xFFC98FEC.toInt()
-                                                            cor2 = 0xFFA89BFF.toInt()
-                                                            arrayTags = arrayTags.filter { it.id != id }
-                                                            Log.e("Murilo e Luiz e Eu", "${arrayTags}")
-                                                        }
-                                                    },
-                                                    text = tag.nome_tag,
-                                                    color1 = Destaque1,
-                                                    color2 = Destaque2,
-                                                )
-                                            }
-                                        }
-                                    }
+                                    )
                                 }
                             }
                         }
-
                     }
+
+                }
 
             }
         }

@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.costurie_app.repository
 
 import br.senai.sp.jandira.costurie_app.model.BaseResponseTag
+import br.senai.sp.jandira.costurie_app.model.BaseResponseTag2
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
@@ -24,6 +25,11 @@ class TagsRepository {
     suspend fun getAllTags(token: String): Response<BaseResponseTag> {
 
         return apiService.getAllTags(token)
+    }
+
+    suspend fun getAllTags2(token: String): Response<BaseResponseTag2> {
+
+        return apiService.getAllTags2(token)
     }
 
     suspend fun getUserByTag(token: String, id_tag: Int, nome_tag: String): Response<JsonObject> {

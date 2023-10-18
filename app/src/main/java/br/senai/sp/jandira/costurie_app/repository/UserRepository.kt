@@ -2,7 +2,6 @@ package br.senai.sp.jandira.costurie_app.repository
 
 import android.net.Uri
 import br.senai.sp.jandira.costurie_app.model.TagResponseId
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import br.senai.sp.jandira.costurie_app.model.UserTagsResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
@@ -10,7 +9,6 @@ import br.senai.sp.jandira.costurie_app.service.UserService
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Response
-import retrofit2.http.Url
 
 class UserRepository {
     private val apiService = RetrofitFactory.getInstance().create(UserService::class.java)
@@ -30,7 +28,7 @@ class UserRepository {
         descricao: String,
         foto: Uri?,
         nome_de_usuario: String,
-        tags: List<TagsResponse>?
+        tags: MutableList<TagResponseId>
     ): Response<UserResponse> {
         val requestBody = JsonObject().apply {
             addProperty("id_usuario", id)
@@ -50,7 +48,6 @@ class UserRepository {
                 for (tag in tags) {
                     val tagObject = JsonObject().apply {
                         addProperty("id_tag", tag.id)
-                        addProperty("nome", tag.nome_tag)
                     }
                     tagsArray.add(tagObject)
                 }
