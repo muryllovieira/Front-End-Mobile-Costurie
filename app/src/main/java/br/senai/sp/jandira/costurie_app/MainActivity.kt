@@ -27,6 +27,7 @@ import br.senai.sp.jandira.costurie_app.screens.personalization.TypeProfileScree
 import br.senai.sp.jandira.costurie_app.screens.profile.ProfileListScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 import br.senai.sp.jandira.costurie_app.screens.services.ServicesScreen
+import br.senai.sp.jandira.costurie_app.screens.settings.SettingsScreen
 import br.senai.sp.jandira.costurie_app.screens.tradePassword.TradePasswordScreen
 import br.senai.sp.jandira.costurie_app.screens.validationCode.ValidationCodeScreen
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -54,8 +55,8 @@ class MainActivity : ComponentActivity() {
                 val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
+                    startDestination = "main")
 
-                    startDestination = "register")
 
                 {
                     composable(route = "main") { MainScreen(navController = navController) }
@@ -74,6 +75,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "profileList") { ProfileListScreen(navController = navController, lifecycleScope = lifecycleScope, profiles = emptyList(), viewModel = viewModelUser, viewModelUserTags = viewModelUserTags, localStorage = localStorage) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser, localStorage = localStorage) }
                     composable(route = "tagsEditProfile") { TagsEditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModelUser = viewModelUser, viewModelTags = viewModelTags, localStorage = localStorage) }
+                    composable(route = "settings") { SettingsScreen(lifecycleScope = lifecycleScope, navController = navController) }
 
                     //telas de personalização
                     composable(route = "name") { NameScreen(navController = navController, localStorage) }

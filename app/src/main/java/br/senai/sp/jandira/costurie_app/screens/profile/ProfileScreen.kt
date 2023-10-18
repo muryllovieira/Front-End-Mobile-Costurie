@@ -296,7 +296,9 @@ fun ProfileScreen(
                             painter = painterResource(id = R.drawable.settings_icon),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(35.dp).clickable {
+                                    navController.navigate("settings")
+                                }
                         )
                     }
                 }
