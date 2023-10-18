@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.costurie_app.service
 
 import br.senai.sp.jandira.costurie_app.model.BaseResponseTag
+import br.senai.sp.jandira.costurie_app.model.BaseResponseTag2
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import com.google.gson.JsonObject
 import retrofit2.Response
@@ -31,4 +32,10 @@ interface TagsService {
         @Body requestBody: JsonObject,
         @Header("x-access-token") token: String
     ): Response<JsonObject>
+
+    @Headers("Content-Type: application/json")
+    @GET("/tag")
+    suspend fun getAllTags2(
+        @Header("x-access-token") token: String
+    ): Response<BaseResponseTag2>
 }

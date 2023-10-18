@@ -308,7 +308,7 @@ fun ProfileViewedScreen(
                         contentScale = ContentScale.Crop
                     )
 
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
 
                     Column(
                     ) {
@@ -321,6 +321,7 @@ fun ProfileViewedScreen(
                             modifier = Modifier.height(28.dp)
                         )
 
+                        Spacer(modifier = Modifier.width(20.dp))
                         Text(
                             color = Color.White,
                             text = nome_de_usuario,
@@ -329,7 +330,7 @@ fun ProfileViewedScreen(
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.height(22.dp)
                         )
-
+                        Spacer(modifier = Modifier.width(20.dp))
                         Row {
                             Image(
                                 painter = painterResource(id = R.drawable.icon_location),
