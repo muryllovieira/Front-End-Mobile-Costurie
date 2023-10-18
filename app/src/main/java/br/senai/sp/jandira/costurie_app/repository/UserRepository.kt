@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.costurie_app.repository
 
 import android.net.Uri
+import android.util.Log
 import br.senai.sp.jandira.costurie_app.model.TagResponseId
 import br.senai.sp.jandira.costurie_app.model.UserResponse
 import br.senai.sp.jandira.costurie_app.model.UserTagsResponse
@@ -82,6 +83,8 @@ class UserRepository {
         estado: String,
         bairro: String
     ): Response<UserResponse> {
+        Log.i("location", "updateLocation: ${token}")
+        Log.i("location", "updateLocation: ${id}")
         val requestBody = JsonObject().apply {
             addProperty("id_usuario", id)
             addProperty("cidade", cidade)
