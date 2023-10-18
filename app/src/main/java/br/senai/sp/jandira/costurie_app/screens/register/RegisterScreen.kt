@@ -150,7 +150,8 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                 lifecycleScope.launch {
                     val response = userRepository.registerUser(name, email, password)
                     var resultId = response.body()?.getAsJsonObject("usuario")
-                    var resulToken = response.body()?.get("token").toString()
+                    var resulToken = response.body()?.get("token")!!.asString
+                    Log.i("location", "${response.body()}")
 
                     if (response.isSuccessful) {
                         val checagem = response.body()?.get("status")
@@ -158,26 +159,26 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                             Toast.makeText(context, "Campos obrigatórios não foram preenchidos.", Toast.LENGTH_LONG).show()
                         } else {
                             if (UserRepositorySqlite(context).findUsers().isEmpty()) {
-                                resultId?.get("id_usuario")?.asLong?.let {
+                                resultId?.get("id_usuario")?.asLong?.let { id ->
                                     saveLogin(
                                         context = context,
-                                        id = it,
+                                        id = id,
                                         nome = name,
-                                        token = resulToken,
+                                        token = resulToken.trim('"'),
                                         email = email,
-                                        senha = password,  // Você pode definir a senha aqui
+                                        senha = password  // Você pode definir a senha aqui
                                     )
                                 }
                             } else {
-                                deleteUserSQLite(context = context)
-                                resultId?.get("id_usuario")?.asLong?.let {
+                                deleteUserSQLite(context = context, resultId?.get("id_usuario")?.asInt)
+                                resultId?.get("id_usuario")?.asLong?.let {id ->
                                     saveLogin(
                                         context = context,
-                                        id = it,
+                                        id = id,
                                         nome = name,
-                                        token = resulToken,
+                                        token = resulToken.trim('"'),
                                         email = email,
-                                        senha = password,  // Você pode definir a senha aqui
+                                        senha = password  // Você pode definir a senha aqui
                                     )
                                 }
                             }

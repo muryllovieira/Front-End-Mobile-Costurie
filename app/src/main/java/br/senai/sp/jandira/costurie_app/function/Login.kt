@@ -23,6 +23,6 @@ fun saveLogin (
     return UserRepositorySqlite(context).save(newUser)
 }
 
-fun deleteUserSQLite(context: Context): Int {
+fun deleteUserSQLite(context: Context, id: Int?): Int {
     return UserRepositorySqlite(context).deleteUser()
 }
