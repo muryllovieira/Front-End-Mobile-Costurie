@@ -104,6 +104,8 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
     val validateEmailError = "O formato do e-mail não é válido"
     val validatePasswordError = "Deve misturar letras maiúsculas e minúsculas, pelo menos um número, caracter especial e mínimo de 8 caracteres"
 
+    Log.i("findusers", "${UserRepositorySqlite(context).findUsers()}")
+
     fun validateData(email: String, password: String): Boolean {
         val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}\$".toRegex()
 
@@ -165,7 +167,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                         senha = password,
                                     )
                                 }
-                                navController.navigate("home")
+                                navController.navigate("location")
 
                             } else {
                                 Toast.makeText(context, "Dados do usuário inválidos", Toast.LENGTH_SHORT).show()

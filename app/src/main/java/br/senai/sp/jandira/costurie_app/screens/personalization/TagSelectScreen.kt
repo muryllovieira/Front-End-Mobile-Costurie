@@ -93,7 +93,9 @@ fun TagSelectScreen(
 
     fun filtro(text: String): List<TagsResponse> {
         lifecycleScope.launch {
-            tagsList = tagsRepository.getAllTags(user.token).body()!!.data
+            var result = tagsRepository.getAllTags(user.token).body()!!.data
+            var emptyArray = emptyList<TagsResponse>()
+            tagsList = if (result.isEmpty()) { emptyArray } else { result }
         }
         var newList: List<TagsResponse> = tagsList.filter {
             it.nome_tag.contains(text, ignoreCase = true)
