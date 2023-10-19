@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.costurie_app.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -76,7 +77,7 @@ fun CustomOutlinedTextField(
                 unfocusedBorderColor = borderColor,
                 errorBorderColor = Color.Transparent
             ),
-            label = { Text(label, fontSize = 15.sp, color = Contraste2) },
+            label = { Text(label, fontSize = 12.sp, color = Contraste2) },
             textStyle = TextStyle.Default.copy(fontSize = 15.sp, color = Color.Black),
             leadingIcon = {
                 Icon(
@@ -108,7 +109,7 @@ fun CustomOutlinedTextField(
             },
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
-            singleLine = true
+            singleLine = true,
         )
         if (showError) {
             Text(

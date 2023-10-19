@@ -66,6 +66,7 @@ import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.ui.theme.Kufam
 import br.senai.sp.jandira.costurie_app.viewModel.UserTagViewModel
 import coil.compose.AsyncImage
 import com.google.gson.Gson
@@ -322,6 +323,7 @@ fun ServicesScreen(
 
                 Row(
                     modifier = Modifier
+
                         .padding(top = 28.dp)
                         .fillMaxWidth()
                         .fillMaxHeight(),
@@ -403,13 +405,14 @@ fun ServicesScreen(
                                         fontSize = 18.sp,
                                         color = Color.White,
                                         modifier = Modifier.padding(start = 12.dp),
-                                        fontWeight = FontWeight.SemiBold,
+                                        fontWeight = FontWeight.Light,
                                         style = TextStyle(
                                             shadow = Shadow(
                                                 color = Color.Black,
                                                 offset = Offset(0f, 6f),
                                             )
-                                        )
+                                        ),
+                                        fontFamily = Kufam
                                     )
                                 }
                             }
