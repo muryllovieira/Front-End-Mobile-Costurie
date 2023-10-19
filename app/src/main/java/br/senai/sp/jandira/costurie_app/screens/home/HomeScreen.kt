@@ -24,12 +24,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.Storage
@@ -80,7 +80,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
         )
     )
 
-    var selectedIdexItem by rememberSaveable {
+    var selectedIndexItem by rememberSaveable {
         mutableStateOf(0)
     }
 
@@ -97,7 +97,8 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     NavigationBar(
                         modifier = Modifier
                             .height(80.dp)
-                            .padding(start = 14.dp, end = 14.dp, bottom = 13.dp)
+                            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                            .shadow(elevation = 15.dp)
                             .clip(shape = RoundedCornerShape(15.dp)),
                         containerColor = Color.White,
                         contentColor = Color.Transparent
@@ -107,9 +108,9 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                                 colors = NavigationBarItemDefaults.colors(
                                     indicatorColor = Color.White
                                 ),
-                                selected = selectedIdexItem == index,
+                                selected = selectedIndexItem == index,
                                 onClick = {
-                                    selectedIdexItem = index
+                                    selectedIndexItem = index
 
                                 },
                                 icon = {
@@ -118,7 +119,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
 
                                         }
                                     ) {
-                                        if (selectedIdexItem == index) {
+                                        if (selectedIndexItem == index) {
                                             TextMenuBar(text = item.selected.uppercase())
                                         } else {
                                             if (index == 2) {
@@ -148,13 +149,13 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     verticalArrangement = Arrangement.Center
                 ) {
                     val localStorage: Storage = Storage()
-                    if (selectedIdexItem == 0) {
+                    if (selectedIndexItem == 0) {
                         ExploreScreen(navController = navController)
-                    } else if (selectedIdexItem == 1) {
+                    } else if (selectedIndexItem == 1) {
                         ServicesScreen(navController = navController, lifecycleScope =  lifecycleScope, filterings = emptyList(), categories = emptyList(), viewModelUserTags = UserTagViewModel(), localStorage = localStorage)
-                    } else if (selectedIdexItem == 2) {
-                        PublishScreen(navController = navController)
-                    } else if (selectedIdexItem == 3) {
+                    } else if (selectedIndexItem == 2) {
+                        PublishScreen()
+                    } else if (selectedIndexItem == 3) {
                         ChatsScreen(navController = navController)
                     } else {
                         ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUserViewModel)

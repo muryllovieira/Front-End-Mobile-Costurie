@@ -25,6 +25,7 @@ import br.senai.sp.jandira.costurie_app.screens.personalization.ProfilePicScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.TagSelectScreen
 import br.senai.sp.jandira.costurie_app.screens.personalization.TypeProfileScreen
 import br.senai.sp.jandira.costurie_app.screens.profile.ProfileListScreen
+import br.senai.sp.jandira.costurie_app.screens.publish.PublishScreen
 import br.senai.sp.jandira.costurie_app.screens.register.RegisterScreen
 import br.senai.sp.jandira.costurie_app.screens.services.ServicesScreen
 import br.senai.sp.jandira.costurie_app.screens.settings.SettingsScreen
@@ -55,6 +56,7 @@ class MainActivity : ComponentActivity() {
                 val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
+
                     startDestination = "main")
 
 
@@ -68,6 +70,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
                     composable(route = "home") { HomeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModelUser) }
                     composable(route = "explore") { ExploreScreen(navController = navController) }
+                    composable(route = "publish") { PublishScreen()}
                     composable(route = "services") { ServicesScreen(navController = navController, lifecycleScope = lifecycleScope, categories = emptyList(), filterings = emptyList(), viewModelUserTags = viewModelUserTags, localStorage = localStorage) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
                     composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }

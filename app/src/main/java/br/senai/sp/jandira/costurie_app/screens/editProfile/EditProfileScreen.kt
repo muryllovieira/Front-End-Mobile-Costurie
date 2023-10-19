@@ -376,9 +376,11 @@ fun EditProfileScreen(
                 ) {
 
                     Text(
+
                         text = "NOME",
                         fontSize = 20.sp,
                         color = Color.Black
+
                     )
                     CustomOutlinedTextField2(
                         value = nomeState,
