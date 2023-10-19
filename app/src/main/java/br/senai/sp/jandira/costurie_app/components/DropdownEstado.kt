@@ -66,7 +66,7 @@ import kotlinx.coroutines.launch
 fun DropdownEstado(
     lifecycleScope: LifecycleCoroutineScope,
     viewModel: EstadoViewModel,
-    onEstadoSelected: (String) -> Unit
+    onEstadoSelected: (String) -> Unit,
 ) {
 
     val context = LocalContext.current
@@ -150,7 +150,7 @@ fun DropdownEstado(
                         .onGloballyPositioned { coordinates ->
                             textFieldSize = coordinates.size.toSize()
                         },
-                    value = estado,
+                    value = estado!!,
                     onValueChange = {
                         estado = it
                         isExpanded = true
@@ -195,11 +195,11 @@ fun DropdownEstado(
                         modifier = Modifier.heightIn(max = 150.dp),
                     ) {
 
-                        if (estado.isNotEmpty()) {
+                        if (estado!!.isNotEmpty()) {
                             items(
                                 estados.filter {
                                     it.lowercase()
-                                        .contains(estado.lowercase()) || it.lowercase()
+                                        .contains(estado!!.lowercase()) || it.lowercase()
                                         .contains("others")
                                 }
                                     .sorted()
