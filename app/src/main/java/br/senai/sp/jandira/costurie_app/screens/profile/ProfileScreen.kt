@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.components.GradientButtonTags
 import br.senai.sp.jandira.costurie_app.components.ModalTags2
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -295,7 +296,9 @@ fun ProfileScreen(
                             painter = painterResource(id = R.drawable.settings_icon),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(35.dp).clickable {
+                                    navController.navigate("settings")
+                                }
                         )
                     }
                 }
@@ -321,7 +324,7 @@ fun ProfileScreen(
                     )
 
 
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
 
                     Column(
                     ) {
@@ -333,7 +336,7 @@ fun ProfileScreen(
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.height(28.dp)
                         )
-
+                        Spacer(modifier = Modifier.width(20.dp))
                         Text(
                             color = Color.White,
                             text = nome_de_usuario,
@@ -342,7 +345,7 @@ fun ProfileScreen(
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.height(22.dp)
                         )
-
+                        Spacer(modifier = Modifier.width(20.dp))
                         Row {
                             Image(
                                 painter = painterResource(id = R.drawable.icon_location),
@@ -414,15 +417,11 @@ fun ProfileScreen(
                         Arrangement.SpaceEvenly
                     ) {
                         viewModel.tags?.take(1)?.forEach { tag ->
-                            GradientButtonTag(
-                                onClick = {
-                                    // Faça algo quando uma tag for clicada
-                                },
+                            GradientButtonTags(
+                                onClick = {},
                                 text = tag.nome_tag,
                                 color1 = Destaque1,
                                 color2 = Destaque2,
-                                tagId = 0,
-                                textColor = Color(168, 155, 255, 255)
                             )
                         }
                         if ((viewModel.tags?.size ?: 0) > 1) {

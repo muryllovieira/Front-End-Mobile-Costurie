@@ -26,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,36 +44,30 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
-import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
-import br.senai.sp.jandira.costurie_app.model.TagResponse
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
-import br.senai.sp.jandira.costurie_app.repository.TagsRepository
+import br.senai.sp.jandira.costurie_app.model.TagResponseId
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
-import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
-import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
-import java.lang.reflect.Type
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
     lifecycleScope: LifecycleCoroutineScope,
     navController: NavController,
-    viewModel: UserViewModel
+    viewModel: UserViewModel,
+    localStorage: Storage
 ) {
 
     val viewModelEstado = viewModel<EstadoViewModel>()
@@ -144,7 +137,7 @@ fun EditProfileScreen(
         descricao: String,
         foto: Uri?,
         nome_de_usuario: String,
-        tags: List<TagsResponse>
+        tags: MutableList<TagResponseId>
     ) {
         val userRepository = UserRepository()
 
@@ -257,7 +250,35 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                       navController.navigate("tagsEditProfile")
+                                        navController.navigate("tagsEditProfile")
+
+                                        val array = UserRepositorySqlite(context).findUsers()
+
+                                        val user = array[0]
+
+                                        var id_usuario = user.id.toInt()
+                                        var token = user.token
+                                        var id_localizacao = viewModelIdLocalizacao
+                                        var bairro = bairroStateUser
+                                        var cidade = cidadeStateUser
+                                        var estado = estadoStateUser
+                                        var descricao = descricaoState
+                                        var foto = fotoUri
+                                        var nome_de_usuario = tagDeUsuarioState
+                                        var nome = nomeState
+
+                                        localStorage.salvarValor(context, id_usuario.toString(), "id")
+                                        localStorage.salvarValor(context, token, "token")
+                                        localStorage.salvarValor(context, id_localizacao.toString(), "id_localizacao")
+                                        localStorage.salvarValor(context, bairro, "bairro")
+                                        localStorage.salvarValor(context, estado, "estado")
+                                        localStorage.salvarValor(context, cidade, "cidade")
+                                        localStorage.salvarValor(context, descricao, "descricao")
+                                        localStorage.salvarValor(context, foto.toString(), "foto")
+                                        localStorage.salvarValor(context, nome_de_usuario, "nome_de_usuario")
+                                        localStorage.salvarValor(context, nome, "nome")
+
+
                                     },
                                 alignment = Alignment.TopEnd
                             )
@@ -287,8 +308,13 @@ fun EditProfileScreen(
                                                 foto = fotoUri,
                                                 nome_de_usuario = tagDeUsuarioState,
                                                 nome = nomeState,
-                                                tags = listOf(
-                                                    TagsResponse(id = 2, nome_tag = "Casual", id_categoria = 1, imagem = "https://img.freepik.com/free-photo/male-belt-sweater-accessories-clothes_1203-6421.jpg?w=740&t=st=1694351721~exp=1694352321~hmac=cebea3dc3c1f0bbb3b224d66947feddf4550fee45b41f3bfb7e9142ba1a5bc71")
+                                                tags = mutableListOf(
+//                                                    TagsResponse(
+//                                                        id = 2,
+//                                                        nome_tag = "Casual",
+//                                                        id_categoria = 1,
+//                                                        imagem = "https://img.freepik.com/free-photo/male-belt-sweater-accessories-clothes_1203-6421.jpg?w=740&t=st=1694351721~exp=1694352321~hmac=cebea3dc3c1f0bbb3b224d66947feddf4550fee45b41f3bfb7e9142ba1a5bc71"
+//                                                    )
                                                 )
                                             )
                                         }
@@ -299,10 +325,7 @@ fun EditProfileScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(14.dp)
-                                .clickable {
-                                    launcher.launch("image/*")
-                                },
+                                .padding(14.dp),
                             horizontalArrangement = Arrangement.Center
                         ) {
 
@@ -313,7 +336,10 @@ fun EditProfileScreen(
                                     contentDescription = "",
                                     modifier = Modifier
                                         .size(100.dp)
-                                        .clip(CircleShape),
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                        },
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
@@ -328,7 +354,10 @@ fun EditProfileScreen(
                                             RoundedCornerShape(10.dp)
                                         )
                                         .padding(borderWidth)
-                                        .clip(RoundedCornerShape(10.dp)),
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                        },
                                     contentScale = ContentScale.Crop
                                 )
                             }
@@ -347,8 +376,11 @@ fun EditProfileScreen(
                 ) {
 
                     Text(
-                        text = "Nome",
-                        fontSize = 24.sp
+
+                        text = "NOME",
+                        fontSize = 20.sp,
+                        color = Color.Black
+
                     )
                     CustomOutlinedTextField2(
                         value = nomeState,
@@ -362,7 +394,8 @@ fun EditProfileScreen(
                     )
                     Text(
                         text = "Tag De Usuário",
-                        fontSize = 24.sp
+                        fontSize = 20.sp,
+                        color = Color.Black
                     )
                     CustomOutlinedTextField2(
                         value = tagDeUsuarioState,
@@ -378,7 +411,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Estado", fontSize = 24.sp)
+                        Text(text = "Estado", fontSize = 20.sp, color = Color.Black)
                         DropdownEstado(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
@@ -391,7 +424,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Cidade", fontSize = 24.sp)
+                        Text(text = "Cidade", fontSize = 20.sp, color = Color.Black)
                         DropdownCidade(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
@@ -405,7 +438,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Bairro", fontSize = 24.sp)
+                        Text(text = "Bairro", fontSize = 20.sp, color = Color.Black)
                         DropdownBairro(
                             lifecycleScope = lifecycleScope,
                             viewModelCidade
@@ -414,7 +447,7 @@ fun EditProfileScreen(
                         }
                     }
 
-                    Text(text = "Descrição", fontSize = 24.sp)
+                    Text(text = "Descrição", fontSize = 20.sp, color = Color.Black)
                     CustomOutlinedTextField2(
                         value = descricaoState,
                         onValueChange = {

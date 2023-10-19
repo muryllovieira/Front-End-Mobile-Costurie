@@ -53,9 +53,12 @@ import br.senai.sp.jandira.costurie_app.components.GoogleButton
 import br.senai.sp.jandira.costurie_app.components.GradientButton
 import br.senai.sp.jandira.costurie_app.components.Line
 import br.senai.sp.jandira.costurie_app.components.WhiteButton
+import br.senai.sp.jandira.costurie_app.function.deleteUserSQLite
+import br.senai.sp.jandira.costurie_app.function.saveLogin
 import br.senai.sp.jandira.costurie_app.repository.CadastroRepository
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.UserService
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
@@ -146,12 +149,39 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                 val userRepository = CadastroRepository()
                 lifecycleScope.launch {
                     val response = userRepository.registerUser(name, email, password)
+                    var resultId = response.body()?.getAsJsonObject("usuario")
+                    var resulToken = response.body()?.get("token")!!.asString
+                    Log.i("location", "${response.body()}")
 
                     if (response.isSuccessful) {
                         val checagem = response.body()?.get("status")
                         if (checagem.toString() == "400") {
                             Toast.makeText(context, "Campos obrigatórios não foram preenchidos.", Toast.LENGTH_LONG).show()
                         } else {
+                            if (UserRepositorySqlite(context).findUsers().isEmpty()) {
+                                resultId?.get("id_usuario")?.asLong?.let { id ->
+                                    saveLogin(
+                                        context = context,
+                                        id = id,
+                                        nome = name,
+                                        token = resulToken.trim('"'),
+                                        email = email,
+                                        senha = password  // Você pode definir a senha aqui
+                                    )
+                                }
+                            } else {
+                                deleteUserSQLite(context = context, resultId?.get("id_usuario")?.asInt)
+                                resultId?.get("id_usuario")?.asLong?.let {id ->
+                                    saveLogin(
+                                        context = context,
+                                        id = id,
+                                        nome = name,
+                                        token = resulToken.trim('"'),
+                                        email = email,
+                                        senha = password  // Você pode definir a senha aqui
+                                    )
+                                }
+                            }
                             Toast.makeText(context, "Seja bem-vindo", Toast.LENGTH_SHORT).show()
                             navController.navigate("name")
                         }
@@ -163,7 +193,7 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                     }
                 }
             } else {
-                Toast.makeText(context, "Por favor, reolhe suas caixas de texto", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Por favor, reveja suas caixas de texto", Toast.LENGTH_SHORT).show()
             }
         }
 

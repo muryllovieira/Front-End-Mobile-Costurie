@@ -93,7 +93,9 @@ fun TagSelectScreen(
 
     fun filtro(text: String): List<TagsResponse> {
         lifecycleScope.launch {
-            tagsList = tagsRepository.getAllTags(user.token).body()!!.data
+            var result = tagsRepository.getAllTags(user.token).body()!!.data
+            var emptyArray = emptyList<TagsResponse>()
+            tagsList = if (result.isEmpty()) { emptyArray } else { result }
         }
         var newList: List<TagsResponse> = tagsList.filter {
             it.nome_tag.contains(text, ignoreCase = true)
@@ -131,7 +133,7 @@ fun TagSelectScreen(
 
                     IconButton(
                         onClick = {
-                            //navController.navigate("profileType")
+                            navController.navigate("profileType")
                         },
 
                         ) {
@@ -225,8 +227,8 @@ fun TagSelectScreen(
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         state = rememberLazyGridState(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(filtro(pesquisaState)) {
                             GradientButtonTag(

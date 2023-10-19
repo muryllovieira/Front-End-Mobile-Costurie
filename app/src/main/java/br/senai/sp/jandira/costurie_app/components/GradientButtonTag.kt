@@ -61,8 +61,7 @@ fun GradientButtonTag(
                 ),
                 shape = RoundedCornerShape(15.dp),
             )
-            .height(IntrinsicSize.Min)
-            .fillMaxWidth(),
+            .height(IntrinsicSize.Min),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
         ),
