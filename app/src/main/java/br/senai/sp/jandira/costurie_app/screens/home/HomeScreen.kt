@@ -157,7 +157,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     } else if (selectedIdexItem == 3) {
                         ChatsScreen(navController = navController)
                     } else {
-                        ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUserViewModel)
+                        ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUserViewModel,  localStorage = localStorage)
                     }
                 }
 

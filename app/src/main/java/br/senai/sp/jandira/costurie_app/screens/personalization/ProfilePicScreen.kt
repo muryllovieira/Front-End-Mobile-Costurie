@@ -83,12 +83,6 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage, lifecy
 
     val brush = Brush.horizontalGradient(listOf(Destaque1, Destaque2))
 
-    //obter fot oda galeria de imagens
-
-    var fotoUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-
     //REFERENCIA PARA ACESSO E MANiPULACAO DO CLOUD STORAGE
     var storageRef: StorageReference = FirebaseStorage.getInstance().reference.child("images")
 
@@ -96,6 +90,12 @@ fun ProfilePicScreen(navController: NavController, localStorage: Storage, lifecy
     var firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     var context = LocalContext.current
+
+    //obter fot oda galeria de imagens
+
+    var fotoUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
 
     //criar o objeto que abrira a galeria e retornara a uri da imagem selecionada
     val launcher = rememberLauncherForActivityResult(

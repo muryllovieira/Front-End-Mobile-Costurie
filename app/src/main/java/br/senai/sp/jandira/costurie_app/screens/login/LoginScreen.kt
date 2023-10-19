@@ -167,7 +167,7 @@ fun LoginScreen(navController: NavController, lifecycleScope: LifecycleCoroutine
                                         senha = password,
                                     )
                                 }
-                                navController.navigate("location")
+                                navController.navigate("home")
 
                             } else {
                                 Toast.makeText(context, "Dados do usuário inválidos", Toast.LENGTH_SHORT).show()

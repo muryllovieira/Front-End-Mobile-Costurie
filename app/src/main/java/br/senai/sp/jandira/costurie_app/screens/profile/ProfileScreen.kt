@@ -44,6 +44,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTags
 import br.senai.sp.jandira.costurie_app.components.ModalTags2
@@ -68,6 +69,7 @@ fun ProfileScreen(
     lifecycleScope: LifecycleCoroutineScope,
     navController: NavController,
     viewModel: UserViewModel,
+    localStorage: Storage,
 ) {
 
     var isModalOpen by remember { mutableStateOf(false) }
@@ -182,6 +184,10 @@ fun ProfileScreen(
                 estado = usuarioObject.getString("estado")
                 bairro = usuarioObject.getString("bairro")
                 id_localizacao = usuarioObject.getInt("id_localizacao")
+
+                localStorage.salvarValor(context, cidade, "cidade")
+                localStorage.salvarValor(context, estado, "estado")
+                localStorage.salvarValor(context, bairro, "bairro")
 
                 viewModel.id_usuario = id_usuario
                 viewModel.nome = nome

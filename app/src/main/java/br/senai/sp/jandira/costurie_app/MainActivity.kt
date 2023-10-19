@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                 val localStorage: Storage = Storage()
                 AnimatedNavHost(
                     navController = navController,
-                    startDestination = "main")
+                    startDestination = "login")
 
 
                 {
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "explore") { ExploreScreen(navController = navController) }
                     composable(route = "services") { ServicesScreen(navController = navController, lifecycleScope = lifecycleScope, categories = emptyList(), filterings = emptyList(), viewModelUserTags = viewModelUserTags, localStorage = localStorage) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
-                    composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser) }
+                    composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser,  localStorage = localStorage) }
                     composable(route = "profileViewed") { ProfileViewedScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser, localStorage = localStorage) }
                     composable(route = "profileList") { ProfileListScreen(navController = navController, lifecycleScope = lifecycleScope, profiles = emptyList(), viewModel = viewModelUser, viewModelUserTags = viewModelUserTags, localStorage = localStorage) }
                     composable(route = "editProfile") { EditProfileScreen(lifecycleScope = lifecycleScope, navController = navController, viewModel = viewModelUser, localStorage = localStorage) }
