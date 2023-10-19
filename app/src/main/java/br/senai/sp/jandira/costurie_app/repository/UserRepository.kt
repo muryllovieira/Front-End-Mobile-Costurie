@@ -27,9 +27,9 @@ class UserRepository {
         bairro: String,
         nome: String,
         descricao: String,
-        foto: Uri?,
+        foto: String?,
         nome_de_usuario: String,
-        tags: MutableList<TagResponseId>
+        tags: List<TagResponseId>
     ): Response<UserResponse> {
         val requestBody = JsonObject().apply {
             addProperty("id_usuario", id)

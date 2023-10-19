@@ -50,6 +50,8 @@ import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.model.TagResponseId
+import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.models_private.User
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -59,6 +61,9 @@ import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +91,11 @@ fun EditProfileScreen(
 
     val viewModelTagUsuario = viewModel.nome_de_usuario
 
+    //REFERENCIA PARA ACESSO E MANiPULACAO DO CLOUD STORAGE
+    var storageRef: StorageReference = FirebaseStorage.getInstance().reference.child("images")
+
+    //REFERENCIA PARA ACESSO E MANIPULACAO DO CLOUD FIRESTORE
+    var firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     var nomeState by remember {
         mutableStateOf(viewModelNome)
@@ -115,88 +125,19 @@ fun EditProfileScreen(
         ImageRequest.Builder(context).data(fotoUri).build()
     )
 
-    var cidadeStateUser by remember { mutableStateOf("") }
-    var estadoStateUser by remember { mutableStateOf("") }
-    var bairroStateUser by remember { mutableStateOf("") }
+    var cidadeStateUser by remember { mutableStateOf(localStorage.lerValor(context, "cidade")) }
+    var estadoStateUser by remember { mutableStateOf(localStorage.lerValor(context, "estado")) }
+    var bairroStateUser by remember { mutableStateOf(localStorage.lerValor(context, "bairro")) }
 
     val estados = viewModel.estados.value ?: emptyList()
     val cidades = viewModel.cidades.value ?: emptyList()
     val bairros = viewModel.bairros.value ?: emptyList()
 
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
     val scrollState = rememberScrollState()
-
-    fun updateUser(
-        id_usuario: Int,
-        token: String,
-        viewModel: UserViewModel,
-        id_localizacao: Int,
-        cidade: String,
-        estado: String,
-        bairro: String,
-        nome: String,
-        descricao: String,
-        foto: Uri?,
-        nome_de_usuario: String,
-        tags: MutableList<TagResponseId>
-    ) {
-        val userRepository = UserRepository()
-
-        lifecycleScope.launch {
-            Log.e("ID", "user: $id_usuario")
-            Log.e("token", "user: $token")
-
-            val array = UserRepositorySqlite(context).findUsers()
-
-            val user = array[0]
-
-            val response = userRepository.updateUser(
-                user.id.toInt(),
-                user.token,
-                id_localizacao,
-                cidade,
-                estado,
-                bairro,
-                nome,
-                descricao,
-                foto,
-                nome_de_usuario,
-                tags
-            )
-
-            Log.e("TAG4", "user: $response")
-            Log.i("TAG5", "user: ${response.body()}")
-
-            if (response.isSuccessful) {
-                Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
-                Log.e("user", "user: ${response.body()} ")
-
-                viewModel.setProfileEditSuccess(true)
-
-                navController.popBackStack()
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
-                val descricao = response.body()?.descricao
-                if (descricao != null) {
-                    if (descricao.length > 255)
-                        Log.e(
-                            MainActivity::class.java.simpleName,
-                            "Erro durante a atualização dos dados do usuário: ${errorBody}"
-                        )
-                    Toast.makeText(
-                        context,
-                        "Descricão grande demais",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                Toast.makeText(
-                    context,
-                    "Erro durante a atualização dos dados do usuário: $errorBody",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
 
     Costurie_appTheme {
 
@@ -250,35 +191,102 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                        navController.navigate("tagsEditProfile")
 
-                                        val array = UserRepositorySqlite(context).findUsers()
+                                        val id_usuario = user.id.toInt()
+                                        val token = user.token
+                                        val id_localizacao = viewModelIdLocalizacao
+                                        val bairro = bairroStateUser
+                                        val cidade = cidadeStateUser
+                                        val estado = estadoStateUser
+                                        val descricao = descricaoState
+                                        val foto = fotoUri
+                                        val nome_de_usuario = tagDeUsuarioState
+                                        val nome = nomeState
 
-                                        val user = array[0]
+                                        foto?.let {
+                                            storageRef
+                                                .putFile(it)
+                                                .addOnCompleteListener { task ->
 
-                                        var id_usuario = user.id.toInt()
-                                        var token = user.token
-                                        var id_localizacao = viewModelIdLocalizacao
-                                        var bairro = bairroStateUser
-                                        var cidade = cidadeStateUser
-                                        var estado = estadoStateUser
-                                        var descricao = descricaoState
-                                        var foto = fotoUri
-                                        var nome_de_usuario = tagDeUsuarioState
-                                        var nome = nomeState
+                                                    if (task.isSuccessful) {
 
-                                        localStorage.salvarValor(context, id_usuario.toString(), "id")
+                                                        storageRef.downloadUrl.addOnSuccessListener { uri ->
+
+                                                            val map = HashMap<String, Any>()
+                                                            map["pic"] = uri.toString()
+
+                                                            firebaseFirestore
+                                                                .collection("images")
+                                                                .add(map)
+                                                                .addOnCompleteListener { firestoreTask ->
+
+                                                                    if (firestoreTask.isSuccessful) {
+                                                                        Toast
+                                                                            .makeText(
+                                                                                context,
+                                                                                "UPLOAD REALIZADO COM SUCESSO",
+                                                                                Toast.LENGTH_SHORT
+                                                                            )
+                                                                            .show()
+                                                                    } else {
+                                                                        Toast
+                                                                            .makeText(
+                                                                                context,
+                                                                                "ERRO AO TENTAR REALIZAR O UPLOAD",
+                                                                                Toast.LENGTH_SHORT
+                                                                            )
+                                                                            .show()
+                                                                    }
+
+                                                                    localStorage.salvarValor(
+                                                                        context,
+                                                                        uri.toString(),
+                                                                        "foto"
+                                                                    )
+                                                                    //BARRA DE PROGRESSO DO UPLOAD
+                                                                }
+                                                        }
+
+                                                    } else {
+
+                                                        Toast
+                                                            .makeText(
+                                                                context,
+                                                                "ERRO AO TENTAR REALIZAR O UPLOAD",
+                                                                Toast.LENGTH_SHORT
+                                                            )
+                                                            .show()
+
+                                                    }
+
+                                                    //BARRA DE PROGRESSO DO UPLOAD
+
+                                                }
+                                        }
+
+                                        localStorage.salvarValor(
+                                            context,
+                                            id_usuario.toString(),
+                                            "id"
+                                        )
                                         localStorage.salvarValor(context, token, "token")
-                                        localStorage.salvarValor(context, id_localizacao.toString(), "id_localizacao")
-                                        localStorage.salvarValor(context, bairro, "bairro")
-                                        localStorage.salvarValor(context, estado, "estado")
-                                        localStorage.salvarValor(context, cidade, "cidade")
+                                        localStorage.salvarValor(
+                                            context,
+                                            id_localizacao.toString(),
+                                            "id_localizacao"
+                                        )
+                                        localStorage.salvarValor(context, bairro!!, "bairro")
+                                        localStorage.salvarValor(context, estado!!, "estado")
+                                        localStorage.salvarValor(context, cidade!!, "cidade")
                                         localStorage.salvarValor(context, descricao, "descricao")
-                                        localStorage.salvarValor(context, foto.toString(), "foto")
-                                        localStorage.salvarValor(context, nome_de_usuario, "nome_de_usuario")
+                                        localStorage.salvarValor(
+                                            context,
+                                            nome_de_usuario,
+                                            "nome_de_usuario"
+                                        )
                                         localStorage.salvarValor(context, nome, "nome")
 
-
+                                        navController.navigate("tagsEditProfile")
                                     },
                                 alignment = Alignment.TopEnd
                             )
@@ -289,34 +297,82 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                        val array = UserRepositorySqlite(context).findUsers()
-
-                                        val user = array[0]
-
                                         Log.e("user-teste", "EditProfileScreen: $user")
 
                                         if (viewModelIdLocalizacao != null) {
-                                            updateUser(
-                                                id_usuario = user.id.toInt(),
-                                                token = user.token,
-                                                viewModel,
-                                                id_localizacao = viewModelIdLocalizacao,
-                                                bairro = bairroStateUser,
-                                                cidade = cidadeStateUser,
-                                                estado = estadoStateUser,
-                                                descricao = descricaoState,
-                                                foto = fotoUri,
-                                                nome_de_usuario = tagDeUsuarioState,
-                                                nome = nomeState,
-                                                tags = mutableListOf(
-//                                                    TagsResponse(
-//                                                        id = 2,
-//                                                        nome_tag = "Casual",
-//                                                        id_categoria = 1,
-//                                                        imagem = "https://img.freepik.com/free-photo/male-belt-sweater-accessories-clothes_1203-6421.jpg?w=740&t=st=1694351721~exp=1694352321~hmac=cebea3dc3c1f0bbb3b224d66947feddf4550fee45b41f3bfb7e9142ba1a5bc71"
-//                                                    )
+                                            Log.i("verifica", "${estadoStateUser!!}")
+                                            localStorage.salvarValor(context, estadoStateUser!!, "estado")
+                                            Log.i("verifica", "${localStorage.lerValor(context, "estado")}")
+
+
+                                            localStorage.salvarValor(context, bairroStateUser!!, "bairro")
+                                            localStorage.salvarValor(context, cidadeStateUser!!, "cidade")
+                                            localStorage.salvarValor(context, descricaoState, "descricao")
+                                            localStorage.salvarValor(context, tagDeUsuarioState, "nome_de_usuario")
+                                            localStorage.salvarValor(context, nomeState, "nome")
+
+                                            lifecycleScope.launch {
+                                                var response = UserRepository().updateUser(
+                                                    id = user.id.toInt(),
+                                                    token = user.token,
+                                                    id_localizacao = viewModel.id_localizacao!!,
+                                                    bairro = localStorage.lerValor(context, "bairro")!!,
+                                                    cidade = localStorage.lerValor(context, "cidade")!!,
+                                                    estado = localStorage.lerValor(context, "estado")!!,
+                                                    descricao = localStorage.lerValor(context, "descricao")!!,
+                                                    foto = localStorage.lerValor(context, "foto"),
+                                                    nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")!!,
+                                                    nome = localStorage.lerValor(context, "nome")!!,
+                                                    tags = emptyList<TagResponseId>()
                                                 )
-                                            )
+
+                                                if (response.isSuccessful) {
+                                                    Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
+                                                    Log.e("user", "user: ${response.body()} ")
+
+                                                    viewModel.setProfileEditSuccess(true)
+
+                                                    navController.popBackStack()
+                                                } else {
+                                                    val errorBody = response.errorBody()?.string()
+                                                    Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
+                                                    val descricao = response.body()?.descricao
+                                                    if (descricao != null) {
+                                                        if (descricao.length > 255)
+                                                            Log.e(
+                                                                MainActivity::class.java.simpleName,
+                                                                "Erro durante a atualização dos dados do usuário: ${errorBody}"
+                                                            )
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Descricão grande demais",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Erro durante a atualização dos dados do usuário: $errorBody",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+
+
+//                                            updateUser(
+//                                                id_usuario = user.id.toInt(),
+//                                                token = user.token,
+//                                                viewModel,
+//                                                id_localizacao = viewModelIdLocalizacao,
+//                                                bairro = localStorage.lerValor(context, "bairro")!!,
+//                                                cidade = localStorage.lerValor(context, "cidade")!!,
+//                                                estado = localStorage.lerValor(context, "estado")!!,
+//                                                descricao = localStorage.lerValor(context, "descricao")!!,
+//                                                foto = localStorage.lerValor(context, "foto"),
+//                                                nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")!!,
+//                                                nome = localStorage.lerValor(context, "nome")!!,
+//                                                tags = mutableListOf()
+//                                            )
+
                                         }
                                     }
                             )
@@ -376,9 +432,11 @@ fun EditProfileScreen(
                 ) {
 
                     Text(
+
                         text = "NOME",
                         fontSize = 20.sp,
                         color = Color.Black
+
                     )
                     CustomOutlinedTextField2(
                         value = nomeState,

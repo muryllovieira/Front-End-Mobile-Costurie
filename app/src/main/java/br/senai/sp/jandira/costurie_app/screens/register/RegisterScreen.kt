@@ -332,8 +332,6 @@ fun RegisterScreen(navController: NavController, lifecycleScope: LifecycleCorout
                         },
                             text = stringResource(id = R.string.texto_botao_google_registre_se))
 
-                        Spacer(modifier = Modifier.height(5.dp))
-
                         WhiteButton(onClick = {
                             navController.navigate("login")
                         }, text = stringResource(id = R.string.texto_botao_login).uppercase())

@@ -103,7 +103,7 @@ fun TagsEditProfileScreen(
         bairro: String,
         nome: String,
         descricao: String,
-        foto: Uri?,
+        foto: String?,
         nome_de_usuario: String,
         tags: MutableList<TagResponseId>
     ) {
@@ -273,7 +273,7 @@ fun TagsEditProfileScreen(
                                                     cidade = cidade!!,
                                                     estado = estado!!,
                                                     descricao = descricao!!,
-                                                    foto = fotoUri,
+                                                    foto = localStorage.lerValor(context, "foto"),
                                                     nome_de_usuario = nome_de_usuario!!,
                                                     nome = nome!!,
                                                     tags = tagsArray
