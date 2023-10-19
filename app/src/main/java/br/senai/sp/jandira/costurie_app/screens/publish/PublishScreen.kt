@@ -9,6 +9,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,9 +53,10 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PublishScreen() {
+fun PublishScreen(navController: NavController) {
+    var openBottomSheet by remember { mutableStateOf(false) }
     Costurie_appTheme {
         val sheetState = rememberBottomSheetState(
             initialValue = BottomSheetValue.Collapsed
@@ -105,6 +119,36 @@ fun PublishScreen() {
                 .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
+
+                Text(text = "Publicar",
+                    color = Color.Red)
+                Button(
+                    onClick = { openBottomSheet = true },
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(text = "Show Bottom Sheet")
+                    if (openBottomSheet) {
+//                        ModalPublication(
+//                            onDismissRequest = { openBottomSheet = false }
+//                        ) {
+//                            Column(
+//                                modifier = Modifier.padding(16.dp)
+//                            ) {
+//                                Text(
+//                                    text = "This is the content of the bottom sheet",
+//                                    fontSize = 20.sp
+//                                )
+//
+//                                Button(
+//                                    onClick = { openBottomSheet = false },
+//                                    modifier = Modifier.padding(top = 16.dp)
+//                                ) {
+//                                    Text("Close Bottom Sheet")
+//                                }
+//                            }
+//                        }
+                    }
+
                 Button(onClick = {
                     scope.launch {
                         if(sheetState.isCollapsed) {
@@ -115,6 +159,7 @@ fun PublishScreen() {
                     }
                 }) {
                     Text(text = "Publicar")
+
                 }
             }
         }

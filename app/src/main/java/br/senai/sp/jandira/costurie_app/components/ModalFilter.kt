@@ -68,7 +68,7 @@ fun ModalFilter(
             painter = painterResource(id = R.drawable.filter_icon),
             contentDescription = "",
             modifier = Modifier
-                .size(40.dp)
+                .size(50.dp)
                 .clickable { },
             colorFilter = ColorFilter.tint(Color.Black)
         )
