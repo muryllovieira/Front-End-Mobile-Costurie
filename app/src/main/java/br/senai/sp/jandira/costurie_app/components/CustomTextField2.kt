@@ -54,6 +54,34 @@ fun CustomOutlinedTextField2(
     searchIcon: Boolean = false,
 ) {
 
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        modifier = modifier
+            .background(
+                colorResource(id = R.color.principal_2),
+                shape = RoundedCornerShape(20.dp),
+            ),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = borderColor,
+            unfocusedBorderColor = borderColor,
+        ),
+        label = { Text(label, fontSize = 12.sp, color = Contraste2) },
+        textStyle = TextStyle.Default.copy(fontSize = 15.sp, color = Color.Black),
+        singleLine = true,
+        trailingIcon = {
+            if (searchIcon) {
+                Icon(
+                    painter = painterResource(id = R.drawable.search_icon),
+                    contentDescription = "",
+                    modifier = Modifier.size(30.dp)
+                        .padding(bottom = 4.dp, end = 2.dp)
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.search_icon),
+                    contentDescription = "",
+                    tint = Color.Transparent
     Box(contentAlignment = Alignment.TopStart) {
         OutlinedTextField(
             value = value,
