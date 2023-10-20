@@ -57,9 +57,12 @@
     <string name="descricao_tag_de_servico">*As tags de serviço são utilizadas pelas costureiras para identificar que tipo de tipo de serviço elas prestam.</string>
     <string name="tag_de_servico_label">Pesquise por uma tag...</string>
     <string name="servicos_titulo">SERVIÇOS</string>
+    <string name="explorar_titulo">EXPLORAR</string>
     <string name="servicos_categorias_textfield">Procurar um serviço</string>
     <string name="lista_de_perfis_textfield">Procurar um perfil</string>
     <string name="servicos_filtros_text">FILTROS</string>
+    <string name="mais_populares_text">MAIS POPULARES</string>
+    <string name="recentes_text">RECENTES</string>
     <string name="text_filtragem_geral">GERAL</string>
     <string name="text_filtragem_vestuario">VESTUÁRIO</string>
     <string name="text_filtragem_acessorios">ACESSÓRIOS</string>

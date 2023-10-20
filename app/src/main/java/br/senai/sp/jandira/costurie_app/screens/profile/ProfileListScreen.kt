@@ -49,6 +49,7 @@ import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.ModalFilter
+import br.senai.sp.jandira.costurie_app.components.ModalLocation
 import br.senai.sp.jandira.costurie_app.model.UsersTagResponse
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
@@ -78,6 +79,8 @@ fun ProfileListScreen(
 ) {
 
     var context = LocalContext.current
+
+    var isDialogOpen by remember { mutableStateOf(false) }
 
     var pesquisaState by remember {
         mutableStateOf("")
@@ -198,14 +201,7 @@ fun ProfileListScreen(
                                 .height(62.dp)
                         )
 
-                        Image(
-                            painter = painterResource(id = R.drawable.filter_icon),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clickable { },
-                            colorFilter = ColorFilter.tint(Color.White)
-                        )
+                        ModalLocation(lifecycleScope, localStorage)
                     }
                 }
 
@@ -217,13 +213,13 @@ fun ProfileListScreen(
                         Card(
                             modifier = Modifier
                                 .size(380.dp, 85.dp)
-                                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp).
-                            clickable {
-                                      var id = profile.id
-                                localStorage.salvarValor(context, id.toString(), "idUsuario")
+                                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp)
+                                .clickable {
+                                    var id = profile.id
+                                    localStorage.salvarValor(context, id.toString(), "idUsuario")
 
-                                navController.navigate("profileViewed")
-                            },
+                                    navController.navigate("profileViewed")
+                                },
                             backgroundColor = Color.White,
                             shape = RoundedCornerShape(15.dp),
                             elevation = AppBarDefaults.TopAppBarElevation

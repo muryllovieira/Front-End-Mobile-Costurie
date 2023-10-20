@@ -14,14 +14,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -53,7 +49,7 @@ import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun PublishScreen(navController: NavController) {
     var openBottomSheet by remember { mutableStateOf(false) }
@@ -70,11 +66,12 @@ fun PublishScreen(navController: NavController) {
             sheetShape = RoundedCornerShape(20.dp),
             sheetElevation = 10.dp,
             sheetContent = {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(550.dp)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(550.dp)
                 ) {
-                    Row (
+                    Row(
                         Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -88,7 +85,7 @@ fun PublishScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(15.dp))
 
-                    Row (
+                    Row(
                         Modifier
                             .fillMaxWidth()
                             .padding(start = 30.dp, top = 60.dp, end = 30.dp),
@@ -99,7 +96,7 @@ fun PublishScreen(navController: NavController) {
                             contentDescription = "",
                             Modifier
                                 .size(35.dp)
-                                .clickable {  }
+                                .clickable { }
                         )
 
                         Image(
@@ -107,21 +104,24 @@ fun PublishScreen(navController: NavController) {
                             contentDescription = "",
                             Modifier
                                 .size(35.dp)
-                                .clickable {  }
+                                .clickable { }
                         )
                     }
                 }
-        },
+            },
             sheetBackgroundColor = Color.White,
             sheetPeekHeight = 0.dp
         ) {
-            Box(modifier = Modifier
-                .fillMaxSize(),
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
 
-                Text(text = "Publicar",
-                    color = Color.Red)
+                Text(
+                    text = "Publicar",
+                    color = Color.Red
+                )
                 Button(
                     onClick = { openBottomSheet = true },
                     modifier = Modifier.padding(16.dp)
@@ -149,25 +149,20 @@ fun PublishScreen(navController: NavController) {
 //                        }
                     }
 
-                Button(onClick = {
-                    scope.launch {
-                        if(sheetState.isCollapsed) {
-                            sheetState.expand()
-                        } else {
-                            sheetState.collapse()
+                    Button(onClick = {
+                        scope.launch {
+                            if (sheetState.isCollapsed) {
+                                sheetState.expand()
+                            } else {
+                                sheetState.collapse()
+                            }
                         }
-                    }
-                }) {
-                    Text(text = "Publicar")
+                    }) {
+                        Text(text = "Publicar")
 
+                    }
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PublishScreenPreview() {
-    PublishScreen()
 }
