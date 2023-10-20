@@ -70,8 +70,7 @@ fun GoogleButton(
 
                 Text(
                     text = text,
-                    style =
-                    MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall,
                     fontSize = 12.sp,
                     fontWeight = FontWeight(600),
                     color = colorResource(id = R.color.destaque_1),

@@ -1,14 +1,15 @@
 package br.senai.sp.jandira.costurie_app.repository
 
 import android.net.Uri
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import android.util.Log
+import br.senai.sp.jandira.costurie_app.model.TagResponseId
 import br.senai.sp.jandira.costurie_app.model.UserResponse
+import br.senai.sp.jandira.costurie_app.model.UserTagsResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.UserService
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Response
-import retrofit2.http.Url
 
 class UserRepository {
     private val apiService = RetrofitFactory.getInstance().create(UserService::class.java)
@@ -26,9 +27,9 @@ class UserRepository {
         bairro: String,
         nome: String,
         descricao: String,
-        foto: Uri?,
+        foto: String?,
         nome_de_usuario: String,
-        tags: List<TagsResponse>?
+        tags: List<TagResponseId>
     ): Response<UserResponse> {
         val requestBody = JsonObject().apply {
             addProperty("id_usuario", id)
@@ -48,7 +49,6 @@ class UserRepository {
                 for (tag in tags) {
                     val tagObject = JsonObject().apply {
                         addProperty("id_tag", tag.id)
-                        addProperty("nome", tag.nome_tag)
                     }
                     tagsArray.add(tagObject)
                 }
@@ -83,6 +83,8 @@ class UserRepository {
         estado: String,
         bairro: String
     ): Response<UserResponse> {
+        Log.i("location", "updateLocation: ${token}")
+        Log.i("location", "updateLocation: ${id}")
         val requestBody = JsonObject().apply {
             addProperty("id_usuario", id)
             addProperty("cidade", cidade)
@@ -90,6 +92,27 @@ class UserRepository {
             addProperty("bairro", bairro)
         }
         return apiService.updateLocation(requestBody, token)
+    }
+
+    suspend fun updateUserTags(
+        id: Int,
+        token: String,
+        tags: MutableList<TagResponseId>
+    ): Response<UserTagsResponse> {
+        val requestBody = JsonObject().apply {
+            addProperty("id_usuario", id)
+            val tagsArray = JsonArray()
+            if (tags != null) {
+                for (tag in tags) {
+                    val tagObject = JsonObject().apply {
+                        addProperty("id", tag.id)
+                    }
+                    tagsArray.add(tagObject)
+                }
+            }
+            add("tags", tagsArray)
+        }
+        return apiService.updateUserTags(requestBody, token)
     }
 
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,14 +30,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -47,14 +47,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
-import br.senai.sp.jandira.costurie_app.components.SearchAppBar
+import br.senai.sp.jandira.costurie_app.Storage
+import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
+import br.senai.sp.jandira.costurie_app.components.DropdownServicesTag
+import br.senai.sp.jandira.costurie_app.function.saveLogin
 import br.senai.sp.jandira.costurie_app.model.Filtering
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.repository.CategoriesRepository
@@ -62,6 +66,8 @@ import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
+import br.senai.sp.jandira.costurie_app.ui.theme.Kufam
+import br.senai.sp.jandira.costurie_app.viewModel.UserTagViewModel
 import coil.compose.AsyncImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -75,8 +81,16 @@ fun ServicesScreen(
     navController: NavController,
     lifecycleScope: LifecycleCoroutineScope,
     filterings: List<Filtering>,
-    categories: List<TagsResponse>
+    categories: List<TagsResponse>,
+    viewModelUserTags: UserTagViewModel,
+    localStorage: Storage
 ) {
+
+    val categoryClickedViewModel: CategoryClickedViewModel = viewModel()
+
+    var pesquisaState by remember {
+        mutableStateOf("")
+    }
 
     val color = Contraste
 
@@ -90,6 +104,12 @@ fun ServicesScreen(
         mutableStateOf(listOf<TagsResponse>())
     }
 
+    fun filtro(text: String): List<TagsResponse> {
+        var newList: List<TagsResponse> = listTags.filter {
+            it.nome_tag.contains(text, ignoreCase = true)
+        }
+        return newList
+    }
 
     suspend fun getTags(
         token: String,
@@ -158,11 +178,18 @@ fun ServicesScreen(
                 val type: Type = object : TypeToken<List<Filtering>>() {}.type
                 val categoriesList: List<Filtering> = Gson().fromJson(categoriesJson, type)
 
+                // Reorganize a lista para que o último elemento seja o primeiro
+                val reorderedList = mutableListOf<Filtering>()
+                if (categoriesList.isNotEmpty()) {
+                    reorderedList.add(categoriesList.last())  // Adiciona o último elemento primeiro
+                    reorderedList.addAll(categoriesList.dropLast(1))  // Adiciona os elementos restantes
+                }
+
                 // Log para verificar as categorias recebidas
                 Log.e(MainActivity::class.java.simpleName, "Categorias recebidas")
-                Log.e("user", "user: $categoriesList")
+                Log.e("user", "user: $reorderedList")
 
-                return categoriesList
+                return reorderedList
 
 
             }
@@ -210,17 +237,26 @@ fun ServicesScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 30.dp, top = 10.dp),
+                    color = Color.Black,
                     text = stringResource(id = R.string.servicos_titulo),
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.SemiBold
                 )
 
-                SearchAppBar(
-                    text = stringResource(id = R.string.servicos_categorias_textfield),
-                    onTextChange = { },
-                    onCloseClicked = { /*TODO*/ },
-                    onSearchClicked = { }
+                CustomOutlinedTextField2(
+                    value = pesquisaState,
+                    onValueChange = {
+                        pesquisaState = it
+                        filtro(pesquisaState)
+                    },
+                    label = stringResource(id = R.string.tag_de_servico_label),
+                    borderColor = Color.Transparent,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(62.dp)
+                        .padding(horizontal = 32.dp),
+                    searchIcon = true
                 )
 
                 Text(
@@ -228,6 +264,7 @@ fun ServicesScreen(
                         .padding(top = 15.dp)
                         .fillMaxWidth()
                         .padding(start = 30.dp),
+                    color = Color.Black,
                     text = stringResource(id = R.string.servicos_filtros_text),
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 22.sp,
@@ -242,6 +279,7 @@ fun ServicesScreen(
                                 .size(100.dp, 45.dp)
                                 .padding(start = 16.dp, 2.dp)
                                 .clickable {
+                                    categoryClickedViewModel.setClickedCategory(filtering.id)
                                     val categoriaSelecionada = filtering.nome
                                     val array = UserRepositorySqlite(context).findUsers()
                                     val user = array[0]
@@ -253,7 +291,7 @@ fun ServicesScreen(
                                         listTags = tags
                                     }
                                 },
-                            backgroundColor = Color.Transparent
+                            elevation = 0.dp
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -268,14 +306,16 @@ fun ServicesScreen(
                                     color = Contraste
                                 )
 
-                                Canvas(
-                                    modifier = Modifier.size(6.dp),
-                                    onDraw = {
-                                        drawCircle(
-                                            color = color
-                                        )
-                                    }
-                                )
+                                if (categoryClickedViewModel.getClickedCategory(filtering.id)) {
+                                    Canvas(
+                                        modifier = Modifier.size(6.dp),
+                                        onDraw = {
+                                            drawCircle(
+                                                color = color
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -283,8 +323,10 @@ fun ServicesScreen(
 
                 Row(
                     modifier = Modifier
+
                         .padding(top = 28.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     LazyVerticalGrid(
@@ -294,13 +336,34 @@ fun ServicesScreen(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
-                        items(listTags) { tags ->
+                        items(filtro(pesquisaState)) { tags ->
                             Card(
                                 modifier = Modifier
                                     .size(170.dp, 85.dp)
                                     .clickable {
+                                        val idTagSelecionada = tags.id.toString()
                                         val tagSelecionada = tags.nome_tag
-                                        Log.d("TAGSELECIONADA", "ServicesScreen: $tagSelecionada")
+
+                                        localStorage.salvarValor(
+                                            context,
+                                            idTagSelecionada,
+                                            "idSelecionado"
+                                        )
+                                        localStorage.salvarValor(
+                                            context,
+                                            tagSelecionada,
+                                            "tagSelecionada"
+                                        )
+
+//                                        viewModelUserTags.id = idTagSelecionada
+//                                        viewModelUserTags.nome = tagSelecionada
+
+
+                                        navController.navigate("profileList")
+                                        Log.d(
+                                            "TAGSELECIONADA",
+                                            "ServicesScreen: $idTagSelecionada, $tagSelecionada"
+                                        )
                                     },
                                 shape = RoundedCornerShape(15.dp),
                                 border = BorderStroke(
@@ -318,7 +381,12 @@ fun ServicesScreen(
 
                                 val colorMatrix = ColorMatrix().apply {
                                     // Aplicando o ajuste de contraste
-                                    setToScale(1f + fatorContraste, 1f + fatorContraste, 1f + fatorContraste, 1f)
+                                    setToScale(
+                                        1f + fatorContraste,
+                                        1f + fatorContraste,
+                                        1f + fatorContraste,
+                                        1f
+                                    )
                                 }
 
                                 AsyncImage(
@@ -337,13 +405,14 @@ fun ServicesScreen(
                                         fontSize = 18.sp,
                                         color = Color.White,
                                         modifier = Modifier.padding(start = 12.dp),
-                                        fontWeight = FontWeight.SemiBold,
+                                        fontWeight = FontWeight.Light,
                                         style = TextStyle(
                                             shadow = Shadow(
                                                 color = Color.Black,
                                                 offset = Offset(0f, 6f),
                                             )
-                                        )
+                                        ),
+                                        fontFamily = Kufam
                                     )
                                 }
                             }
@@ -353,4 +422,31 @@ fun ServicesScreen(
             }
         }
     }
+}
+
+class CategoryClickedViewModel : ViewModel() {
+    private var isClicked = mutableStateMapOf<Int, Boolean>()
+    private var arrayFalse = mutableListOf<Int>()
+    private var valueTrue: Int = 0
+    fun getClickedCategory(categoryId: Int): Boolean {
+        if (!arrayFalse.contains(categoryId)) {
+            arrayFalse.add(categoryId)
+        }
+
+        return isClicked[categoryId] ?: false
+    }
+
+    fun setClickedCategory(categoryId: Int) {
+        valueTrue = categoryId
+
+        for (i in arrayFalse) {
+            if (i != valueTrue) {
+                isClicked[i] = false
+            } else {
+                isClicked[categoryId] = true
+            }
+        }
+    }
+
+
 }

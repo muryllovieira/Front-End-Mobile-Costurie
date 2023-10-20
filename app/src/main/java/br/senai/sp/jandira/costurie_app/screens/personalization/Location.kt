@@ -85,6 +85,12 @@ fun LocationScreen(navController: NavController, lifecycleScope: LifecycleCorout
     var estadoStateUser by remember { mutableStateOf("") }
     var bairroStateUser by remember { mutableStateOf("") }
 
+    Log.i("location", "${user.id.toInt()}")
+    Log.i("location", "${user.token}")
+    Log.i("location", "${cidadeStateUser}")
+    Log.i("location", "${estadoStateUser}")
+    Log.i("location", "${bairroStateUser}")
+
     Costurie_appTheme {
         Surface(
             modifier = Modifier
@@ -123,6 +129,9 @@ fun LocationScreen(navController: NavController, lifecycleScope: LifecycleCorout
                         onClick = {
                             if (cidadeStateUser.isNotEmpty() || estadoStateUser.isNotEmpty() || bairroStateUser.isNotEmpty()) {
                                 lifecycleScope.launch {
+                                    Log.i("location", "${userRepository.getUser(user.id.toInt(), user.token).body()}")
+                                    Log.i("location", "${userRepository.getUser(user.id.toInt(), user.token)}")
+
                                     userRepository.updateLocation(
                                         id = user.id.toInt(),
                                         token = user.token,
@@ -130,6 +139,7 @@ fun LocationScreen(navController: NavController, lifecycleScope: LifecycleCorout
                                         estado = estadoStateUser,
                                         bairro = bairroStateUser
                                     )
+
                                 }
                                 navController.navigate("profileType")
                             } else {

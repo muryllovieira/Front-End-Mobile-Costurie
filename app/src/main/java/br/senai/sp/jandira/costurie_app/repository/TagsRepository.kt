@@ -1,10 +1,12 @@
 package br.senai.sp.jandira.costurie_app.repository
 
-import br.senai.sp.jandira.costurie_app.model.CategoryAndTags
+import br.senai.sp.jandira.costurie_app.model.BaseResponseTag
+import br.senai.sp.jandira.costurie_app.model.BaseResponseTag2
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.model.UserResponse
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import br.senai.sp.jandira.costurie_app.service.TagsService
-import br.senai.sp.jandira.costurie_app.service.UserService
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Response
 
@@ -20,9 +22,22 @@ class TagsRepository {
         return apiService.getTags(requestBody, token)
     }
 
-    suspend fun getAllTags(token: String): Response<CategoryAndTags> {
+    suspend fun getAllTags(token: String): Response<BaseResponseTag> {
 
         return apiService.getAllTags(token)
+    }
 
+    suspend fun getAllTags2(token: String): Response<BaseResponseTag2> {
+
+        return apiService.getAllTags2(token)
+    }
+
+    suspend fun getUserByTag(token: String, id_tag: Int, nome_tag: String): Response<JsonObject> {
+        val requestBody = JsonObject().apply {
+            addProperty("id_tag", id_tag)
+            addProperty("nome_tag", nome_tag)
+        }
+
+        return apiService.getUserByTag(requestBody, token)
     }
 }

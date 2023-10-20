@@ -1,7 +1,9 @@
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,7 +30,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,7 +44,9 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.components.GradientButtonTags
 import br.senai.sp.jandira.costurie_app.components.ModalTags2
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -61,6 +69,7 @@ fun ProfileScreen(
     lifecycleScope: LifecycleCoroutineScope,
     navController: NavController,
     viewModel: UserViewModel,
+    localStorage: Storage,
 ) {
 
     var isModalOpen by remember { mutableStateOf(false) }
@@ -176,6 +185,10 @@ fun ProfileScreen(
                 bairro = usuarioObject.getString("bairro")
                 id_localizacao = usuarioObject.getInt("id_localizacao")
 
+                localStorage.salvarValor(context, cidade, "cidade")
+                localStorage.salvarValor(context, estado, "estado")
+                localStorage.salvarValor(context, bairro, "bairro")
+
                 viewModel.id_usuario = id_usuario
                 viewModel.nome = nome
                 viewModel.descricao = descricao
@@ -254,6 +267,7 @@ fun ProfileScreen(
                 Row(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
+                        .height(35.dp)
                         .fillMaxWidth(),
                     Arrangement.SpaceBetween
                 ) {
@@ -272,7 +286,7 @@ fun ProfileScreen(
                         Arrangement.End
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.icon_edit),
+                            painter = painterResource(id = R.drawable.edit_icon),
                             contentDescription = "",
                             modifier = Modifier
                                 .size(35.dp)
@@ -285,10 +299,12 @@ fun ProfileScreen(
                         Spacer(modifier = Modifier.width(18.dp))
 
                         Image(
-                            painter = painterResource(id = R.drawable.icon_config),
+                            painter = painterResource(id = R.drawable.settings_icon),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(35.dp).clickable {
+                                    navController.navigate("settings")
+                                }
                         )
                     }
                 }
@@ -305,10 +321,16 @@ fun ProfileScreen(
                         contentDescription = "",
                         modifier = Modifier
                             .size(100.dp)
+                            .border(BorderStroke(borderWidth, Color.White),
+                                RoundedCornerShape(10.dp)
+                            )
+                            .padding(borderWidth)
+                            .clip(RoundedCornerShape(10.dp)),
+                        contentScale = ContentScale.Crop
                     )
 
 
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
 
                     Column(
                     ) {
@@ -316,20 +338,20 @@ fun ProfileScreen(
                             color = Color.White,
                             text = nome,
                             style = MaterialTheme.typography.bodySmall,
-                            fontSize = 22.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.height(28.dp)
                         )
-
+                        Spacer(modifier = Modifier.width(20.dp))
                         Text(
                             color = Color.White,
                             text = nome_de_usuario,
                             style = MaterialTheme.typography.bodySmall,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.height(22.dp)
                         )
-
+                        Spacer(modifier = Modifier.width(20.dp))
                         Row {
                             Image(
                                 painter = painterResource(id = R.drawable.icon_location),
@@ -342,7 +364,7 @@ fun ProfileScreen(
                                 color = Color.White,
                                 text = "$cidade, $estado",
                                 style = MaterialTheme.typography.bodySmall,
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier.height(20.dp)
                             )
@@ -350,14 +372,14 @@ fun ProfileScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(60.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Spacer(modifier = Modifier.height(40.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     WhiteButtonSmall(
                         onClick = {
@@ -400,25 +422,22 @@ fun ProfileScreen(
                             .fillMaxWidth(),
                         Arrangement.SpaceEvenly
                     ) {
-//                        viewModel.tags?.take(1)?.forEach { tag ->
-//                            GradientButtonTag(
-//                                onClick = {
-//                                    // Faça algo quando uma tag for clicada
-//                                },
-//                                text = tag.nome_tag,
-//                                color1 = Destaque1,
-//                                color2 = Destaque2,
-//                                viewModel,
-//                            )
-//                        }
+                        viewModel.tags?.take(1)?.forEach { tag ->
+                            GradientButtonTags(
+                                onClick = {},
+                                text = tag.nome_tag,
+                                color1 = Destaque1,
+                                color2 = Destaque2,
+                            )
+                        }
                         if ((viewModel.tags?.size ?: 0) > 1) {
                             ModalTags2(color1 = Destaque1, color2 = Destaque2, viewModel)
                         }
                     }
                 }
-
-
             }
         }
     }
 }
+
+val borderWidth = 1.dp

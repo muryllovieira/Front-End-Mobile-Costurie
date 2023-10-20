@@ -5,7 +5,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,18 +19,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,35 +44,35 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.MainActivity
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
-import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
+import br.senai.sp.jandira.costurie_app.model.TagResponseId
 import br.senai.sp.jandira.costurie_app.model.TagsResponse
-import br.senai.sp.jandira.costurie_app.repository.TagsRepository
+import br.senai.sp.jandira.costurie_app.models_private.User
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
-import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
-import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.viewModel.BairroViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.EstadoViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
-import java.lang.reflect.Type
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
     lifecycleScope: LifecycleCoroutineScope,
     navController: NavController,
-    viewModel: UserViewModel
+    viewModel: UserViewModel,
+    localStorage: Storage
 ) {
 
     val viewModelEstado = viewModel<EstadoViewModel>()
@@ -87,6 +91,11 @@ fun EditProfileScreen(
 
     val viewModelTagUsuario = viewModel.nome_de_usuario
 
+    //REFERENCIA PARA ACESSO E MANiPULACAO DO CLOUD STORAGE
+    var storageRef: StorageReference = FirebaseStorage.getInstance().reference.child("images")
+
+    //REFERENCIA PARA ACESSO E MANIPULACAO DO CLOUD FIRESTORE
+    var firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     var nomeState by remember {
         mutableStateOf(viewModelNome)
@@ -116,88 +125,19 @@ fun EditProfileScreen(
         ImageRequest.Builder(context).data(fotoUri).build()
     )
 
-    var cidadeStateUser by remember { mutableStateOf("") }
-    var estadoStateUser by remember { mutableStateOf("") }
-    var bairroStateUser by remember { mutableStateOf("") }
+    var cidadeStateUser by remember { mutableStateOf(localStorage.lerValor(context, "cidade")) }
+    var estadoStateUser by remember { mutableStateOf(localStorage.lerValor(context, "estado")) }
+    var bairroStateUser by remember { mutableStateOf(localStorage.lerValor(context, "bairro")) }
 
     val estados = viewModel.estados.value ?: emptyList()
     val cidades = viewModel.cidades.value ?: emptyList()
     val bairros = viewModel.bairros.value ?: emptyList()
 
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
     val scrollState = rememberScrollState()
-
-    fun updateUser(
-        id_usuario: Int,
-        token: String,
-        viewModel: UserViewModel,
-        id_localizacao: Int,
-        cidade: String,
-        estado: String,
-        bairro: String,
-        nome: String,
-        descricao: String,
-        foto: Uri?,
-        nome_de_usuario: String,
-        tags: List<TagsResponse>
-    ) {
-        val userRepository = UserRepository()
-
-        lifecycleScope.launch {
-            Log.e("ID", "user: $id_usuario")
-            Log.e("token", "user: $token")
-
-            val array = UserRepositorySqlite(context).findUsers()
-
-            val user = array[0]
-
-            val response = userRepository.updateUser(
-                user.id.toInt(),
-                user.token,
-                id_localizacao,
-                cidade,
-                estado,
-                bairro,
-                nome,
-                descricao,
-                foto,
-                nome_de_usuario,
-                tags
-            )
-
-            Log.e("TAG4", "user: $response")
-            Log.i("TAG5", "user: ${response.body()}")
-
-            if (response.isSuccessful) {
-                Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
-                Log.e("user", "user: ${response.body()} ")
-
-                viewModel.setProfileEditSuccess(true)
-
-                navController.popBackStack()
-            } else {
-                val errorBody = response.errorBody()?.string()
-                Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
-                val descricao = response.body()?.descricao
-                if (descricao != null) {
-                    if (descricao.length > 255)
-                        Log.e(
-                            MainActivity::class.java.simpleName,
-                            "Erro durante a atualização dos dados do usuário: ${errorBody}"
-                        )
-                    Toast.makeText(
-                        context,
-                        "Descricão grande demais",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                Toast.makeText(
-                    context,
-                    "Erro durante a atualização dos dados do usuário: $errorBody",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
 
     Costurie_appTheme {
 
@@ -246,12 +186,108 @@ fun EditProfileScreen(
                                     }
                             )
                             Image(
-                                painter = painterResource(id = R.drawable.icon_edit),
+                                painter = painterResource(id = R.drawable.edit_icon),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                       navController.navigate("tagsEditProfile")
+
+                                        val id_usuario = user.id.toInt()
+                                        val token = user.token
+                                        val id_localizacao = viewModelIdLocalizacao
+                                        val bairro = bairroStateUser
+                                        val cidade = cidadeStateUser
+                                        val estado = estadoStateUser
+                                        val descricao = descricaoState
+                                        val foto = fotoUri
+                                        val nome_de_usuario = tagDeUsuarioState
+                                        val nome = nomeState
+
+                                        foto?.let {
+                                            storageRef
+                                                .putFile(it)
+                                                .addOnCompleteListener { task ->
+
+                                                    if (task.isSuccessful) {
+
+                                                        storageRef.downloadUrl.addOnSuccessListener { uri ->
+
+                                                            val map = HashMap<String, Any>()
+                                                            map["pic"] = uri.toString()
+
+                                                            firebaseFirestore
+                                                                .collection("images")
+                                                                .add(map)
+                                                                .addOnCompleteListener { firestoreTask ->
+
+                                                                    if (firestoreTask.isSuccessful) {
+                                                                        Toast
+                                                                            .makeText(
+                                                                                context,
+                                                                                "UPLOAD REALIZADO COM SUCESSO",
+                                                                                Toast.LENGTH_SHORT
+                                                                            )
+                                                                            .show()
+                                                                    } else {
+                                                                        Toast
+                                                                            .makeText(
+                                                                                context,
+                                                                                "ERRO AO TENTAR REALIZAR O UPLOAD",
+                                                                                Toast.LENGTH_SHORT
+                                                                            )
+                                                                            .show()
+                                                                    }
+
+                                                                    localStorage.salvarValor(
+                                                                        context,
+                                                                        uri.toString(),
+                                                                        "foto"
+                                                                    )
+                                                                    //BARRA DE PROGRESSO DO UPLOAD
+                                                                }
+                                                        }
+
+                                                    } else {
+
+                                                        Toast
+                                                            .makeText(
+                                                                context,
+                                                                "ERRO AO TENTAR REALIZAR O UPLOAD",
+                                                                Toast.LENGTH_SHORT
+                                                            )
+                                                            .show()
+
+                                                    }
+
+                                                    //BARRA DE PROGRESSO DO UPLOAD
+
+                                                }
+                                        }
+
+                                        localStorage.salvarValor(
+                                            context,
+                                            id_usuario.toString(),
+                                            "id"
+                                        )
+                                        localStorage.salvarValor(context, token, "token")
+                                        localStorage.salvarValor(
+                                            context,
+                                            id_localizacao.toString(),
+                                            "id_localizacao"
+                                        )
+                                        localStorage.salvarValor(context, bairro!!, "bairro")
+                                        localStorage.salvarValor(context, estado!!, "estado")
+                                        localStorage.salvarValor(context, cidade!!, "cidade")
+                                        localStorage.salvarValor(context, descricao, "descricao")
+                                        localStorage.salvarValor(
+                                            context,
+                                            nome_de_usuario,
+                                            "nome_de_usuario"
+                                        )
+                                        localStorage.salvarValor(context, nome, "nome")
+
+
+                                        navController.navigate("tagsEditProfile")
                                     },
                                 alignment = Alignment.TopEnd
                             )
@@ -262,29 +298,82 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(35.dp)
                                     .clickable {
-                                        val array = UserRepositorySqlite(context).findUsers()
-
-                                        val user = array[0]
-
                                         Log.e("user-teste", "EditProfileScreen: $user")
 
                                         if (viewModelIdLocalizacao != null) {
-                                            updateUser(
-                                                id_usuario = user.id.toInt(),
-                                                token = user.token,
-                                                viewModel,
-                                                id_localizacao = viewModelIdLocalizacao,
-                                                bairro = bairroStateUser,
-                                                cidade = cidadeStateUser,
-                                                estado = estadoStateUser,
-                                                descricao = descricaoState,
-                                                foto = fotoUri,
-                                                nome_de_usuario = tagDeUsuarioState,
-                                                nome = nomeState,
-                                                tags = listOf(
+                                            Log.i("verifica", "${estadoStateUser!!}")
+                                            localStorage.salvarValor(context, estadoStateUser!!, "estado")
+                                            Log.i("verifica", "${localStorage.lerValor(context, "estado")}")
 
+
+                                            localStorage.salvarValor(context, bairroStateUser!!, "bairro")
+                                            localStorage.salvarValor(context, cidadeStateUser!!, "cidade")
+                                            localStorage.salvarValor(context, descricaoState, "descricao")
+                                            localStorage.salvarValor(context, tagDeUsuarioState, "nome_de_usuario")
+                                            localStorage.salvarValor(context, nomeState, "nome")
+
+                                            lifecycleScope.launch {
+                                                var response = UserRepository().updateUser(
+                                                    id = user.id.toInt(),
+                                                    token = user.token,
+                                                    id_localizacao = viewModel.id_localizacao!!,
+                                                    bairro = localStorage.lerValor(context, "bairro")!!,
+                                                    cidade = localStorage.lerValor(context, "cidade")!!,
+                                                    estado = localStorage.lerValor(context, "estado")!!,
+                                                    descricao = localStorage.lerValor(context, "descricao")!!,
+                                                    foto = localStorage.lerValor(context, "foto"),
+                                                    nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")!!,
+                                                    nome = localStorage.lerValor(context, "nome")!!,
+                                                    tags = emptyList<TagResponseId>()
                                                 )
-                                            )
+
+                                                if (response.isSuccessful) {
+                                                    Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
+                                                    Log.e("user", "user: ${response.body()} ")
+
+                                                    viewModel.setProfileEditSuccess(true)
+
+                                                    navController.popBackStack()
+                                                } else {
+                                                    val errorBody = response.errorBody()?.string()
+                                                    Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
+                                                    val descricao = response.body()?.descricao
+                                                    if (descricao != null) {
+                                                        if (descricao.length > 255)
+                                                            Log.e(
+                                                                MainActivity::class.java.simpleName,
+                                                                "Erro durante a atualização dos dados do usuário: ${errorBody}"
+                                                            )
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Descricão grande demais",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Erro durante a atualização dos dados do usuário: $errorBody",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+
+
+//                                            updateUser(
+//                                                id_usuario = user.id.toInt(),
+//                                                token = user.token,
+//                                                viewModel,
+//                                                id_localizacao = viewModelIdLocalizacao,
+//                                                bairro = localStorage.lerValor(context, "bairro")!!,
+//                                                cidade = localStorage.lerValor(context, "cidade")!!,
+//                                                estado = localStorage.lerValor(context, "estado")!!,
+//                                                descricao = localStorage.lerValor(context, "descricao")!!,
+//                                                foto = localStorage.lerValor(context, "foto"),
+//                                                nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")!!,
+//                                                nome = localStorage.lerValor(context, "nome")!!,
+//                                                tags = mutableListOf()
+//                                            )
+
                                         }
                                     }
                             )
@@ -293,10 +382,7 @@ fun EditProfileScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(14.dp)
-                                .clickable {
-                                    launcher.launch("image/*")
-                                },
+                                .padding(14.dp),
                             horizontalArrangement = Arrangement.Center
                         ) {
 
@@ -306,7 +392,11 @@ fun EditProfileScreen(
                                     model = "$fotoUri",
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(100.dp),
+                                        .size(100.dp)
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                        },
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
@@ -315,7 +405,16 @@ fun EditProfileScreen(
                                     model = "$fotoUri",
                                     contentDescription = "",
                                     modifier = Modifier
-                                        .size(100.dp),
+                                        .size(100.dp)
+                                        .border(
+                                            BorderStroke(borderWidth, Color.White),
+                                            RoundedCornerShape(10.dp)
+                                        )
+                                        .padding(borderWidth)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                        },
                                     contentScale = ContentScale.Crop
                                 )
                             }
@@ -334,8 +433,11 @@ fun EditProfileScreen(
                 ) {
 
                     Text(
+
                         text = "NOME",
-                        fontSize = 24.sp
+                        fontSize = 20.sp,
+                        color = Color.Black
+
                     )
                     CustomOutlinedTextField2(
                         value = nomeState,
@@ -349,7 +451,8 @@ fun EditProfileScreen(
                     )
                     Text(
                         text = "Tag De Usuário",
-                        fontSize = 24.sp
+                        fontSize = 20.sp,
+                        color = Color.Black
                     )
                     CustomOutlinedTextField2(
                         value = tagDeUsuarioState,
@@ -365,13 +468,12 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Estado", fontSize = 24.sp)
+                        Text(text = "Estado", fontSize = 20.sp, color = Color.Black)
                         DropdownEstado(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
                         ) { selectedEstado ->
                             estadoStateUser = selectedEstado
-
                         }
 
                     }
@@ -379,7 +481,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Cidade", fontSize = 24.sp)
+                        Text(text = "Cidade", fontSize = 20.sp, color = Color.Black)
                         DropdownCidade(
                             lifecycleScope = lifecycleScope,
                             viewModelEstado,
@@ -393,7 +495,7 @@ fun EditProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "Bairro", fontSize = 24.sp)
+                        Text(text = "Bairro", fontSize = 20.sp, color = Color.Black)
                         DropdownBairro(
                             lifecycleScope = lifecycleScope,
                             viewModelCidade
@@ -402,7 +504,7 @@ fun EditProfileScreen(
                         }
                     }
 
-                    Text(text = "Descrição", fontSize = 24.sp)
+                    Text(text = "Descrição", fontSize = 20.sp, color = Color.Black)
                     CustomOutlinedTextField2(
                         value = descricaoState,
                         onValueChange = {
@@ -419,4 +521,5 @@ fun EditProfileScreen(
     }
 }
 
+val borderWidth = 1.dp
 

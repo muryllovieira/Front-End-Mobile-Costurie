@@ -49,8 +49,7 @@ fun GradientButtonTags(
                 ),
                 shape = ShapeButton.large,
             )
-            .height(37.dp)
-            .width(230.dp),
+            .height(37.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
         ),

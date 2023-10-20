@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
+import br.senai.sp.jandira.costurie_app.ui.theme.Kufam
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -36,8 +38,8 @@ fun TextMenuBar (text: String) {
     ) {
         Text(text = text,
             modifier = Modifier
-                .padding(bottom = 6.dp),
-            fontSize = 12.sp,
+                .height(20.dp),
+            fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             style = TextStyle(
                 brush = Brush.linearGradient(
@@ -47,7 +49,8 @@ fun TextMenuBar (text: String) {
                     ),
                     tileMode = TileMode.Mirror
                 )
-            )
+            ),
+            fontFamily = Kufam
 
         )
         Canvas(

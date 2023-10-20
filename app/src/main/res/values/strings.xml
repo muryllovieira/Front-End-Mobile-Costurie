@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">costurie_app</string>
     <string name="titulo_app">COSTURIÊ</string>
-    <string name="boas_vindas">Bem vindo(a)!</string>
+    <string name="boas_vindas">Bem-vindo(a)!</string>
     <string name="texto_boas_vindas">Olá, seja bem-vindo(a) ao Costuriê. É um prazer recebê-lo(a) aqui.</string>
     <string name="texto_botao_registrar">Registrar</string>
     <string name="texto_botao_login">Entrar</string>
@@ -26,11 +26,13 @@
     <string name="requerimentos_senha4">*É preciso ter ao menos um caractére maiúsculo</string>
     <string name="requerimentos_senha5">*É preciso ter ao menos um caractére minúsculo</string>
     <string name="texto_meu_perfil">MEU PERFIL</string>
+    <string name="texto_perfil">PERFIL</string>
     <string name="nome_perfil">Beltrana dos Santos Silva</string>
     <string name="tag_usuario">"@BELTRANA_S"</string>
     <string name="cidade_perfil">Jandira, SP</string>
     <string name="botao_recomendacoes">Recomendações</string>
     <string name="botao_recomendados">Recomendados</string>
+    <string name="botao_recomendar">Recomendar</string>
     <string name="texto_nome_do_seu_perfil">Nome do seu Perfil</string>
     <string name="texto_descricao_do_seu_perfil">Descrição do seu Perfil</string>
     <string name="texto_localizacao_do_seu_perfil">Localização</string>
@@ -55,9 +57,12 @@
     <string name="descricao_tag_de_servico">*As tags de serviço são utilizadas pelas costureiras para identificar que tipo de tipo de serviço elas prestam.</string>
     <string name="tag_de_servico_label">Pesquise por uma tag...</string>
     <string name="servicos_titulo">SERVIÇOS</string>
+    <string name="explorar_titulo">EXPLORAR</string>
     <string name="servicos_categorias_textfield">Procurar um serviço</string>
     <string name="lista_de_perfis_textfield">Procurar um perfil</string>
     <string name="servicos_filtros_text">FILTROS</string>
+    <string name="mais_populares_text">MAIS POPULARES</string>
+    <string name="recentes_text">RECENTES</string>
     <string name="text_filtragem_geral">GERAL</string>
     <string name="text_filtragem_vestuario">VESTUÁRIO</string>
     <string name="text_filtragem_acessorios">ACESSÓRIOS</string>

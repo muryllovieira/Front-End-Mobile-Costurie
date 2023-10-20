@@ -90,7 +90,6 @@ dependencies {
     //Mais icones
     implementation("androidx.compose.material:material-icons-extended")
 
-
     implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("io.coil-kt:coil:2.3.0")
 
