@@ -286,6 +286,7 @@ fun EditProfileScreen(
                                         )
                                         localStorage.salvarValor(context, nome, "nome")
 
+
                                         navController.navigate("tagsEditProfile")
                                     },
                                 alignment = Alignment.TopEnd

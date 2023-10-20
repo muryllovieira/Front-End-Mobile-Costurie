@@ -89,7 +89,7 @@ fun TagsEditProfileScreen(
     var token = localStorage.lerValor(context, "token")
     var nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")
 
-    Log.w("Chega", "vendo se os dados: $id, $nome, $nome_de_usuario, $estado, $bairro, $cidade, $descricao, $foto, $id_localizacao, $token", )
+    Log.w("Chega", "vendo se os dados: $id, $nome, $nome_de_usuario, $estado, $bairro, $cidade, $descricao, $fotoUri, $id_localizacao, $token", )
 
     val scrollState = rememberScrollState()
 
