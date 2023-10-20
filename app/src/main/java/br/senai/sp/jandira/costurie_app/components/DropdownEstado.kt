@@ -142,11 +142,7 @@ fun DropdownEstado(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(heightTextFields)
-                        .border(
-                            width = 1.8.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(5.dp)
-                        )
+                        .background(Color(252,246,255), shape = RoundedCornerShape(15.dp))
                         .onGloballyPositioned { coordinates ->
                             textFieldSize = coordinates.size.toSize()
                         },
