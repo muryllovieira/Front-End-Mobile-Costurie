@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -85,11 +86,15 @@ fun ModalLocation(
                 isDialogOpen = false
             },
             title = {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         text = "Filtros",
                         textAlign = TextAlign.Center,
-                        fontSize = 24.sp,
+                        fontSize = 32.sp,
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(
@@ -138,26 +143,29 @@ fun ModalLocation(
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
                         WhiteButton(onClick = { /*TODO*/ }, text = "FILTRAR".uppercase())
                     }
 
                 }
 
             },
-            containerColor = colorResource(id = R.color.principal_2),
+            containerColor = Color.White,
             confirmButton = {
-                Button(
-                    onClick = {
-                        //isDialogOpen = false
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Transparent
-                    )
-                ) {
-                    Text(text = "Fechar", color = Color.Transparent)
-                }
+//                Button(
+//                    onClick = {
+//                        //isDialogOpen = false
+//                    },
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = Color.Transparent,
+//                        contentColor = Color.Transparent
+//                    )
+//                ) {
+//                    Text(text = "Fechar", color = Color.Transparent)
+//                }
             }
         )
     }
