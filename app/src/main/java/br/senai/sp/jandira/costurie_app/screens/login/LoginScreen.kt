@@ -42,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -57,13 +56,11 @@ import br.senai.sp.jandira.costurie_app.components.WhiteButton
 import br.senai.sp.jandira.costurie_app.function.deleteUserSQLite
 import br.senai.sp.jandira.costurie_app.function.saveLogin
 import br.senai.sp.jandira.costurie_app.repository.LoginRepository
-import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -69,4 +69,7 @@
     <string name="text_filtragem_ajustes">AJUSTES</string>
     <string name="text_filtragem_decoracao">DECORAÇÃO</string>
     <string name="text_filtragem_pet">PET</string>
+    <string name="titulo_label">Título</string>
+    <string name="descricao_label">Digite uma descrição</string>
+    <string name="tags_title_label">TAGS</string>
 </resources>

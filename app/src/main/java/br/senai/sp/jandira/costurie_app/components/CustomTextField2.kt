@@ -57,14 +57,14 @@ fun CustomOutlinedTextField2(
         modifier = modifier
             .background(
                 colorResource(id = R.color.principal_2),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
             ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = borderColor,
             unfocusedBorderColor = borderColor,
         ),
-        label = { Text(label, fontSize = 15.sp, color = Contraste2) },
-        textStyle = TextStyle.Default.copy(fontSize = 18.sp, color = Color.Black),
+        label = { Text(label, fontSize = 12.sp, color = Contraste2) },
+        textStyle = TextStyle.Default.copy(fontSize = 15.sp, color = Color.Black),
         singleLine = true,
         trailingIcon = {
             if (searchIcon) {
