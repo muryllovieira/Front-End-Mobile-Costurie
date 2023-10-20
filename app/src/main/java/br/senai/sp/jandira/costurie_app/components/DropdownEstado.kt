@@ -45,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -125,7 +126,6 @@ fun DropdownEstado(
 
     Column(
         modifier = Modifier
-            .padding(start = 30.dp, end = 30.dp, top = 4.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
@@ -142,11 +142,7 @@ fun DropdownEstado(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(heightTextFields)
-                        .border(
-                            width = 1.8.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(5.dp)
-                        )
+                        .background(Color(252, 246, 255), shape = RoundedCornerShape(15.dp))
                         .onGloballyPositioned { coordinates ->
                             textFieldSize = coordinates.size.toSize()
                         },
@@ -154,6 +150,16 @@ fun DropdownEstado(
                     onValueChange = {
                         estado = it
                         isExpanded = true
+                    },
+                    placeholder = {
+                        if (estado.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.label_dropdown_localizacao),
+                                fontSize = 18.sp,
+                                color = Contraste2,
+                                maxLines = 1
+                            )
+                        }
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -187,12 +193,15 @@ fun DropdownEstado(
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
-                        .width(textFieldSize.width.dp),
+                        .width(textFieldSize.width.dp)
+                        .background(Color.Transparent),
                     elevation = 15.dp
                 ) {
 
                     LazyColumn(
-                        modifier = Modifier.heightIn(max = 150.dp),
+                        modifier = Modifier
+                            .heightIn(max = 150.dp)
+                            .background(Color.Transparent),
                     ) {
 
                         if (estado!!.isNotEmpty()) {
@@ -242,6 +251,7 @@ fun CategoryItemsEstado(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(252, 246, 255))
             .clickable {
                 onSelect(title)
             }
