@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.LifecycleCoroutineScope
 import br.senai.sp.jandira.costurie_app.MainActivity
+import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.model.CityResponse
 import br.senai.sp.jandira.costurie_app.repository.LocationRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste2
@@ -99,7 +101,7 @@ fun DropdownCidade(
         lifecycleScope.launch {
             val response = locationRepository.getCidades(siglaEstado)
 
-            Log.e("siglaEstado", "loadCidades: $siglaEstado", )
+            Log.e("siglaEstado", "loadCidades: $siglaEstado")
             Log.e("response", "loadCidades: ${response.body()}")
 
             if (response.isSuccessful) {
@@ -139,7 +141,6 @@ fun DropdownCidade(
 
     Column(
         modifier = Modifier
-            .padding(start = 30.dp, end = 30.dp, top = 4.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
@@ -156,7 +157,7 @@ fun DropdownCidade(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(heightTextFields)
-                        .background(Color(252,246,255), shape = RoundedCornerShape(15.dp))
+                        .background(Color(252, 246, 255), shape = RoundedCornerShape(15.dp))
                         .onGloballyPositioned { coordinates ->
                             textFieldSize = coordinates.size.toSize()
                         },
@@ -164,6 +165,16 @@ fun DropdownCidade(
                     onValueChange = {
                         cidade = it
                         isExpanded = true
+                    },
+                    placeholder = {
+                        if (cidade.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.label_dropdown_localizacao),
+                                fontSize = 18.sp,
+                                color = Contraste2,
+                                maxLines = 1
+                            )
+                        }
                     },
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -197,12 +208,15 @@ fun DropdownCidade(
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
-                        .width(textFieldSize.width.dp),
+                        .width(textFieldSize.width.dp)
+                        .background(Color.Transparent),
                     elevation = 15.dp
                 ) {
 
                     LazyColumn(
-                        modifier = Modifier.heightIn(max = 150.dp),
+                        modifier = Modifier
+                            .heightIn(max = 150.dp)
+                            .background(Color.Transparent),
                     ) {
 
                         if (cidade.isNotEmpty()) {
@@ -254,6 +268,7 @@ fun CategoryItemsCidade(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(252, 246, 255))
             .clickable {
                 onSelect(title, id)
             }

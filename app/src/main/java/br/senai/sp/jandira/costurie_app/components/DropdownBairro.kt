@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.LifecycleCoroutineScope
 import br.senai.sp.jandira.costurie_app.MainActivity
+import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.model.NeighborhoodResponse
 import br.senai.sp.jandira.costurie_app.repository.LocationRepository
 import br.senai.sp.jandira.costurie_app.ui.theme.Contraste2
@@ -134,7 +136,6 @@ fun DropdownBairro(
 
     Column(
         modifier = Modifier
-            .padding(start = 30.dp, end = 30.dp, top = 4.dp, bottom = 6.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
@@ -151,7 +152,7 @@ fun DropdownBairro(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(heightTextFields)
-                        .background(Color(252,246,255), shape = RoundedCornerShape(15.dp))
+                        .background(Color(252, 246, 255), shape = RoundedCornerShape(15.dp))
                         .onGloballyPositioned { coordinates ->
                             textFieldSize = coordinates.size.toSize()
                         },
@@ -159,6 +160,16 @@ fun DropdownBairro(
                     onValueChange = {
                         bairro = it
                         isExpanded = true
+                    },
+                    placeholder = {
+                        if (bairro.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.label_dropdown_localizacao),
+                                fontSize = 18.sp,
+                                color = Contraste2,
+                                maxLines = 1
+                            )
+                        }
                     },
                     colors = androidx.compose.material.TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -192,12 +203,15 @@ fun DropdownBairro(
                 androidx.compose.material.Card(
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
-                        .width(textFieldSize.width.dp),
+                        .width(textFieldSize.width.dp)
+                        .background(Color.Transparent),
                     elevation = 15.dp
                 ) {
 
                     LazyColumn(
-                        modifier = Modifier.heightIn(max = 150.dp),
+                        modifier = Modifier
+                            .heightIn(max = 150.dp)
+                            .background(Color.Transparent),
                     ) {
 
                         if (bairro.isNotEmpty()) {
@@ -248,6 +262,7 @@ fun CategoryItemsBairro(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(252, 246, 255))
             .clickable {
                 onSelect(title)
             }

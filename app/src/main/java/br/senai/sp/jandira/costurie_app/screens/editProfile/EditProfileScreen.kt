@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,8 +51,6 @@ import br.senai.sp.jandira.costurie_app.components.DropdownBairro
 import br.senai.sp.jandira.costurie_app.components.DropdownCidade
 import br.senai.sp.jandira.costurie_app.components.DropdownEstado
 import br.senai.sp.jandira.costurie_app.model.TagResponseId
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
-import br.senai.sp.jandira.costurie_app.models_private.User
 import br.senai.sp.jandira.costurie_app.repository.UserRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
@@ -162,8 +161,7 @@ fun EditProfileScreen(
 
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    //contentAlignment = Alignment.Center
+                        .fillMaxWidth()
                 ) {
 
                     Column(
@@ -182,7 +180,7 @@ fun EditProfileScreen(
                                 modifier = Modifier
                                     .size(45.dp)
                                     .clickable {
-                                        navController.popBackStack()
+                                        navController.navigate("home")
                                     }
                             )
                             Image(
@@ -302,14 +300,37 @@ fun EditProfileScreen(
 
                                         if (viewModelIdLocalizacao != null) {
                                             Log.i("verifica", "${estadoStateUser!!}")
-                                            localStorage.salvarValor(context, estadoStateUser!!, "estado")
-                                            Log.i("verifica", "${localStorage.lerValor(context, "estado")}")
+                                            localStorage.salvarValor(
+                                                context,
+                                                estadoStateUser!!,
+                                                "estado"
+                                            )
+                                            Log.i(
+                                                "verifica",
+                                                "${localStorage.lerValor(context, "estado")}"
+                                            )
 
 
-                                            localStorage.salvarValor(context, bairroStateUser!!, "bairro")
-                                            localStorage.salvarValor(context, cidadeStateUser!!, "cidade")
-                                            localStorage.salvarValor(context, descricaoState, "descricao")
-                                            localStorage.salvarValor(context, tagDeUsuarioState, "nome_de_usuario")
+                                            localStorage.salvarValor(
+                                                context,
+                                                bairroStateUser!!,
+                                                "bairro"
+                                            )
+                                            localStorage.salvarValor(
+                                                context,
+                                                cidadeStateUser!!,
+                                                "cidade"
+                                            )
+                                            localStorage.salvarValor(
+                                                context,
+                                                descricaoState,
+                                                "descricao"
+                                            )
+                                            localStorage.salvarValor(
+                                                context,
+                                                tagDeUsuarioState,
+                                                "nome_de_usuario"
+                                            )
                                             localStorage.salvarValor(context, nomeState, "nome")
 
                                             lifecycleScope.launch {
@@ -317,26 +338,49 @@ fun EditProfileScreen(
                                                     id = user.id.toInt(),
                                                     token = user.token,
                                                     id_localizacao = viewModel.id_localizacao!!,
-                                                    bairro = localStorage.lerValor(context, "bairro")!!,
-                                                    cidade = localStorage.lerValor(context, "cidade")!!,
-                                                    estado = localStorage.lerValor(context, "estado")!!,
-                                                    descricao = localStorage.lerValor(context, "descricao")!!,
+                                                    bairro = localStorage.lerValor(
+                                                        context,
+                                                        "bairro"
+                                                    )!!,
+                                                    cidade = localStorage.lerValor(
+                                                        context,
+                                                        "cidade"
+                                                    )!!,
+                                                    estado = localStorage.lerValor(
+                                                        context,
+                                                        "estado"
+                                                    )!!,
+                                                    descricao = localStorage.lerValor(
+                                                        context,
+                                                        "descricao"
+                                                    )!!,
                                                     foto = localStorage.lerValor(context, "foto"),
-                                                    nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")!!,
+                                                    nome_de_usuario = localStorage.lerValor(
+                                                        context,
+                                                        "nome_de_usuario"
+                                                    )!!,
                                                     nome = localStorage.lerValor(context, "nome")!!,
                                                     tags = emptyList<TagResponseId>()
                                                 )
 
                                                 if (response.isSuccessful) {
-                                                    Log.e(MainActivity::class.java.simpleName, "Usuário atualizado com sucesso")
+                                                    Log.e(
+                                                        MainActivity::class.java.simpleName,
+                                                        "Usuário atualizado com sucesso"
+                                                    )
                                                     Log.e("user", "user: ${response.body()} ")
 
                                                     viewModel.setProfileEditSuccess(true)
 
                                                     navController.popBackStack()
                                                 } else {
-                                                    val errorBody = response.errorBody()?.string()
-                                                    Log.e("EDICAO DE PERFIL", "updateUser: $errorBody")
+                                                    val errorBody = response
+                                                        .errorBody()
+                                                        ?.string()
+                                                    Log.e(
+                                                        "EDICAO DE PERFIL",
+                                                        "updateUser: $errorBody"
+                                                    )
                                                     val descricao = response.body()?.descricao
                                                     if (descricao != null) {
                                                         if (descricao.length > 255)
@@ -344,17 +388,21 @@ fun EditProfileScreen(
                                                                 MainActivity::class.java.simpleName,
                                                                 "Erro durante a atualização dos dados do usuário: ${errorBody}"
                                                             )
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Descricão grande demais",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
+                                                        Toast
+                                                            .makeText(
+                                                                context,
+                                                                "Descricão grande demais",
+                                                                Toast.LENGTH_SHORT
+                                                            )
+                                                            .show()
                                                     }
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Erro durante a atualização dos dados do usuário: $errorBody",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
+                                                    Toast
+                                                        .makeText(
+                                                            context,
+                                                            "Erro durante a atualização dos dados do usuário: $errorBody",
+                                                            Toast.LENGTH_SHORT
+                                                        )
+                                                        .show()
                                                 }
                                             }
 
@@ -429,44 +477,57 @@ fun EditProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp, 8.dp, 20.dp, 0.dp)
-                        .verticalScroll(scrollState)
+                        .verticalScroll(scrollState),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Column(modifier = Modifier
+                        .fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
 
-                    Text(
+                            text = "NOME",
+                            fontSize = 20.sp,
+                            color = Color.Black
 
-                        text = "NOME",
-                        fontSize = 20.sp,
-                        color = Color.Black
+                        )
+                        CustomOutlinedTextField2(
+                            value = nomeState,
+                            onValueChange = {
+                                nomeState = it
+                            },
+                            borderColor = Color.Transparent,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(62.dp)
+                        )
+                    }
+                    Column(modifier = Modifier
+                        .fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "Tag De Usuário",
+                            fontSize = 20.sp,
+                            color = Color.Black
+                        )
+                        CustomOutlinedTextField2(
+                            value = tagDeUsuarioState,
+                            onValueChange = {
+                                tagDeUsuarioState = it
+                            },
+                            borderColor = Color.Transparent,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(62.dp)
+                        )
+                    }
 
-                    )
-                    CustomOutlinedTextField2(
-                        value = nomeState,
-                        onValueChange = {
-                            nomeState = it
-                        },
-                        borderColor = Color.Transparent,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(62.dp)
-                    )
-                    Text(
-                        text = "Tag De Usuário",
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
-                    CustomOutlinedTextField2(
-                        value = tagDeUsuarioState,
-                        onValueChange = {
-                            tagDeUsuarioState = it
-                        },
-                        borderColor = Color.Transparent,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(62.dp)
-                    )
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
                     ) {
                         Text(text = "Estado", fontSize = 20.sp, color = Color.Black)
                         DropdownEstado(
@@ -477,44 +538,61 @@ fun EditProfileScreen(
                         }
 
                     }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = "Cidade", fontSize = 20.sp, color = Color.Black)
-                        DropdownCidade(
-                            lifecycleScope = lifecycleScope,
-                            viewModelEstado,
-                            viewModelCidade
-                        ) { selectedCidade ->
-                            cidadeStateUser = selectedCidade
-                        }
 
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(text = "Bairro", fontSize = 20.sp, color = Color.Black)
-                        DropdownBairro(
-                            lifecycleScope = lifecycleScope,
-                            viewModelCidade
-                        ) { selectedBairro ->
-                            bairroStateUser = selectedBairro
-                        }
-                    }
-
-                    Text(text = "Descrição", fontSize = 20.sp, color = Color.Black)
-                    CustomOutlinedTextField2(
-                        value = descricaoState,
-                        onValueChange = {
-                            descricaoState = it
-                        },
-                        borderColor = Color.Transparent,
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp)
-                    )
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(
+                            modifier = Modifier
+                            .width(180.dp),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(text = "Cidade", fontSize = 20.sp, color = Color.Black)
+                            DropdownCidade(
+                                lifecycleScope = lifecycleScope,
+                                viewModelEstado,
+                                viewModelCidade
+                            ) { selectedCidade ->
+                                cidadeStateUser = selectedCidade
+                            }
+
+                        }
+                        Column(
+                            modifier = Modifier
+                            .width(180.dp),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(text = "Bairro", fontSize = 20.sp, color = Color.Black)
+                            DropdownBairro(
+                                lifecycleScope = lifecycleScope,
+                                viewModelCidade
+                            ) { selectedBairro ->
+                                bairroStateUser = selectedBairro
+                            }
+                        }
+                    }
+
+
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(text = "Descrição", fontSize = 20.sp, color = Color.Black)
+                        CustomOutlinedTextField2(
+                            value = descricaoState,
+                            onValueChange = {
+                                descricaoState = it
+                            },
+                            borderColor = Color.Transparent,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp)
+                        )
+                    }
+
                 }
             }
         }
