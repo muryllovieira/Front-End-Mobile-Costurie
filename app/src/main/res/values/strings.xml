@@ -72,4 +72,5 @@
     <string name="titulo_label">Título</string>
     <string name="descricao_label">Digite uma descrição</string>
     <string name="tags_title_label">TAGS</string>
+    <string name="label_dropdown_localizacao">Selecione um...</string>
 </resources>
