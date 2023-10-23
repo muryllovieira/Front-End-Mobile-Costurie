@@ -38,7 +38,6 @@ class PublicationRepository {
             if (anexos != null) {
                 for (anexo in anexos) {
                     val anexoObject = JsonObject().apply {
-                        addProperty("id_publicacao", anexo.id_publicacao)
                         addProperty("conteudo", anexo.conteudo)
                     }
                     anexosArray.add(anexoObject)
