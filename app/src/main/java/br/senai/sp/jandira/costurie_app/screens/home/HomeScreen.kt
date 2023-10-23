@@ -154,7 +154,7 @@ fun HomeScreen (navController: NavController,lifecycleScope: LifecycleCoroutineS
                     } else if (selectedIndexItem == 1) {
                         ServicesScreen(navController = navController, lifecycleScope =  lifecycleScope, filterings = emptyList(), categories = emptyList(), viewModelUserTags = UserTagViewModel(), localStorage = localStorage)
                     } else if (selectedIndexItem == 2) {
-                        PublishScreen(navController = navController)
+                        PublishScreen(navController = navController, lifecycleScope = lifecycleScope, localStorage = localStorage)
                     } else if (selectedIndexItem == 3) {
                         ChatsScreen(navController = navController)
                     } else {

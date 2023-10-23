@@ -1,5 +1,10 @@
 package br.senai.sp.jandira.costurie_app.screens.publish
 
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +29,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -44,6 +54,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,24 +62,44 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
+import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTag
 import br.senai.sp.jandira.costurie_app.components.GradientButtonTags
+import br.senai.sp.jandira.costurie_app.components.TagColorViewModel
+import br.senai.sp.jandira.costurie_app.model.TagEditResponse
+import br.senai.sp.jandira.costurie_app.model.TagResponseId
+import br.senai.sp.jandira.costurie_app.repository.TagsRepository
+import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
 import br.senai.sp.jandira.costurie_app.ui.theme.Costurie_appTheme
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.Kufam
+import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun PublishScreen(
-    navController: NavController
+    navController: NavController,
+    lifecycleScope: LifecycleCoroutineScope,
+    localStorage: Storage
 ) {
+
+    var context = LocalContext.current
+
+    val scrollState = rememberScrollState()
 
     var titleState by remember {
         mutableStateOf("")
@@ -76,6 +107,68 @@ fun PublishScreen(
 
     var descriptionState by remember {
         mutableStateOf("")
+    }
+
+    var tagsList by remember() {
+        mutableStateOf(listOf<TagEditResponse>())
+    }
+
+    //REFERENCIA PARA ACESSO E MANiPULACAO DO CLOUD STORAGE
+    var storageRef: StorageReference = FirebaseStorage.getInstance().reference.child("images")
+
+    //REFERENCIA PARA ACESSO E MANIPULACAO DO CLOUD FIRESTORE
+    var firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    var fotoUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    var painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(context).data(fotoUri).build()
+    )
+
+    var isImageSelected by remember { mutableStateOf(false) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            fotoUri = uri
+            isImageSelected = true
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(context).data(fotoUri).build()
+            )
+        }
+    }
+
+
+
+    val array = UserRepositorySqlite(context).findUsers()
+
+    val user = array[0]
+
+    var tagsArray = mutableListOf<TagResponseId>()
+
+    val tagsRepository = TagsRepository()
+
+    var pesquisaState by remember {
+        mutableStateOf("")
+    }
+
+    var isClicked by remember {
+        mutableStateOf(false)
+    }
+
+    val viewModel: TagColorViewModel = viewModel()
+
+    fun filtro(text: String): List<TagEditResponse> {
+        lifecycleScope.launch {
+            tagsList = tagsRepository.getAllTags2(user.token).body()!!.data
+        }
+        var newList: List<TagEditResponse> = tagsList.filter {
+            it.nome_tag.contains(text, ignoreCase = true)
+        }
+        return newList
     }
 
     Costurie_appTheme {
@@ -94,7 +187,7 @@ fun PublishScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(690.dp)
+                        .height(750.dp)
                 ) {
                     Column (
                         modifier = Modifier
@@ -131,11 +224,45 @@ fun PublishScreen(
                                 contentDescription = "",
                                 Modifier
                                     .size(35.dp)
-                                    .clickable { }
+                                    .clickable {
+                                        fotoUri?.let {
+                                            storageRef.putFile(it).addOnCompleteListener { task->
+
+                                                if (task.isSuccessful) {
+
+                                                    storageRef.downloadUrl.addOnSuccessListener { uri ->
+
+                                                        val map = HashMap<String, Any>()
+                                                        map["pic"] = uri.toString()
+
+                                                        firebaseFirestore.collection("images").add(map).addOnCompleteListener { firestoreTask ->
+
+                                                            if (firestoreTask.isSuccessful){
+                                                                Toast.makeText(context, "UPLOAD REALIZADO COM SUCESSO", Toast.LENGTH_SHORT).show()
+                                                            }else{
+                                                                Toast.makeText(context, "ERRO AO TENTAR REALIZAR O UPLOAD", Toast.LENGTH_SHORT).show()
+                                                            }
+
+                                                            localStorage.salvarValor(context, uri.toString(), "foto")
+                                                            //BARRA DE PROGRESSO DO UPLOAD
+                                                        }
+                                                    }
+
+                                                }else{
+
+                                                    Toast.makeText(context,  "ERRO AO TENTAR REALIZAR O UPLOAD", Toast.LENGTH_SHORT).show()
+
+                                                }
+
+                                                //BARRA DE PROGRESSO DO UPLOAD
+
+                                            }
+                                        }
+                                    }
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(30.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         Box (
                             modifier = Modifier
@@ -155,12 +282,15 @@ fun PublishScreen(
                                     ),
                                 contentAlignment = Alignment.Center
                             ) {
+
                                 Image(
                                     painter = painterResource(id = R.drawable.icon_add_image),
                                     contentDescription = "",
                                     Modifier
                                         .size(50.dp)
-                                        .clickable { }
+                                        .clickable {
+                                            launcher.launch("image/*")
+                                        }
                                 )
                             }
                         }
@@ -187,24 +317,40 @@ fun PublishScreen(
                                         .background(Color(168, 155, 255, 102)),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.mulher_publicacao),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(bottom = 5.dp, end = 2.dp)
-                                            .clip(shape = RoundedCornerShape(10.dp)),
-                                        contentScale = ContentScale.Crop
-                                    )
+                                    if (isImageSelected) {
+                                       AsyncImage(
+                                            model = painter,
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(bottom = 5.dp, end = 2.dp)
+                                                .clip(shape = RoundedCornerShape(10.dp)),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+                                        // Aqui você pode exibir um ícone padrão, caso nada tenha sido selecionado.
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.bola_de_la),
+                                            contentDescription = "",
+                                            modifier = Modifier.size(50.dp),
+                                            tint = Color.White
+                                        )
+                                    }
 
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.trash_icon),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .size(25.dp)
-                                            .clickable {  },
-                                        tint = Color.White
-                                    )
+                                    if (isImageSelected) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.trash_icon),
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .size(25.dp)
+                                                .clickable {
+                                                    // Limpar a seleção da imagem/vídeo
+                                                    isImageSelected = false
+                                                    fotoUri = null
+                                                },
+                                            tint = Color.White
+                                        )
+                                    }
                                 }
                         }
 
@@ -245,14 +391,15 @@ fun PublishScreen(
                                 modifier = Modifier
                                     .padding(horizontal = 35.dp),
                                 fontFamily = Kufam,
-                                fontSize = 18.sp
+                                fontSize = 18.sp,
+                                color = Color.Black
                             )
 
                         Box(
                             modifier = Modifier
                                 .height(120.dp)
                                 .fillMaxWidth()
-                                .padding(horizontal = 35.dp)
+                                .padding(horizontal = 25.dp)
                                 .background((Color.White), shape = RoundedCornerShape(20.dp))
                                 .border(
                                     width = 2.dp,
@@ -261,12 +408,44 @@ fun PublishScreen(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            GradientButtonTags(
-                                onClick = { /*TODO*/ },
-                                text = "Teste",
-                                color1 = Destaque1,
-                                color2 = Destaque2
-                            )
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+                                state = rememberLazyGridState(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.padding(12.dp)
+                            ) {
+                                items(filtro(pesquisaState)) {
+                                    GradientButtonTag(
+                                        onClick = {
+                                            isClicked = !isClicked
+                                            if (isClicked) {
+                                                viewModel.setTagColor(it.id, Destaque1, Destaque2)
+                                                viewModel.setTagTextColor(it.id, Color.White, Color.White)
+                                                if (!tagsArray.contains(TagResponseId(it.id))){
+                                                    tagsArray.add(TagResponseId(it.id))
+                                                }
+                                            } else {
+                                                viewModel.setTagColor(it.id, Color.Transparent, Color.Transparent)
+                                                viewModel.setTagTextColor(it.id, Destaque1, Destaque2)
+                                                if (tagsArray.contains(TagResponseId(it.id))) {
+                                                    tagsArray.remove(TagResponseId(it.id))
+                                                }
+                                            }
+
+                                            Log.e("it.nome", "mometag: ${it.nome_tag}", )
+                                            Log.e("it.id", "id: ${it.id}", )
+                                            Log.e("array", "array: ${tagsArray}", )
+                                        },
+                                        tagId = it.id,
+                                        color1 = Destaque1,
+                                        color2 = Destaque2,
+                                        text = it.nome_tag,
+                                        textColor = Color(168, 155, 255, 255),
+
+                                        )
+                                }
+                            }
                         }
                     }
                 }
@@ -288,7 +467,7 @@ fun PublishScreen(
                             }
                         }
                     }) {
-                        Text(text = "Publicar")
+                        Text(text = "Publicar", color = Color.Black)
                     }
                 }
             }
