@@ -53,7 +53,6 @@ fun CustomOutlinedTextField2(
     modifier: Modifier,
     searchIcon: Boolean = false,
 ) {
-
     Box(contentAlignment = Alignment.TopStart) {
         OutlinedTextField(
             value = value,
@@ -97,6 +96,5 @@ fun CustomOutlinedTextField2(
 
         )
     }
-
 }
 
