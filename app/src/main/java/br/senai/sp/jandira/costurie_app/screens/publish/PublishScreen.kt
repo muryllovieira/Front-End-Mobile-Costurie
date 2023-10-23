@@ -135,7 +135,7 @@ fun PublishScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(30.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         Box (
                             modifier = Modifier
