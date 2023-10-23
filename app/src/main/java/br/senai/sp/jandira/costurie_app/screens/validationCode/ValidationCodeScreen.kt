@@ -144,7 +144,9 @@ fun ValidationCodeScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(modifier = Modifier.height(140.dp))
+
+                        Spacer(modifier = Modifier.height(100.dp))
+
                         Button(
                             onClick = {
                                 navController.navigate("password")
@@ -153,7 +155,7 @@ fun ValidationCodeScreen(
                                 containerColor = Color.Transparent
                             )
                         ) {
-                            Column(Modifier.padding(end = 250.dp)) {
+                            Column(Modifier.padding(end = 300.dp)) {
                                 Image(
                                     painter = painterResource(id = R.drawable.arrow_back),
                                     contentDescription = "",

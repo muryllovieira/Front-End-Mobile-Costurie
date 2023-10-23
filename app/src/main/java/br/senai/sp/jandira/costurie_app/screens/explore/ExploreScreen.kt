@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -105,9 +106,7 @@ fun ExploreScreen(navController: NavController) {
                                 .clickable {
 
                                 },
-                            elevation = 20.dp,
-                            backgroundColor = Color.White,
-                            border = BorderStroke(1.dp, Color.LightGray),
+                            elevation = 20.dp
                         ) {
                             Column(
                                 modifier = Modifier.fillMaxSize(),
@@ -175,9 +174,8 @@ fun ExploreScreen(navController: NavController) {
                                 .clickable {
 
                                 },
-                            elevation = 20.dp,
                             backgroundColor = Color.White,
-                            border = BorderStroke(1.dp, Color.LightGray),
+                            elevation = 20.dp
                         ) {
                             Column(
                                 modifier = Modifier.fillMaxSize(),

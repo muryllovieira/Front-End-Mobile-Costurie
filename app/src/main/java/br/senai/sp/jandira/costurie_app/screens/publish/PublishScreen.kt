@@ -94,7 +94,7 @@ fun PublishScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(690.dp)
+                        .height(750.dp)
                 ) {
                     Column (
                         modifier = Modifier
@@ -245,7 +245,8 @@ fun PublishScreen(
                                 modifier = Modifier
                                     .padding(horizontal = 35.dp),
                                 fontFamily = Kufam,
-                                fontSize = 18.sp
+                                fontSize = 18.sp,
+                                color = Color.Black
                             )
 
                         Box(

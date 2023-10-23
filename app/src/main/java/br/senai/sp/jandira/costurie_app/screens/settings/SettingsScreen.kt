@@ -92,10 +92,9 @@ fun SettingsScreen(
                                     navController.popBackStack()
                                 }
                         )
-
                     }
-
                 }
+
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
