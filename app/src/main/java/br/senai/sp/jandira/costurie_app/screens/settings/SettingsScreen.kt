@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.costurie_app.screens.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,6 +50,7 @@ import br.senai.sp.jandira.costurie_app.viewModel.UserTagViewModel
 import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.AsyncImage
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SettingsScreen(
     navController: NavController,
