@@ -42,6 +42,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.Storage
+import br.senai.sp.jandira.costurie_app.components.ButtonGivePoint
 import br.senai.sp.jandira.costurie_app.components.ButtonSettings
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.GoogleButton
@@ -187,7 +188,7 @@ fun ExpandedPublicationScreen(
                         Card(
                             modifier = Modifier
                                 .width(250.dp)
-                                .height(200.dp)
+                                .height(270.dp)
                                 .padding(start = 16.dp, 2.dp)
                                 .clip(RoundedCornerShape(16.dp))
                                 .clickable {
@@ -196,12 +197,12 @@ fun ExpandedPublicationScreen(
                             elevation = 20.dp
                         ) {
                             Column(
-                                modifier = Modifier.height(400.dp),
+                                modifier = Modifier.height(100.dp),
                                 verticalArrangement = Arrangement.Top
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .height(195.dp)
+                                        .height(250.dp)
                                         .fillMaxWidth()
                                         .background(
                                             Color(168, 155, 255, 102),
@@ -212,7 +213,8 @@ fun ExpandedPublicationScreen(
                                         painter = painterResource(id = R.drawable.mulher_publicacao),
                                         contentDescription = "",
                                         modifier = Modifier
-                                            .size(280.dp, 200.dp)
+                                            .width(225.dp)
+                                            .height(240.dp)
                                             .clip(shape = RoundedCornerShape(10.dp)),
                                         contentScale = ContentScale.Crop
                                     )
@@ -220,6 +222,62 @@ fun ExpandedPublicationScreen(
                             }
                         }
                     }
+                }
+
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    GradientButtonSmall(
+                        onClick = { /*TODO*/ },
+                        text = stringResource(id = R.string.botao_responder),
+                        color1 = Destaque1,
+                        color2 = Destaque2
+                    )
+
+                    ButtonGivePoint(
+                        onClick = { /*TODO*/ },
+                        text = "DAR PONTO"
+                    )
+
+                    GradientButtonSmall(
+                        onClick = { /*TODO*/ },
+                        text = stringResource(id = R.string.botao_comentarios),
+                        color1 = Destaque1,
+                        color2 = Destaque2
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.titulo_label).uppercase(),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                            .padding(start = 10.dp, end = 10.dp),
+                        fontSize = 15.sp,
+                        color = Contraste,
+                        fontWeight = FontWeight.SemiBold
+                    )
+
+                    Text(
+                        text = "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem more...Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem more...",
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .width(430.dp)
+                            .height(65.dp)
+                            .padding(start = 10.dp, end = 10.dp),
+                        fontSize = 15.sp,
+                        color = Contraste
+                    )
                 }
             }
         }

@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 AnimatedNavHost(
                     navController = navController,
                     startDestination = "home")
-                {
+   {
                     composable(route = "main") { MainScreen(navController = navController) }
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }
                     composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope) }

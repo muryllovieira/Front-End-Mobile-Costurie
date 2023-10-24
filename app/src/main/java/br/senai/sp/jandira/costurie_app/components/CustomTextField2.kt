@@ -63,8 +63,9 @@ fun CustomOutlinedTextField2(
                     shape = RoundedCornerShape(20.dp)
                 ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = borderColor,
+                focusedBorderColor = Color.Black,
                 unfocusedBorderColor = borderColor,
+                cursorColor = Color(65, 57, 70, 255)
             ),
             //label = { Text(label, fontSize = 15.sp, color = Contraste2) },
             placeholder = {
