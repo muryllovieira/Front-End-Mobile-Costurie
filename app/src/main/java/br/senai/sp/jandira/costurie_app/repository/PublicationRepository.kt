@@ -2,7 +2,7 @@ package br.senai.sp.jandira.costurie_app.repository
 
 import br.senai.sp.jandira.costurie_app.model.AnexoResponse
 import br.senai.sp.jandira.costurie_app.model.PublicationResponse
-import br.senai.sp.jandira.costurie_app.model.TagsResponse
+import br.senai.sp.jandira.costurie_app.model.TagResponseId
 import br.senai.sp.jandira.costurie_app.service.PublicationService
 import br.senai.sp.jandira.costurie_app.service.RetrofitFactory
 import com.google.gson.JsonArray
@@ -17,7 +17,7 @@ class PublicationRepository {
         token: String,
         titulo: String,
         descricao: String,
-        tags: List<TagsResponse>,
+        tags: MutableList<TagResponseId>,
         anexos: List<AnexoResponse>
     ): Response<PublicationResponse> {
         val requestBody = JsonObject().apply {
