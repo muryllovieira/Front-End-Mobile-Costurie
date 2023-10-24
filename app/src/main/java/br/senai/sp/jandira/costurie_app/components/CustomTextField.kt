@@ -56,7 +56,7 @@ fun CustomOutlinedTextField(
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         OutlinedTextField(
             value = value,
@@ -69,10 +69,12 @@ fun CustomOutlinedTextField(
                     shape = RoundedCornerShape(20.dp)
                 ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = borderColor,
+                focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = borderColor,
-                errorBorderColor = Color.Transparent
+                errorBorderColor = Color.Transparent,
+                cursorColor = Color(65, 57, 70, 255)
             ),
+            shape = RoundedCornerShape(20.dp),
             label = { Text(label, fontSize = 12.sp, color = Contraste2) },
             textStyle = TextStyle.Default.copy(fontSize = 15.sp, color = Color.Black),
             leadingIcon = {

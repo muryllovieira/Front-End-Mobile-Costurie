@@ -73,4 +73,6 @@
     <string name="descricao_label">Digite uma descrição</string>
     <string name="tags_title_label">TAGS</string>
     <string name="label_dropdown_localizacao">Selecione um...</string>
+    <string name="botao_responder">RESPONDER</string>
+    <string name="botao_comentarios">COMENTÁRIOS</string>
 </resources>

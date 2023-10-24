@@ -87,7 +87,7 @@ fun GradientButtonTag(
         )
     ) {
         Text(
-            text = text,
+            text = text.uppercase(),
             modifier = Modifier
                 .graphicsLayer(alpha = 0.99f)
                 .drawWithCache {

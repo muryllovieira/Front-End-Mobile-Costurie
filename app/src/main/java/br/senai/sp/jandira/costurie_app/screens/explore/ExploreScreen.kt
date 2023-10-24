@@ -29,6 +29,7 @@ import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,10 +93,11 @@ fun ExploreScreen(navController: NavController) {
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 2.sp
+                    letterSpacing = 2.sp,
                 )
 
-                LazyRow() {
+                LazyRow(
+                ) {
                     items(4) { publication ->
                         Card(
                             modifier = Modifier
@@ -104,9 +106,7 @@ fun ExploreScreen(navController: NavController) {
                                 .padding(start = 16.dp, 2.dp)
                                 .clip(RoundedCornerShape(16.dp))
                                 .clickable {
-
                                 },
-                            elevation = 20.dp
                         ) {
                             Column(
                                 modifier = Modifier.fillMaxSize(),
