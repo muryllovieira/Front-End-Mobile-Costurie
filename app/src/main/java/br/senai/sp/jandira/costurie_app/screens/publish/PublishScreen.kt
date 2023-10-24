@@ -189,8 +189,12 @@ fun PublishScreen(
                 navController.navigate("services")
             } else {
                 val errorBody = response.errorBody()?.string()
-                Log.e(MainActivity::class.java.simpleName, "Erro durante inserir uma publicação: $errorBody")
-                Toast.makeText(context, "Erro durante inserir uma publicação", Toast.LENGTH_SHORT).show()
+                Log.e(
+                    MainActivity::class.java.simpleName,
+                    "Erro durante inserir uma publicação: $errorBody"
+                )
+                Toast.makeText(context, "Erro durante inserir uma publicação", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -198,357 +202,320 @@ fun PublishScreen(
 
 
     Costurie_appTheme {
-        val sheetState = rememberBottomSheetState(
-            initialValue = BottomSheetValue.Collapsed
-        )
-        val scaffoldState = rememberBottomSheetScaffoldState(
-            bottomSheetState = sheetState
-        )
-        val scope = rememberCoroutineScope()
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            sheetShape = RoundedCornerShape(20.dp),
-            sheetElevation = 10.dp,
-            sheetContent = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(750.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.bar_icon),
-                                contentDescription = "",
-                                Modifier.size(75.dp)
-                            )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.bar_icon),
+                    contentDescription = "",
+                    Modifier.size(75.dp)
+                )
+            }
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 30.dp, end = 30.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.close_icon),
+                    contentDescription = "",
+                    Modifier
+                        .size(35.dp)
+                        .clickable {
+
                         }
+                )
 
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(start = 30.dp, end = 30.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.close_icon),
-                                contentDescription = "",
-                                Modifier
-                                    .size(35.dp)
-                                    .clickable {
+                Image(
+                    painter = painterResource(id = R.drawable.send_icon),
+                    contentDescription = "",
+                    Modifier
+                        .size(35.dp)
+                        .clickable {
+                            fotoUri?.let {
+                                storageRef
+                                    .putFile(it)
+                                    .addOnCompleteListener { task ->
 
-                                    }
-                            )
+                                        if (task.isSuccessful) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.send_icon),
-                                contentDescription = "",
-                                Modifier
-                                    .size(35.dp)
-                                    .clickable {
-                                        fotoUri?.let {
-                                            storageRef
-                                                .putFile(it)
-                                                .addOnCompleteListener { task ->
+                                            storageRef.downloadUrl.addOnSuccessListener { uri ->
 
-                                                    if (task.isSuccessful) {
+                                                val map = HashMap<String, Any>()
+                                                map["pic"] = uri.toString()
 
-                                                        storageRef.downloadUrl.addOnSuccessListener { uri ->
+                                                firebaseFirestore
+                                                    .collection("images")
+                                                    .add(map)
+                                                    .addOnCompleteListener { firestoreTask ->
 
-                                                            val map = HashMap<String, Any>()
-                                                            map["pic"] = uri.toString()
-
-                                                            firebaseFirestore
-                                                                .collection("images")
-                                                                .add(map)
-                                                                .addOnCompleteListener { firestoreTask ->
-
-                                                                    if (firestoreTask.isSuccessful) {
-                                                                        Toast
-                                                                            .makeText(
-                                                                                context,
-                                                                                "UPLOAD REALIZADO COM SUCESSO",
-                                                                                Toast.LENGTH_SHORT
-                                                                            )
-                                                                            .show()
-                                                                    } else {
-                                                                        Toast
-                                                                            .makeText(
-                                                                                context,
-                                                                                "ERRO AO TENTAR REALIZAR O UPLOAD",
-                                                                                Toast.LENGTH_SHORT
-                                                                            )
-                                                                            .show()
-                                                                    }
-
-                                                                    localStorage.salvarValor(
-                                                                        context,
-                                                                        uri.toString(),
-                                                                        "foto"
-                                                                    )
-                                                                    //BARRA DE PROGRESSO DO UPLOAD
-                                                                }
+                                                        if (firestoreTask.isSuccessful) {
+                                                            Toast
+                                                                .makeText(
+                                                                    context,
+                                                                    "UPLOAD REALIZADO COM SUCESSO",
+                                                                    Toast.LENGTH_SHORT
+                                                                )
+                                                                .show()
+                                                        } else {
+                                                            Toast
+                                                                .makeText(
+                                                                    context,
+                                                                    "ERRO AO TENTAR REALIZAR O UPLOAD",
+                                                                    Toast.LENGTH_SHORT
+                                                                )
+                                                                .show()
                                                         }
 
-                                                    } else {
-
-                                                        Toast
-                                                            .makeText(
-                                                                context,
-                                                                "ERRO AO TENTAR REALIZAR O UPLOAD",
-                                                                Toast.LENGTH_SHORT
-                                                            )
-                                                            .show()
-
+                                                        localStorage.salvarValor(
+                                                            context,
+                                                            uri.toString(),
+                                                            "foto"
+                                                        )
+                                                        //BARRA DE PROGRESSO DO UPLOAD
                                                     }
-
-                                                    //BARRA DE PROGRESSO DO UPLOAD
-
-                                                }
-                                        }
-                                        createPublication(
-                                            id_usuario = user.id.toInt(),
-                                            token = user.token,
-                                            titulo = titleState,
-                                            descricao = descriptionState,
-                                            anexos = selectedMedia,
-                                            tags = tagsArray
-                                        )
-                                    }
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Box(
-                            modifier = Modifier
-                                .height(100.dp)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .height(100.dp)
-                                    .width(110.dp)
-                                    .background((Color.White), shape = RoundedCornerShape(20.dp))
-                                    .border(
-                                        width = 2.dp,
-                                        color = Color(168, 155, 255, 255),
-                                        shape = RoundedCornerShape(20.dp)
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-
-                                Image(
-                                    painter = painterResource(id = R.drawable.icon_add_image),
-                                    contentDescription = "",
-                                    Modifier
-                                        .size(50.dp)
-                                        .clickable {
-                                            launcher.launch("image/*")
-                                        }
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(15.dp))
-
-                        Box(
-                            modifier = Modifier
-                                .height(70.dp)
-                                .fillMaxWidth()
-                                .padding(horizontal = 35.dp)
-                                .background((Color.White), shape = RoundedCornerShape(60.dp))
-                                .border(
-                                    width = 2.dp,
-                                    color = Color(231, 188, 255, 255),
-                                    shape = RoundedCornerShape(60.dp)
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            LazyRow(content = {
-                                items(selectedMedia) { anexoResponse ->
-                                    val uri = Uri.parse(anexoResponse.conteudo)
-                                    Box(
-                                        modifier = Modifier
-                                            .size(60.dp)
-                                            .clip(shape = RoundedCornerShape(10.dp))
-                                            .background(Color(168, 155, 255, 102))
-                                            .padding(2.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        AsyncImage(
-                                            model = uri,
-                                            contentDescription = "",
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .clip(shape = RoundedCornerShape(10.dp)),
-                                            contentScale = ContentScale.Crop
-                                        )
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.trash_icon),
-                                            contentDescription = "Delete",
-                                            modifier = Modifier
-                                                .size(25.dp)
-                                                .clickable {
-                                                    Log.i(
-                                                        "ListaArquivos",
-                                                        "Lista de Arquivos: $selectedMedia"
-                                                    )
-                                                    Log.i(
-                                                        "ListaArquivos",
-                                                        "Lista de Arquivos: $anexoResponse"
-                                                    )
-                                                    selectedMedia =
-                                                        selectedMedia.filter { it != anexoResponse }
-                                                },
-                                            tint = Color.White
-                                        )
-                                    }
-                                }
-
-                            })
-                        }
-
-
-                        Spacer(modifier = Modifier.height(15.dp))
-
-                        CustomOutlinedTextField2(
-                            value = titleState,
-                            onValueChange = {
-                                titleState = it
-                            },
-                            label = stringResource(id = R.string.titulo_label),
-                            borderColor = Color.Transparent,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(62.dp)
-                                .padding(horizontal = 35.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(15.dp))
-
-                        CustomOutlinedTextField2(
-                            value = descriptionState,
-                            onValueChange = {
-                                descriptionState = it
-                            },
-                            label = stringResource(id = R.string.descricao_label),
-                            borderColor = Color.Transparent,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(90.dp)
-                                .padding(horizontal = 35.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(
-                            text = stringResource(id = R.string.tags_title_label),
-                            modifier = Modifier
-                                .padding(horizontal = 35.dp),
-                            fontFamily = Kufam,
-                            fontSize = 18.sp,
-                            color = Color.Black
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .height(120.dp)
-                                .fillMaxWidth()
-                                .padding(horizontal = 25.dp)
-                                .background((Color.White), shape = RoundedCornerShape(20.dp))
-                                .border(
-                                    width = 2.dp,
-                                    color = Color(168, 155, 255, 255),
-                                    shape = RoundedCornerShape(20.dp)
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                state = rememberLazyGridState(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.padding(12.dp)
-                            ) {
-                                items(filtro(pesquisaState)) {
-                                    GradientButtonTag(
-                                        onClick = {
-                                            isClicked = !isClicked
-                                            if (isClicked) {
-                                                viewModel.setTagColor(it.id, Destaque1, Destaque2)
-                                                viewModel.setTagTextColor(
-                                                    it.id,
-                                                    Color.White,
-                                                    Color.White
-                                                )
-                                                if (!tagsArray.contains(TagResponseId(it.id))) {
-                                                    tagsArray.add(TagResponseId(it.id))
-                                                }
-                                            } else {
-                                                viewModel.setTagColor(
-                                                    it.id,
-                                                    Color.Transparent,
-                                                    Color.Transparent
-                                                )
-                                                viewModel.setTagTextColor(
-                                                    it.id,
-                                                    Destaque1,
-                                                    Destaque2
-                                                )
-                                                if (tagsArray.contains(TagResponseId(it.id))) {
-                                                    tagsArray.remove(TagResponseId(it.id))
-                                                }
                                             }
 
-                                            Log.e("it.nome", "mometag: ${it.nome_tag}")
-                                            Log.e("it.id", "id: ${it.id}")
-                                            Log.e("array", "array: $tagsArray")
-                                        },
-                                        tagId = it.id,
-                                        color1 = Destaque1,
-                                        color2 = Destaque2,
-                                        text = it.nome_tag,
-                                        textColor = Color(168, 155, 255, 255),
+                                        } else {
 
-                                        )
-                                }
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    "ERRO AO TENTAR REALIZAR O UPLOAD",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
+
+                                        }
+
+                                        //BARRA DE PROGRESSO DO UPLOAD
+
+                                    }
                             }
+                            createPublication(
+                                id_usuario = user.id.toInt(),
+                                token = user.token,
+                                titulo = titleState,
+                                descricao = descriptionState,
+                                anexos = selectedMedia,
+                                tags = tagsArray
+                            )
                         }
-                    }
-                }
-            },
-            sheetBackgroundColor = Color.White,
-            sheetPeekHeight = 0.dp
-        ) {
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .height(100.dp)
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Button(onClick = {
-                    scope.launch {
-                        if (sheetState.isCollapsed) {
-                            sheetState.expand()
-                        } else {
-                            sheetState.collapse()
+                Box(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .width(110.dp)
+                        .background((Color.White), shape = RoundedCornerShape(20.dp))
+                        .border(
+                            width = 2.dp,
+                            color = Color(168, 155, 255, 255),
+                            shape = RoundedCornerShape(20.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Image(
+                        painter = painterResource(id = R.drawable.icon_add_image),
+                        contentDescription = "",
+                        Modifier
+                            .size(50.dp)
+                            .clickable {
+                                launcher.launch("image/*")
+                            }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Box(
+                modifier = Modifier
+                    .height(70.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 35.dp)
+                    .background((Color.White), shape = RoundedCornerShape(60.dp))
+                    .border(
+                        width = 2.dp,
+                        color = Color(231, 188, 255, 255),
+                        shape = RoundedCornerShape(60.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+
+                LazyRow(content = {
+                    items(selectedMedia) { anexoResponse ->
+                        val uri = Uri.parse(anexoResponse.conteudo)
+                        Box(
+                            modifier = Modifier
+                                .size(60.dp)
+                                .clip(shape = RoundedCornerShape(10.dp))
+                                .background(Color(168, 155, 255, 102))
+                                .padding(2.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(shape = RoundedCornerShape(10.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                            Icon(
+                                painter = painterResource(id = R.drawable.trash_icon),
+                                contentDescription = "Delete",
+                                modifier = Modifier
+                                    .size(25.dp)
+                                    .clickable {
+                                        Log.i(
+                                            "ListaArquivos",
+                                            "media: $selectedMedia"
+                                        )
+                                        Log.i(
+                                            "ListaArquivos",
+                                            "anexo: $anexoResponse"
+                                        )
+                                        selectedMedia = selectedMedia.minus(anexoResponse)
+                                    },
+                                tint = Color.White
+                            )
                         }
                     }
-                }) {
-                    Text(text = "Publicar", color = Color.Black)
+
+                })
+            }
+
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            CustomOutlinedTextField2(
+                value = titleState,
+                onValueChange = {
+                    titleState = it
+                },
+                label = stringResource(id = R.string.titulo_label),
+                borderColor = Color.Transparent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(62.dp)
+                    .padding(horizontal = 35.dp)
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            CustomOutlinedTextField2(
+                value = descriptionState,
+                onValueChange = {
+                    descriptionState = it
+                },
+                label = stringResource(id = R.string.descricao_label),
+                borderColor = Color.Transparent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(90.dp)
+                    .padding(horizontal = 35.dp)
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = stringResource(id = R.string.tags_title_label),
+                modifier = Modifier
+                    .padding(horizontal = 35.dp),
+                fontFamily = Kufam,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+
+            Box(
+                modifier = Modifier
+                    .height(120.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 25.dp)
+                    .background((Color.White), shape = RoundedCornerShape(20.dp))
+                    .border(
+                        width = 2.dp,
+                        color = Color(168, 155, 255, 255),
+                        shape = RoundedCornerShape(20.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    state = rememberLazyGridState(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    items(filtro(pesquisaState)) {
+                        GradientButtonTag(
+                            onClick = {
+                                isClicked = !isClicked
+                                if (isClicked) {
+                                    viewModel.setTagColor(it.id, Destaque1, Destaque2)
+                                    viewModel.setTagTextColor(
+                                        it.id,
+                                        Color.White,
+                                        Color.White
+                                    )
+                                    if (!tagsArray.contains(TagResponseId(it.id))) {
+                                        tagsArray.add(TagResponseId(it.id))
+                                    }
+                                } else {
+                                    viewModel.setTagColor(
+                                        it.id,
+                                        Color.Transparent,
+                                        Color.Transparent
+                                    )
+                                    viewModel.setTagTextColor(
+                                        it.id,
+                                        Destaque1,
+                                        Destaque2
+                                    )
+                                    if (tagsArray.contains(TagResponseId(it.id))) {
+                                        tagsArray.remove(TagResponseId(it.id))
+                                    }
+                                }
+
+                                Log.e("it.nome", "mometag: ${it.nome_tag}")
+                                Log.e("it.id", "id: ${it.id}")
+                                Log.e("array", "array: $tagsArray")
+                            },
+                            tagId = it.id,
+                            color1 = Destaque1,
+                            color2 = Destaque2,
+                            text = it.nome_tag,
+                            textColor = Color(168, 155, 255, 255),
+
+                            )
+                    }
                 }
             }
         }
+
+
     }
 }
+
 
 

@@ -97,6 +97,7 @@ fun ExploreScreen(navController: NavController) {
 
                 LazyRow() {
                     items(4) { publication ->
+
                         Card(
                             modifier = Modifier
                                 .width(170.dp)
