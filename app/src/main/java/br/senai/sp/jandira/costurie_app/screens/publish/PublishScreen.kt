@@ -183,14 +183,33 @@ fun PublishScreen(
             Log.i("PUBLICATION1", "user: ${response.body()}")
 
             if (response.isSuccessful) {
+
                 Log.e(MainActivity::class.java.simpleName, "Publicação Feita com Sucesso!")
                 Log.e("publication", "publication: ${response.body()} ")
 
                 navController.navigate("services")
+
             } else {
                 val errorBody = response.errorBody()?.string()
-                Log.e(MainActivity::class.java.simpleName, "Erro durante inserir uma publicação: $errorBody")
-                Toast.makeText(context, "Erro durante inserir uma publicação", Toast.LENGTH_SHORT).show()
+                val checagem = response.body()
+                if (checagem?.titulo == "" || checagem?.descricao == null || checagem?.titulo == null || checagem.descricao == "" || checagem.anexos == null || checagem.tags == null) {
+                    Toast.makeText(
+                        context,
+                        "Campos obrigatórios não foram preenchidos.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    Log.e(
+                        MainActivity::class.java.simpleName,
+                        "Erro durante inserir uma publicação: $errorBody"
+                    )
+                    Toast.makeText(
+                        context,
+                        "Erro durante inserir uma publicação",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
             }
         }
 
