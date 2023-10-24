@@ -405,23 +405,6 @@ fun EditProfileScreen(
                                                         .show()
                                                 }
                                             }
-
-
-//                                            updateUser(
-//                                                id_usuario = user.id.toInt(),
-//                                                token = user.token,
-//                                                viewModel,
-//                                                id_localizacao = viewModelIdLocalizacao,
-//                                                bairro = localStorage.lerValor(context, "bairro")!!,
-//                                                cidade = localStorage.lerValor(context, "cidade")!!,
-//                                                estado = localStorage.lerValor(context, "estado")!!,
-//                                                descricao = localStorage.lerValor(context, "descricao")!!,
-//                                                foto = localStorage.lerValor(context, "foto"),
-//                                                nome_de_usuario = localStorage.lerValor(context, "nome_de_usuario")!!,
-//                                                nome = localStorage.lerValor(context, "nome")!!,
-//                                                tags = mutableListOf()
-//                                            )
-
                                         }
                                     }
                             )
@@ -435,7 +418,6 @@ fun EditProfileScreen(
                         ) {
 
                             if (fotoUri == null) {
-                                //rememberAsyncImagePainter(model = fotoUri)
                                 AsyncImage(
                                     model = "$fotoUri",
                                     contentDescription = "",
