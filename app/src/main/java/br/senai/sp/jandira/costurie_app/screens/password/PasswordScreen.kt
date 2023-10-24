@@ -157,7 +157,7 @@ fun PasswordScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(modifier = Modifier.height(85.dp))
+                        Spacer(modifier = Modifier.height(95.dp))
                         Button(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = {
@@ -199,6 +199,7 @@ fun PasswordScreen(
                                 text = stringResource(id = R.string.verificacao_email),
                                 modifier = Modifier
                                     .width(247.dp),
+                                color = Color.Black,
                                 style = MaterialTheme.typography.bodyMedium,
                                 textAlign = TextAlign.Center,
                                 fontSize = 16.sp

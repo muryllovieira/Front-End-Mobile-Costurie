@@ -1,9 +1,11 @@
 package br.senai.sp.jandira.costurie_app.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,6 +47,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.senai.sp.jandira.costurie_app.R
 import br.senai.sp.jandira.costurie_app.Storage
+import br.senai.sp.jandira.costurie_app.model.UsersTagResponse
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque1
 import br.senai.sp.jandira.costurie_app.ui.theme.Destaque2
 import br.senai.sp.jandira.costurie_app.ui.theme.ShapeButton
@@ -55,14 +58,19 @@ import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 @Composable
 fun ModalLocation(
     lifecycleScope: LifecycleCoroutineScope,
-    localStorage: Storage
-) {
+    localStorage: Storage,
+    list: List<UsersTagResponse>
+): List<UsersTagResponse>{
     var isDialogOpen by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
     val viewModelEstado = viewModel<EstadoViewModel>()
     val viewModelCidade = viewModel<BairroViewModel>()
+
+    var newList by remember {
+        mutableStateOf(listOf<UsersTagResponse>())
+    }
 
     var cidadeStateUser by remember { mutableStateOf(localStorage.lerValor(context, "cidade")) }
     var estadoStateUser by remember { mutableStateOf(localStorage.lerValor(context, "estado")) }
@@ -72,7 +80,7 @@ fun ModalLocation(
         painter = painterResource(id = R.drawable.filter_icon),
         contentDescription = "",
         modifier = Modifier
-            .size(40.dp)
+            .size(32.dp)
             .clickable {
                 isDialogOpen = true
             },
@@ -85,11 +93,15 @@ fun ModalLocation(
                 isDialogOpen = false
             },
             title = {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         text = "Filtros",
                         textAlign = TextAlign.Center,
-                        fontSize = 24.sp,
+                        fontSize = 32.sp,
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(
@@ -138,27 +150,28 @@ fun ModalLocation(
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                        WhiteButton(onClick = { /*TODO*/ }, text = "FILTRAR".uppercase())
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        WhiteButton(
+                            onClick = {
+                                         newList = list.filter {
+                                             it.cidade.equals(cidadeStateUser)
+                                         }
+                                    isDialogOpen = !isDialogOpen
+                        },
+                            text = "FILTRAR".uppercase()
+                        )
                     }
 
                 }
 
             },
-            containerColor = colorResource(id = R.color.principal_2),
-            confirmButton = {
-                Button(
-                    onClick = {
-                        //isDialogOpen = false
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Transparent
-                    )
-                ) {
-                    Text(text = "Fechar", color = Color.Transparent)
-                }
-            }
+            containerColor = Color.White,
+            confirmButton = {}
         )
     }
+
+    return newList
 }

@@ -50,6 +50,7 @@ import br.senai.sp.jandira.costurie_app.Storage
 import br.senai.sp.jandira.costurie_app.components.CustomOutlinedTextField2
 import br.senai.sp.jandira.costurie_app.components.ModalFilter
 import br.senai.sp.jandira.costurie_app.components.ModalLocation
+import br.senai.sp.jandira.costurie_app.model.TagsResponse
 import br.senai.sp.jandira.costurie_app.model.UsersTagResponse
 import br.senai.sp.jandira.costurie_app.repository.TagsRepository
 import br.senai.sp.jandira.costurie_app.sqlite_repository.UserRepositorySqlite
@@ -60,6 +61,7 @@ import br.senai.sp.jandira.costurie_app.viewModel.UserViewModel
 import coil.compose.AsyncImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 
 //@Preview(showBackground = true, showSystemUi = true)
@@ -79,6 +81,10 @@ fun ProfileListScreen(
 ) {
 
     var context = LocalContext.current
+
+    var newList by remember {
+        mutableStateOf(listOf<UsersTagResponse>())
+    }
 
     var isDialogOpen by remember { mutableStateOf(false) }
 
@@ -100,6 +106,13 @@ fun ProfileListScreen(
     val idTag = viewModelUserTags.id
     val tagSelecionada = viewModelUserTags.nome
     Log.w("TAG", "ProfileListScreen: $idTag, $tagSelecionada")
+
+    fun filtro(text: String): List<UsersTagResponse> {
+        var newList: List<UsersTagResponse> = listUsersTag.filter {
+            it.nome.contains(text, ignoreCase = true)
+        }
+        return newList
+    }
 
     suspend fun getUsersByTag(
         token: String,
@@ -193,6 +206,7 @@ fun ProfileListScreen(
                             value = pesquisaState,
                             onValueChange = {
                                 pesquisaState = it
+                                filtro(pesquisaState)
                             },
                             label = stringResource(id = R.string.lista_de_perfis_textfield),
                             borderColor = Color.Transparent,
@@ -201,7 +215,7 @@ fun ProfileListScreen(
                                 .height(62.dp)
                         )
 
-                        ModalLocation(lifecycleScope, localStorage)
+                        newList = ModalLocation(lifecycleScope, localStorage, listUsersTag)
                     }
                 }
 
@@ -209,7 +223,17 @@ fun ProfileListScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    items(listUsersTag) { profile ->
+                    items(
+                        if (filtro(pesquisaState).isEmpty()) {
+                            if (newList.isEmpty()) {
+                                listUsersTag
+                            } else {
+                                newList
+                            }
+                        } else {
+                            filtro(pesquisaState)
+                        }
+                    ) { profile ->
                         Card(
                             modifier = Modifier
                                 .size(380.dp, 85.dp)

@@ -210,7 +210,7 @@ fun TradePasswordScreen(
                                 )
                             }
                         }
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                         Column(
                             modifier = Modifier.height(480.dp),
                             verticalArrangement = Arrangement.SpaceBetween,
@@ -224,7 +224,7 @@ fun TradePasswordScreen(
                                 fontSize = 20.sp
                             )
                             Column (
-                                modifier = Modifier.height(300.dp),
+                                modifier = Modifier.height(300.dp).width(320.dp),
                                 verticalArrangement = Arrangement.SpaceBetween,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ){
@@ -270,7 +270,7 @@ fun TradePasswordScreen(
                                 Box(
                                     modifier = Modifier
                                         .width(320.dp)
-                                        .height(80.dp)
+                                        .height(110.dp)
                                         .background(Color.White)
                                         .shadow(1.dp)
                                 ) {
@@ -279,37 +279,42 @@ fun TradePasswordScreen(
                                             text = stringResource(id = R.string.requerimentos_senha),
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium,
+                                            color = Color.Black,
                                             textAlign = TextAlign.Left,
-                                            fontSize = 12.sp,
+                                            fontSize = 10.sp,
                                             modifier = Modifier.fillMaxWidth()
                                         )
                                         Text(
                                             text = stringResource(id = R.string.requerimentos_senha2),
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium,
+                                            color = Color.Black,
                                             textAlign = TextAlign.Left,
-                                            fontSize = 12.sp
+                                            fontSize = 10.sp
                                         )
                                         Text(
                                             text = stringResource(id = R.string.requerimentos_senha3),
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium,
+                                            color = Color.Black,
                                             textAlign = TextAlign.Left,
-                                            fontSize = 12.sp
+                                            fontSize = 10.sp
                                         )
                                         Text(
                                             text = stringResource(id = R.string.requerimentos_senha4),
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium,
+                                            color = Color.Black,
                                             textAlign = TextAlign.Left,
-                                            fontSize = 12.sp
+                                            fontSize = 10.sp
                                         )
                                         Text(
                                             text = stringResource(id = R.string.requerimentos_senha5),
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Medium,
+                                            color = Color.Black,
                                             textAlign = TextAlign.Left,
-                                            fontSize = 12.sp
+                                            fontSize = 10.sp
                                         )
                                     }
 

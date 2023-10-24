@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import br.senai.sp.jandira.costurie_app.screens.chats.ChatsScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.EditProfileScreen
 import br.senai.sp.jandira.costurie_app.screens.editProfile.TagsEditProfileScreen
+import br.senai.sp.jandira.costurie_app.screens.expandedPublication.ExpandedPublicationScreen
 import br.senai.sp.jandira.costurie_app.screens.explore.ExploreScreen
 import br.senai.sp.jandira.costurie_app.screens.home.HomeScreen
 import br.senai.sp.jandira.costurie_app.screens.loading.LoadingScreen
@@ -55,8 +56,7 @@ class MainActivity : ComponentActivity() {
                 AnimatedNavHost(
                     navController = navController,
                     startDestination = "home")
-
-                {
+   {
                     composable(route = "main") { MainScreen(navController = navController) }
                     composable(route = "register") { RegisterScreen(navController = navController, lifecycleScope = lifecycleScope) }
                     composable(route = "login") { LoginScreen(navController = navController, lifecycleScope = lifecycleScope) }
@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = "loading") { LoadingScreen(navController = navController, lifecycleScope = lifecycleScope) }
                     composable(route = "home") { HomeScreen(navController = navController, lifecycleScope = lifecycleScope, viewModelUser) }
                     composable(route = "explore") { ExploreScreen(navController = navController) }
-                    composable(route = "publish") { PublishScreen(navController = navController)}
+                    //composable(route = "publish") { PublishScreen(navController = navController, lifecycleScope = lifecycleScope, localStorage = localStorage)}
+                    composable(route = "expandedPublication") { ExpandedPublicationScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser,  localStorage = localStorage) }
                     composable(route = "services") { ServicesScreen(navController = navController, lifecycleScope = lifecycleScope, categories = emptyList(), filterings = emptyList(), viewModelUserTags = viewModelUserTags, localStorage = localStorage) }
                     composable(route = "chats") { ChatsScreen(navController = navController) }
                     composable(route = "profile") { ProfileScreen(navController = navController, lifecycleScope = lifecycleScope, viewModel = viewModelUser,  localStorage = localStorage) }

@@ -266,19 +266,19 @@ fun LocationScreen(navController: NavController, lifecycleScope: LifecycleCorout
                     bairroStateUser = selectedBairro
                 }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 25.dp, 0.dp, 0.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    WhiteButton(
-                        onClick = {
-                                  navController.navigate("profileType")
-                                  },
-                        text = "Pular".uppercase()
-                    )
-                }
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(0.dp, 25.dp, 0.dp, 0.dp),
+//                    horizontalAlignment = Alignment.End
+//                ) {
+//                    WhiteButton(
+//                        onClick = {
+//                                  navController.navigate("profileType")
+//                                  },
+//                        text = "Pular".uppercase()
+//                    )
+//                }
 
             }
 
